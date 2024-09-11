@@ -31,6 +31,8 @@ model User {
   quizResults       QuizResult[]
   certificates      Certificate[]
   createdQuizzes    Quiz[]
+  quizAttempts      QuizAttempt[] // <-- Add this field for the relation
+
   @@map("users")
 }
 
@@ -49,35 +51,38 @@ model Quiz {
   quizResults   QuizResult[]
   quizAnalytics QuizAnalytics?
   certificates  Certificate[]
+  quizAttempts  QuizAttempt[] // <-- Add this field for the relation
+
   @@map("quizzes")
 }
 
 // Question Table
 model Question {
-  id            Int      @id @default(autoincrement())
-  Question      String
+  id             Int      @id @default(autoincrement())
+  Question       String
   Correct_answer String
-  Option1       String
-  Option2       String
-  Option3       String
-  Category      String
-  Is_basic      Boolean
-  Image_url     String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  Option1        String
+  Option2        String
+  Option3        String
+  Category       String
+  Is_basic       Boolean
+  Image_url      String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 // QuizResult Table
 model QuizResult {
-  id                Int   @id @default(autoincrement())
-  userId            Int
-  quizId            Int
-  user              User  @relation(fields: [userId], references: [id])
-  quiz              Quiz  @relation(fields: [quizId], references: [id])
-  score             Int
-  correctAnswers    Int
-  incorrectAnswers  Int
-  skippedQuestions  Int
+  id               Int  @id @default(autoincrement())
+  userId           Int
+  quizId           Int
+  user             User @relation(fields: [userId], references: [id])
+  quiz             Quiz @relation(fields: [quizId], references: [id])
+  score            Int
+  correctAnswers   Int
+  incorrectAnswers Int
+  skippedQuestions Int
+
   @@map("quiz_results")
 }
 
@@ -90,17 +95,33 @@ model Certificate {
   quiz           Quiz     @relation(fields: [quizId], references: [id])
   certificateURL String
   issuedDate     DateTime
+
   @@map("certificates")
 }
 
 // QuizAnalytics Table
 model QuizAnalytics {
-  id                 Int   @id @default(autoincrement())
-  quizId             Int   @unique
-  quiz               Quiz  @relation(fields: [quizId], references: [id])
-  totalParticipants  Int
-  averageScore       Float
-  highestScore       Int
-  lowestScore        Int
+  id                Int   @id @default(autoincrement())
+  quizId            Int   @unique
+  quiz              Quiz  @relation(fields: [quizId], references: [id])
+  totalParticipants Int
+  averageScore      Float
+  highestScore      Int
+  lowestScore       Int
+
   @@map("quiz_analytics")
+}
+
+model QuizAttempt {
+  id          Int       @id @default(autoincrement())
+  quizId      Int
+  studentId   Int
+  questionIds Int[] // Array of question IDs attempted
+  startTime   DateTime  @default(now())
+  quiz        Quiz      @relation(fields: [quizId], references: [id])
+  student     User      @relation(fields: [studentId], references: [id])
+  score       Int?
+  completedAt DateTime?
+
+  @@map("quiz_attempts")
 }

@@ -109,3 +109,55 @@ exports.findAllCategories = async (req, res) => {
     });
   }
 };
+
+exports.getAllQuestions = async (req, res) => {
+  try {
+    const { selectedTags, totalQuestions } = req.body;
+
+    if (
+      !selectedTags ||
+      !Array.isArray(selectedTags) ||
+      selectedTags.length === 0
+    ) {
+      return res.status(400).json({ error: "Selected tags are required" });
+    }
+
+    try {
+      const questionsPerTag = Math.floor(totalQuestions / selectedTags.length);
+      let remainingQuestions = totalQuestions % selectedTags.length;
+
+      let allQuestions = [];
+
+      for (const tag of selectedTags) {
+        const tagQuestions = await prisma.question.findMany({
+          where: {
+            Category: tag,
+          },
+          take: questionsPerTag + (remainingQuestions > 0 ? 1 : 0),
+          orderBy: {
+            id: "asc",
+          },
+        });
+
+        allQuestions = [...allQuestions, ...tagQuestions];
+
+        if (remainingQuestions > 0) {
+          remainingQuestions--;
+        }
+      }
+
+      // Shuffle the questions
+      allQuestions.sort(() => Math.random() - 0.5);
+
+      res.json(allQuestions);
+    } catch (error) {
+      res.status(500).json({ error: "Error fetching random questions" });
+    }
+  } catch (error) {
+    console.log("Error while fetching questions: ", error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

@@ -1,7 +1,11 @@
 const express = require("express");
 const multer = require("multer");
 const { verifyToken, verifyAdmin } = require("../middleware/verifyJWT");
-const { questionUpload, findAllCategories } = require("../controllers/questionController.js");
+const {
+  questionUpload,
+  findAllCategories,
+  getAllQuestions,
+} = require("../controllers/questionController.js");
 
 const router = express.Router();
 
@@ -55,5 +59,6 @@ router.post(
 );
 
 router.get("/category", verifyToken, verifyAdmin, findAllCategories);
+router.post("/get-questions", verifyToken, verifyAdmin, getAllQuestions);
 
 module.exports = router;
