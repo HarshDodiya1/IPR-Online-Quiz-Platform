@@ -1,0 +1,106 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User Table
+model User {
+  id                Int           @id @default(autoincrement())
+  firstName         String
+  middleName        String?
+  lastName          String
+  email             String        @unique
+  password          String
+  mobileNumber      String
+  dateOfBirth       DateTime
+  standard          Int
+  schoolName        String
+  city              String
+  totalQuizzesTaken Int           @default(0)
+  isAdmin           Boolean       @default(false)
+  quizResults       QuizResult[]
+  certificates      Certificate[]
+  createdQuizzes    Quiz[]
+  @@map("users")
+}
+
+// Quiz Table
+model Quiz {
+  id            Int            @id @default(autoincrement())
+  title         String
+  startDate     DateTime
+  endDate       DateTime
+  category      String
+  isBasic       Boolean
+  imageLink     String
+  description   String
+  adminId       Int
+  admin         User           @relation(fields: [adminId], references: [id])
+  quizResults   QuizResult[]
+  quizAnalytics QuizAnalytics?
+  certificates  Certificate[]
+  @@map("quizzes")
+}
+
+// Question Table
+model Question {
+  id            Int      @id @default(autoincrement())
+  Question      String
+  Correct_answer String
+  Option1       String
+  Option2       String
+  Option3       String
+  Category      String
+  Is_basic      Boolean
+  Image_url     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// QuizResult Table
+model QuizResult {
+  id                Int   @id @default(autoincrement())
+  userId            Int
+  quizId            Int
+  user              User  @relation(fields: [userId], references: [id])
+  quiz              Quiz  @relation(fields: [quizId], references: [id])
+  score             Int
+  correctAnswers    Int
+  incorrectAnswers  Int
+  skippedQuestions  Int
+  @@map("quiz_results")
+}
+
+// Certificate Table
+model Certificate {
+  id             Int      @id @default(autoincrement())
+  userId         Int
+  quizId         Int
+  user           User     @relation(fields: [userId], references: [id])
+  quiz           Quiz     @relation(fields: [quizId], references: [id])
+  certificateURL String
+  issuedDate     DateTime
+  @@map("certificates")
+}
+
+// QuizAnalytics Table
+model QuizAnalytics {
+  id                 Int   @id @default(autoincrement())
+  quizId             Int   @unique
+  quiz               Quiz  @relation(fields: [quizId], references: [id])
+  totalParticipants  Int
+  averageScore       Float
+  highestScore       Int
+  lowestScore        Int
+  @@map("quiz_analytics")
+}
