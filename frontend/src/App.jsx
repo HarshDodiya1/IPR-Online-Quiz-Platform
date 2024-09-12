@@ -6,19 +6,21 @@ import AdminLanding from "./pages/Adminlanding";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import AdminUploadExcel from "./pages/AdminUploadExcel";
 import CreateQuiz from "./pages/CreateQuiz";
+import Home from "./pages/Home";
+import Navbar from "./components/Header";
 
 function App() {
   const { t } = useTranslation();
   const { part1, part2 } = t("description");
   return (
     <>
+    <Navbar />
       <Router>
         <Routes>
+          <Route  path="/" element={<Home/>} />
           <Route path="/admin" element={<AdminLanding />} />
           <Route path="/admin/upload-excel" element={<AdminUploadExcel />} />
           <Route path="/admin/create-quiz" element={<CreateQuiz />} />
-
-          <></>
         </Routes>
       </Router>    
       {/* <div className="flex flex-col items-center justify-center h-screen gap-10">
