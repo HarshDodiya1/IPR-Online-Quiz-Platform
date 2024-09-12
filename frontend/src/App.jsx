@@ -5,6 +5,7 @@ import React from "react";
 import AdminLanding from "./pages/Adminlanding";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import AdminUploadExcel from "./pages/AdminUploadExcel";
+import CreateQuiz from "./pages/CreateQuiz";
 
 function App() {
   const { t } = useTranslation();
@@ -15,6 +16,8 @@ function App() {
         <Routes>
           <Route path="/admin" element={<AdminLanding />} />
           <Route path="/admin/upload-excel" element={<AdminUploadExcel />} />
+          <Route path="/admin/create-quiz" element={<CreateQuiz />} />
+
           <></>
         </Routes>
       </Router>    
