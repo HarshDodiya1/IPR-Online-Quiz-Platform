@@ -146,6 +146,9 @@ exports.studentLogin = async (req, res) => {
       { expiresIn: "24h" },
     );
 
+    // Remove the hashed password from the user object
+    delete existingUser.password;
+
     // Send the token as a cookie and corresponding user details
     res
       .cookie("Bearer", token, {
