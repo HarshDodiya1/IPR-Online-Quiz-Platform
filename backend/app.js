@@ -21,10 +21,12 @@ app.use(cookieParser());
 // Imported Routes
 const authRoutes = require("./routes/authRoute.js");
 const questionRoutes = require("./routes/questionsRoute.js");
+const userRoutes = require("./routes/userRoute.js");
 
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/questions", questionRoutes);
+app.use("/api/user", userRoutes);
 
 app.listen(config.port, () => {
   console.log(`⚙️ Server is running at port : ${config.port}`);

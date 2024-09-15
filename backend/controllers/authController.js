@@ -135,9 +135,10 @@ exports.studentLogin = async (req, res) => {
     }
 
     // Generate the JWT token
+    const existingUserIdToString = existingUser.id.toString();
     const token = jwt.sign(
       {
-        userId: existingUser.id,
+        userId: existingUserIdToString,
         email: existingUser.email,
         name: existingUser.firstName + " " + existingUser.lastName,
         role: existingUser.isAdmin ? "admin" : "student",

@@ -5,6 +5,7 @@ const {
   studentSignup,
 } = require("../controllers/authController.js");
 
+
 router.post("/signup", studentSignup);
 router.post("/login", studentLogin);
 

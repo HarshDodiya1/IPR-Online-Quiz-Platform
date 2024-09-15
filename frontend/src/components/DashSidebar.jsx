@@ -14,7 +14,9 @@ const DashSidebar = () => {
     }
   }, [location.search]);
   return (
-    <div>DashSidebar</div>
+    <div>
+      
+    </div>
   )
 }
 
