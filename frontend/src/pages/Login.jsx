@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { RiEyeLine as Eye, RiEyeOffLine as EyeOff } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import { signInStart, signInSuccess, signInFailure } from '../slices/authSlice.js';
+import { signInStart, signInSuccess, signInFailure } from '../slices/userSlice.js';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
-  const { loading, error: errorMessage } = useSelector((state) => state.auth);
+  const { loading, error: errorMessage } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

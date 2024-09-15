@@ -4,11 +4,15 @@ import Logo from "/Logo.jpg";
 import { useTranslation } from "react-i18next";
 import { Button, Navbar } from "flowbite-react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Header = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { t, i18n } = useTranslation();
+
+  const { currentUser } = useSelector((state) => state.user);
+  console.log("This is the current user:", currentUser);
 
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
@@ -97,66 +101,68 @@ const Header = () => {
               </div>
             )}
           </div>
-          {/* <div className="relative inline-block text-left">
-            <div>
-              <button
-                type="button"
-                className="inline-flex items-center justify-center h-12 w-full gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none"
-                onClick={() => setIsOpen(!isOpen)}
-              >
-                <FaUser className="mr-2" />
-                {t("myProfile")}
-                <FaChevronDown className="-mr-1 h-5 w-5 text-gray-400" />
-              </button>
-            </div>
-            {isOpen && (
-              <div className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                <div
-                  className="py-1"
-                  role="menu"
-                  aria-orientation="vertical"
-                  aria-labelledby="options-menu"
+          {currentUser ? (
+            <div className="relative inline-block text-left">
+              <div>
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center h-12 w-full gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none"
+                  onClick={() => setIsOpen(!isOpen)}
                 >
-                  <Link
-                    to={"/dashboard"}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                    role="menuitem"
-                  >
-                    {t("accountSettings")}
-                  </Link>
-                  <Link
-                    to={"/support"}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                    role="menuitem"
-                  >
-                    {t("support")}
-                  </Link>
-                  <Link
-                    t0={"/license"}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                    role="menuitem"
-                  >
-                    {t("license")}
-                  </Link>
-
-                  <Link
-                    to={"/"}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                    role="menuitem"
-                  >
-                    {t("signOut")}
-                  </Link>
-                </div>
+                  <FaUser className="mr-2" />
+                  {/* {t("myProfile")} */}
+                  Hello, {currentUser.user.firstName}
+                  <FaChevronDown className="-mr-1 h-5 w-5 text-gray-400" />
+                </button>
               </div>
-            )}
-          </div> */}
-          <Link to={"/sign-up"}>
-            <Button
-              className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition duration-300 ease-in-out"
-            >
-              Sign Up
-            </Button>
-          </Link>
+              {isOpen && (
+                <div className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <div
+                    className="py-1"
+                    role="menu"
+                    aria-orientation="vertical"
+                    aria-labelledby="options-menu"
+                  >
+                    <Link
+                      to={"/dashboard"}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                      role="menuitem"
+                    >
+                      {t("accountSettings")}
+                    </Link>
+                    <Link
+                      to={"/support"}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                      role="menuitem"
+                    >
+                      {t("support")}
+                    </Link>
+                    <Link
+                      t0={"/license"}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                      role="menuitem"
+                    >
+                      {t("license")}
+                    </Link>
+
+                    <Link
+                      to={"/"}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                      role="menuitem"
+                    >
+                      {t("signOut")}
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link to={"/sign-up"}>
+              <Button className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition duration-300 ease-in-out">
+                Sign Up
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
     </nav>

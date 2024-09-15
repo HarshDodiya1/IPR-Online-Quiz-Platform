@@ -1,26 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  user: null,
-  loading: false,
+  currentUser: null,
   error: null,
-  token: localStorage.getItem("token")
-    ? JSON.parse(localStorage.getItem("token"))
-    : null,
+  loading: false,
 };
 
-export const authSlice = createSlice({
-  name: "auth",
-  initialState: initialState,
+const userSlice = createSlice({
+  name: "user",
+  initialState,
   reducers: {
     signInStart: (state) => {
       state.loading = true;
       state.error = null;
     },
     signInSuccess: (state, action) => {
-      state.user = action.payload;
+      state.currentUser = action.payload;
       state.loading = false;
-      state.token = action.payload.token;
       state.error = null;
     },
     signInFailure: (state, action) => {
@@ -30,6 +26,6 @@ export const authSlice = createSlice({
   },
 });
 
-export const { signInStart, signInSuccess, signInFailure } = authSlice.actions;
+export const { signInStart, signInSuccess, signInFailure } = userSlice.actions;
 
-export default authSlice.reducer;
+export default userSlice.reducer;

@@ -143,7 +143,7 @@ exports.studentLogin = async (req, res) => {
         role: existingUser.isAdmin ? "admin" : "student",
       },
       config.jwtSecret,
-      { expiresIn: "24h" },
+      // { expiresIn: "24h" },
     );
 
     // Remove the hashed password from the user object
@@ -161,7 +161,7 @@ exports.studentLogin = async (req, res) => {
           "LoggedIn Successfully. Here's the Cookie Token and Existing User :)",
         success: true,
         token,
-        existingUser,
+        user: existingUser,
       });
   } catch (error) {
     console.log("Error while logging in student: ", error);
