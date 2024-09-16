@@ -20,7 +20,7 @@ const Header = () => {
   };
 
   return (
-    <nav className="top-0 left-0 right-0 bg-white bg-opacity-70 backdrop-blur-md rounded-b-lg shadow-lg z-50 p-4">
+    <nav className="fixed top-0 left-0 right-0 bg-white bg-opacity-70 backdrop-blur-md rounded-b-lg shadow-lg z-50 p-4">
       <div className="container mx-auto max-w-screen px-4 sm:px-6 lg:px-8 grid grid-cols-8">
         <Link
           to={"/"}

@@ -11,18 +11,20 @@ import Login from "./pages/Login";
 import Error404 from "./pages/Error404";
 import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
+import QuizPage from "./components/QuizQuestionSection";
 
 function App() {
   const { t } = useTranslation();
   const { part1, part2 } = t("description");
   return (
     <BrowserRouter>
-      <Header />
+      <Header/>
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/quize" element={<QuizPage />} />
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>
