@@ -1,1 +1,1 @@
-﻿# IPR Online Quiz Platform
+﻿# Institute for Plasma Research Online Quiz Platform
