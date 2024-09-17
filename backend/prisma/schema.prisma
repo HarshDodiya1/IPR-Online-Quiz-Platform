@@ -31,44 +31,55 @@ model User {
   quizResults       QuizResult[]
   certificates      Certificate[]
   createdQuizzes    Quiz[]
-  quizAttempts      QuizAttempt[] // <-- Add this field for the relation
 
   @@map("users")
 }
 
 // Quiz Table
 model Quiz {
-  id            Int            @id @default(autoincrement())
-  title         String
-  startDate     DateTime
-  endDate       DateTime
-  category      String
-  isBasic       Boolean
-  imageLink     String
-  description   String
-  adminId       Int
-  admin         User           @relation(fields: [adminId], references: [id])
-  quizResults   QuizResult[]
-  quizAnalytics QuizAnalytics?
-  certificates  Certificate[]
-  quizAttempts  QuizAttempt[] // <-- Add this field for the relation
+  id                Int            @id @default(autoincrement())
+  title             String
+  startDate         DateTime
+  endDate           DateTime
+  categories        String[] // Updated to store multiple categories
+  isBasic           Boolean // Standardized isBasic field
+  imageLink         String
+  description       String
+  adminId           Int
+  admin             User           @relation(fields: [adminId], references: [id])
+  quizResults       QuizResult[]
+  quizAnalytics     QuizAnalytics?
+  certificates      Certificate[]
+  selectedQuestions QuizQuestion[] // <-- Relation for selected questions
 
   @@map("quizzes")
 }
 
 // Question Table
 model Question {
-  id             Int      @id @default(autoincrement())
-  Question       String
-  Correct_answer String
-  Option1        String
-  Option2        String
-  Option3        String
-  Category       String
-  Is_basic       Boolean
-  Image_url      String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id            Int            @id @default(autoincrement())
+  question      String
+  correctAnswer String
+  option1       String
+  option2       String
+  option3       String
+  category      String
+  isBasic       Boolean // Standardized isBasic field
+  imageUrl      String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  QuizQuestion  QuizQuestion[]
+}
+
+// QuizQuestion Table - Stores the relation between Quiz and Question
+model QuizQuestion {
+  id         Int      @id @default(autoincrement())
+  quizId     Int
+  questionId Int
+  quiz       Quiz     @relation(fields: [quizId], references: [id])
+  question   Question @relation(fields: [questionId], references: [id])
+
+  @@map("quiz_questions")
 }
 
 // QuizResult Table
@@ -110,18 +121,4 @@ model QuizAnalytics {
   lowestScore       Int
 
   @@map("quiz_analytics")
-}
-
-model QuizAttempt {
-  id          Int       @id @default(autoincrement())
-  quizId      Int
-  studentId   Int
-  questionIds Int[] // Array of question IDs attempted
-  startTime   DateTime  @default(now())
-  quiz        Quiz      @relation(fields: [quizId], references: [id])
-  student     User      @relation(fields: [studentId], references: [id])
-  score       Int?
-  completedAt DateTime?
-
-  @@map("quiz_attempts")
 }
