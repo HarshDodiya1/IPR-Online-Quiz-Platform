@@ -1,167 +1,235 @@
 import React, { useState } from "react";
+import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
+import AuthLeftSide from "../components/AuthLeftSide.jsx";
 
-const SignUp = () => {
+const SignUp = ({ Logo, myImage }) => {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
+    middleName: "",
     lastName: "",
     email: "",
     password: "",
-    school: "",
+    mobileNumber: "",
+    dateOfBirth: "",
+    schoolName: "",
     standard: "",
-    forgotPasswordHint: "",
+    city: "",
   });
-  const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate(); // Initialize useNavigate
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: name === "standard" ? parseInt(value, 10) : value, // Convert standard to integer
+    });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      setLoading(true);
+      setErrorMessage(null);
 
-    // Validate form fields
-    if (
-      !formData.firstName ||
-      !formData.lastName ||
-      !formData.email ||
-      !formData.password ||
-      !formData.school ||
-      !formData.standard ||
-      !formData.forgotPasswordHint
-    ) {
-      setErrorMessage("Please fill in all the fields.");
-      return;
+      // Validate form fields
+      if (Object.values(formData).some((field) => field === "")) {
+        setErrorMessage("Please fill in all the fields.");
+        setLoading(false);
+        return;
+      }
+
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        setErrorMessage("Please enter a valid email address.");
+        setLoading(false);
+        return;
+      }
+
+      // Mobile number validation
+      const mobileRegex = /^[0-9]{10}$/;
+      if (!mobileRegex.test(formData.mobileNumber)) {
+        setErrorMessage("Please enter a valid mobile number (10 digits).");
+        setLoading(false);
+        return;
+      }
+
+      // Password validation
+      if (formData.password.length < 8) {
+        setErrorMessage("Password must be at least 8 characters long.");
+        setLoading(false);
+        return;
+      }
+
+      const response = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        navigate("/login");
+      } else {
+        setErrorMessage(data.message);
+      }
+    } catch (error) {
+      setErrorMessage("An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
     }
-
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      setErrorMessage("Please enter a valid email address.");
-      return;
-    }
-
-    // Validate password length
-    if (formData.password.length < 8) {
-      setErrorMessage("Password must be at least 8 characters long.");
-      return;
-    }
-
-    // If all validations pass, you can submit the form
-    console.log("Form submitted:", formData);
-    // Here you would typically send the form data to your API for registration
-
-    // After successful registration, redirect to the login page
-    navigate("/login"); // Redirect to login
   };
 
   return (
-    <div className="bg-white px-8 py-8 rounded-2xl drop-shadow-md border-2 border-gray-100">
-      <h1 className="text-3xl font-bold text-center mb-6">
-        Let's Register <br /> Account
-      </h1>
-      {errorMessage && <div className="text-red-500 mb-4">{errorMessage}</div>}
-      <form className="space-y-4" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="firstName"
-          placeholder="First Name"
-          className="w-full p-3 border border-gray-300 rounded"
-          value={formData.firstName}
-          onChange={handleInputChange}
-        />
-        <input
-          type="text"
-          name="lastName"
-          placeholder="Last Name"
-          className="w-full p-3 border border-gray-300 rounded"
-          value={formData.lastName}
-          onChange={handleInputChange}
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          className="w-full p-3 border border-gray-300 rounded"
-          value={formData.email}
-          onChange={handleInputChange}
-        />
-        <input
-          type="text"
-          name="forgotPasswordHint"
-          placeholder="Hint for Forgot Password"
-          className="w-full p-3 border border-gray-300 rounded"
-          value={formData.forgotPasswordHint}
-          onChange={handleInputChange}
-        />
-        <select
-          name="school"
-          className="w-full p-3 border border-gray-300 rounded"
-          value={formData.school}
-          onChange={handleInputChange}
-        >
-          <option value="" disabled>
-            Select School Name
-          </option>
-          <option value="School A">School A</option>
-          <option value="School B">School B</option>
-          <option value="School C">School C</option>
-        </select>
-        <input
-          type="text"
-          name="standard"
-          placeholder="Standard"
-          className="w-full p-3 border border-gray-300 rounded"
-          value={formData.standard}
-          onChange={handleInputChange}
-        />
-        <div className="relative">
-          <input
-            type={showPassword ? "text" : "password"}
-            name="password"
-            placeholder="Password"
-            className="w-full p-3 border border-gray-300 rounded"
-            value={formData.password}
-            onChange={handleInputChange}
-          />
-          <button
-            type="button"
-            onClick={togglePasswordVisibility}
-            className="absolute right-3 top-3 text-gray-500"
-          >
-            {showPassword ? "Hide" : "Show"}
-          </button>
+    <div className="flex min-h-screen">
+      <AuthLeftSide Logo={Logo} myImage={myImage} />
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
+        <div className="bg-white px-8 py-8 rounded-2xl shadow-md border-2 border-gray-100 w-full max-w-2xl">
+          <h1 className="text-3xl font-bold text-center mb-6">
+            Let's Register Account
+          </h1>
+          {errorMessage && (
+            <div className="text-red-500 mb-4 text-center">{errorMessage}</div>
+          )}
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <input
+                type="text"
+                name="firstName"
+                placeholder="First Name"
+                className="w-full p-3 border border-gray-300 rounded"
+                value={formData.firstName}
+                onChange={handleInputChange}
+              />
+              <input
+                type="text"
+                name="middleName"
+                placeholder="Middle Name"
+                className="w-full p-3 border border-gray-300 rounded"
+                value={formData.middleName}
+                onChange={handleInputChange}
+              />
+              <input
+                type="text"
+                name="lastName"
+                placeholder="Last Name"
+                className="w-full p-3 border border-gray-300 rounded"
+                value={formData.lastName}
+                onChange={handleInputChange}
+              />
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                className="w-full p-3 border border-gray-300 rounded"
+                value={formData.email}
+                onChange={handleInputChange}
+              />
+              <input
+                type="text"
+                name="mobileNumber"
+                placeholder="Mobile Number"
+                className="w-full p-3 border border-gray-300 rounded"
+                value={formData.mobileNumber}
+                onChange={handleInputChange}
+              />
+              <input
+                type="date"
+                name="dateOfBirth"
+                className="w-full p-3 border border-gray-300 rounded"
+                value={formData.dateOfBirth}
+                onChange={handleInputChange}
+              />
+              <input
+                type="text"
+                name="schoolName"
+                placeholder="School Name"
+                className="w-full p-3 border border-gray-300 rounded"
+                value={formData.schoolName} // Fixed: changed from `formData.school` to `formData.schoolName`
+                onChange={handleInputChange}
+              />
+              <select
+                name="standard"
+                className="w-full p-3 border border-gray-300 rounded"
+                value={formData.standard}
+                onChange={handleInputChange}
+              >
+                <option value="" disabled>
+                  Select Standard
+                </option>
+                {[...Array(8)].map((_, index) => (
+                  <option key={index + 5} value={index + 5}>
+                    {index + 5}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <input
+              type="text"
+              name="city"
+              placeholder="City"
+              className="w-full p-3 border border-gray-300 rounded"
+              value={formData.city}
+              onChange={handleInputChange}
+            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Password"
+                className="w-full p-3 border border-gray-300 rounded pr-10"
+                value={formData.password}
+                onChange={handleInputChange}
+              />
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+              >
+                {showPassword ? (
+                  <RiEyeOffLine size={20} />
+                ) : (
+                  <RiEyeLine size={20} />
+                )}
+              </button>
+            </div>
+            <button
+              type="submit"
+              className="w-full py-3 rounded-xl bg-violet-600 text-white text-lg font-bold transition-all hover:bg-violet-700 active:scale-[.98] disabled:bg-violet-400"
+              disabled={loading}
+            >
+              {loading ? "Loading..." : "Register"}
+            </button>
+          </form>
+
+          <div className="flex items-center justify-center mt-4">
+            <hr className="flex-grow border-t border-gray-300" />
+            <span className="mx-2 text-gray-500">or</span>
+            <hr className="flex-grow border-t border-gray-300" />
+          </div>
+
+          <p className="text-center mt-4">
+            Already have an account?
+            <Link
+              to="/login"
+              className="font-medium text-violet-950 ml-2 underline"
+            >
+              Login
+            </Link>
+          </p>
         </div>
-        <button
-          type="submit"
-          className="active:scale-[.98] active:duration-75 hover:scale-[1.01] ease-in-out transition-all w-full py-3 rounded-xl bg-log-violet text-white text-lg font-bold"
-        >
-          Register
-        </button>
-      </form>
-
-      <div className="flex items-center justify-center mt-4">
-        <hr className="flex-grow border-t border-gray-300" />
-        <span className="mx-2 text-gray-500">or</span>
-        <hr className="flex-grow border-t border-gray-300" />
       </div>
-
-      <p className="ml-2 font-medium text-base pt-3">
-        Already have an account?
-        <Link
-          to={"/login"}
-          className="font-medium text-base text-violet-950 ml-4 underline underline-offset-1"
-        >
-          Login
-        </Link>
-      </p>
     </div>
   );
 };
+
 export default SignUp;

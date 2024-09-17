@@ -1,10 +1,10 @@
-import React, { useState } from "react";
 import { FaChevronDown, FaUser } from "react-icons/fa";
 import Logo from "/Logo.jpg";
 import { useTranslation } from "react-i18next";
 import { Button, Navbar } from "flowbite-react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useState } from "react";
 
 const Header = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);

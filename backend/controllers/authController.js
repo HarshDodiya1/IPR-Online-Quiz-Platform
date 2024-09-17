@@ -23,6 +23,8 @@ exports.studentSignup = async (req, res) => {
       city,
     } = req.body;
 
+    console.log("This the the fields we got from req.body.", req.body);
+
     //Validate the required fields
     if (
       !firstName ||
@@ -61,7 +63,7 @@ exports.studentSignup = async (req, res) => {
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
-
+    const formattedDateOfBirth = new Date(dateOfBirth).toISOString();
     // Create the user
     const newUser = await prisma.user.create({
       data: {
@@ -71,7 +73,7 @@ exports.studentSignup = async (req, res) => {
         email,
         password: hashedPassword,
         mobileNumber,
-        dateOfBirth,
+        dateOfBirth: formattedDateOfBirth,
         standard,
         schoolName,
         city,
