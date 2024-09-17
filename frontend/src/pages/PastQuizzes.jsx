@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const DashboardComponent = () => {
+const PastQuizzes = () => {
   const [activeSection, setActiveSection] = useState('pastQuizzes');
   const [quizzes, setQuizzes] = useState([
     { id: 1, title: 'Math Quiz 1', startDate: '2024-09-01', endDate: '2024-09-10', category: 'math', participants: 45, image: '/api/placeholder/300/200' },
@@ -258,4 +258,4 @@ const DashboardComponent = () => {
   );
 };
 
-export default DashboardComponent;
+export default PastQuizzes;
