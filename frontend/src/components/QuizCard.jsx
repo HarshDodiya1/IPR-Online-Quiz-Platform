@@ -7,6 +7,19 @@ import {
 } from "react-icons/fa";
 
 const QuizCard = ({ quiz, onStart }) => {
+  const currentDate = new Date();
+  const startDate = new Date(quiz.startDate);
+  const endDate = new Date(quiz.endDate);
+
+  const isOngoing = currentDate >= startDate && currentDate <= endDate;
+  const isComingSoon = currentDate < startDate;
+  const isPast = currentDate > endDate;
+
+  const getDaysRemaining = (targetDate) => {
+    const timeDiff = targetDate.getTime() - currentDate.getTime();
+    return Math.ceil(timeDiff / (1000 * 3600 * 24));
+  };
+
   return (
     <div className="bg-white bg-opacity-60 backdrop-blur-md shadow-lg rounded-lg p-4 mb-4 transition-transform transform hover:scale-105 duration-300 ease-in-out border border-orange-200">
       <img
@@ -21,8 +34,8 @@ const QuizCard = ({ quiz, onStart }) => {
       <p className="text-gray-600 mb-2">{quiz.description}</p>
       <div className="flex flex-wrap text-gray-600 mb-2">
         {quiz.categories.map((category, index) => (
-          <span key={index} className="flex items-center mr-2 mb-1">
-            <FaTag className="mr-1 text-blue-500" />
+          <span key={index} className="flex items-center mr-2 mb-1 bg-yellow-200 rounded-[5%] p-1 ">
+            {/* <FaTag className="mr-1 text-blue-500" /> */}
             {category}
           </span>
         ))}
@@ -32,21 +45,33 @@ const QuizCard = ({ quiz, onStart }) => {
         {quiz.isBasic ? "Basic" : "Advanced"}
       </p>
       <div className="text-gray-500 mb-2">
-        <p className="flex items-center">
-          <FaCalendarAlt className="mr-1 text-red-500" />
-          Start: {new Date(quiz.startDate).toLocaleDateString()}
-        </p>
-        <p className="flex items-center">
-          <FaCalendarAlt className="mr-1 text-purple-500" />
-          End: {new Date(quiz.endDate).toLocaleDateString()}
-        </p>
+        {isOngoing && (
+          <p className="flex items-center">
+            <FaClock className="mr-1 text-red-500" />
+            Quiz ending in {getDaysRemaining(endDate)} Days
+          </p>
+        )}
+        {isComingSoon && (
+          <p className="flex items-center">
+            <FaCalendarAlt className="mr-1 text-purple-500" />
+            Quiz will start in {getDaysRemaining(startDate)} Days
+          </p>
+        )}
+        {isPast && (
+          <p className="flex items-center">
+            <FaCalendarAlt className="mr-1 text-gray-500" />
+            Quiz submission is Closed now
+          </p>
+        )}
       </div>
-      <button
-        onClick={onStart}
-        className="mt-4 bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition duration-300 ease-in-out"
-      >
-        Start
-      </button>
+      {isOngoing && (
+        <button
+          onClick={onStart}
+          className="mt-4 bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition duration-300 ease-in-out"
+        >
+          Start
+        </button>
+      )}
     </div>
   );
 };

@@ -66,43 +66,53 @@ const DashCreateQuiz = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!newQuiz.title || !newQuiz.startDate || !newQuiz.endDate || newQuiz.categories.length !== 4) {
-      setError('Please fill all required fields and select exactly 4 categories');
+    if (
+      !newQuiz.title ||
+      !newQuiz.startDate ||
+      !newQuiz.endDate ||
+      newQuiz.categories.length !== 4
+    ) {
+      setError(
+        "Please fill all required fields and select exactly 4 categories"
+      );
       return;
     }
-    
+
     setLoading(true);
     try {
-      const response = await axios.post('/api/quiz/create', newQuiz, {
-        withCredentials: true
+      const response = await axios.post("/api/quiz/create", newQuiz, {
+        withCredentials: true,
       });
-      
+
       if (response.data.success) {
-        console.log('Quiz created successfully:', response.data.quiz);
+        console.log("Quiz created successfully:", response.data.quiz);
         setNewQuiz({
-          title: '',
-          startDate: '',
-          endDate: '',
+          title: "",
+          startDate: "",
+          endDate: "",
           categories: [],
           isBasic: false,
-          imageLink: '',
-          description: '',
+          imageLink: "",
+          description: "",
         });
-        setError('');
-        toast.success('Quiz created successfully!', {
-          position: 'bottom-right',
+        setError("");
+        toast.success("Quiz created successfully!", {
+          position: "bottom-right",
         });
       } else {
-        setError(response.data.message || 'Failed to create quiz');
-        toast.error('Error in creating Quiz', {
-          position: 'bottom-right',
+        setError(response.data.message || "Failed to create quiz");
+        toast.error("Error in creating Quiz", {
+          position: "bottom-right",
         });
       }
     } catch (error) {
-      console.error('Error creating quiz:', error);
-      setError(error.response?.data?.message || 'An error occurred while creating the quiz');
-      toast.error('Error in creating Quiz', {
-        position: 'bottom-right',
+      console.error("Error creating quiz:", error);
+      setError(
+        error.response?.data?.message ||
+          "An error occurred while creating the quiz"
+      );
+      toast.error("Error in creating Quiz", {
+        position: "bottom-right",
       });
     } finally {
       setLoading(false);

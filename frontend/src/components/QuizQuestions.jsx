@@ -25,7 +25,7 @@ const quizQuestions = [
 
 const optionLabels = ["A", "B", "C", "D"];
 
-const QuizQuestions = () => {
+const QuizQuestions = ({ quizId, questions }) => {
   const [answers, setAnswers] = useState(
     new Array(quizQuestions.length).fill(null)
   );
@@ -34,7 +34,7 @@ const QuizQuestions = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [timer, setTimer] = useState(1200); // 20 minutes in seconds
   const [reviewMode, setReviewMode] = useState(false);
-
+  const [quizQuestions, setQuizQuestions] = useState(questions);
   useEffect(() => {
     if (timer <= 0 && !submitted) {
       handleSubmitQuiz();

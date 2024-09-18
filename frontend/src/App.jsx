@@ -11,7 +11,7 @@ import Login from "./pages/Login";
 import Error404 from "./pages/Error404";
 import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
-import QuizPage from "./components/QuizQuestions.jsx";
+import QuizPage from "./pages/QuizPage.jsx";
 import PastQuizzes from "./pages/PastQuizzes";
 
 function App() {
@@ -35,7 +35,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/quiz" element={<QuizPage />} />
+        <Route path="/quiz/:quizId" element={<QuizPage />} />
         <Route path="/past-quiz" element={<PastQuizzes />} />
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />

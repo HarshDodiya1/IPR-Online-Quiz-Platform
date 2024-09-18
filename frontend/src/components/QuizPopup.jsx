@@ -20,7 +20,9 @@ const Popup = ({ show, onClose, onStart }) => {
             <FaRegCheckCircle className="mr-2 text-green-500" />
             Rules
           </h2>
-          <p className="mb-4 text-sm sm:text-base">Here are the rules for the quiz...</p>
+          <p className="mb-4 text-sm sm:text-base">
+            Here are the rules for the quiz...
+          </p>
           <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2">
             <button
               onClick={onClose}
@@ -32,7 +34,7 @@ const Popup = ({ show, onClose, onStart }) => {
             <Link to={"/quiz"} className="w-full sm:w-auto">
               <button
                 onClick={onStart}
-                className="w-full bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition duration-300 ease-in-out flex items-center justify-center"
+                className="w-full bg-orange-500  sm:w-auto  text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition duration-300 ease-in-out flex items-center justify-center"
               >
                 <FaRegCheckCircle className="mr-2 text-white" />
                 Start
