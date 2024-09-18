@@ -37,24 +37,48 @@ const DashboardAnalytics = () => {
     plugins: {
       legend: {
         position: 'bottom',
+        labels: {
+          color: '#001f61',
+          font: {
+            size: 12
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: {
+          color: '#c7d5e9'
+        },
+        ticks: {
+          color: '#001f61'
+        }
+      },
+      y: {
+        grid: {
+          color: '#c7d5e9'
+        },
+        ticks: {
+          color: '#001f61'
+        }
       }
     }
   };
 
   return (
     <div className="bg-white shadow-md rounded px-6 py-4 mb-6">
-      <h2 className="text-2xl font-semibold mb-4">Quiz Analytics Dashboard</h2>
+      <h2 className="text-2xl font-semibold mb-4 text-[#001f61]">Quiz Analytics Dashboard</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-blue-100 p-3 rounded-lg">
+        <div className="bg-[#4e7ecf] p-3 rounded-lg text-white">
           <h3 className="text-lg font-semibold mb-1">Total Quizzes</h3>
           <p className="text-2xl font-bold">{analyticsData.totalQuizzes}</p>
         </div>
-        <div className="bg-green-100 p-3 rounded-lg">
+        <div className="bg-[#0247ba] p-3 rounded-lg text-white">
           <h3 className="text-lg font-semibold mb-1">Total Participants</h3>
           <p className="text-2xl font-bold">{analyticsData.totalParticipants}</p>
         </div>
-        <div className="bg-yellow-100 p-3 rounded-lg">
+        <div className="bg-[#001f61] p-3 rounded-lg text-white">
           <h3 className="text-lg font-semibold mb-1">Average Score</h3>
           <p className="text-2xl font-bold">{analyticsData.averageScore}%</p>
         </div>
@@ -62,27 +86,28 @@ const DashboardAnalytics = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="h-64">
-          <h3 className="text-lg font-semibold mb-2">Quizzes by Category</h3>
+          <h3 className="text-lg font-semibold mb-2 text-[#001f61]">Quizzes by Category</h3>
           <Pie 
             data={{
               labels: Object.keys(analyticsData.quizzesByCategory),
               datasets: [{
                 data: Object.values(analyticsData.quizzesByCategory),
-                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
+                backgroundColor: ['#001f61', '#0247ba', '#4e7ecf', '#9ab5e3'],
               }],
             }} 
             options={chartOptions}
           />
         </div>
         <div className="h-64">
-          <h3 className="text-lg font-semibold mb-2">Participation Trend</h3>
+          <h3 className="text-lg font-semibold mb-2 text-[#001f61]">Participation Trend</h3>
           <Line 
             data={{
               labels: Object.keys(analyticsData.participationTrend),
               datasets: [{
                 label: 'Participants',
                 data: Object.values(analyticsData.participationTrend),
-                borderColor: '#36A2EB',
+                borderColor: '#0247ba',
+                backgroundColor: 'rgba(2, 71, 186, 0.2)',
                 tension: 0.1,
               }],
             }} 
@@ -92,14 +117,14 @@ const DashboardAnalytics = () => {
       </div>
 
       <div className="mt-6 h-64">
-        <h3 className="text-lg font-semibold mb-2">Top Performing Quizzes</h3>
+        <h3 className="text-lg font-semibold mb-2 text-[#001f61]">Top Performing Quizzes</h3>
         <Bar 
           data={{
             labels: analyticsData.topPerformingQuizzes.map(quiz => quiz.name),
             datasets: [{
               label: 'Average Score',
               data: analyticsData.topPerformingQuizzes.map(quiz => quiz.score),
-              backgroundColor: '#4BC0C0',
+              backgroundColor: '#4e7ecf',
             }],
           }} 
           options={chartOptions}
