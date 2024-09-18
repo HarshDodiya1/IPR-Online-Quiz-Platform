@@ -57,18 +57,32 @@ exports.questionUpload = async (req, res) => {
     }
 
     // If no duplicates, insert the new data
+    // const insertedQuestions = await prisma.question.createMany({
+    //   data: formattedData.map((data) => ({
+    //     Question: data.Question,
+    //     Correct_answer: data.CorrectAns,
+    //     Option1: data.Option1,
+    //     Option2: data.Option2,
+    //     Option3: data.Option3,
+    //     Category: data.Category,
+    //     Is_basic: data.IsBasic,
+    //     Image_url: data.ImageLink,
+    //   })),
+    // });
     const insertedQuestions = await prisma.question.createMany({
       data: formattedData.map((data) => ({
-        Question: data.Question,
-        Correct_answer: data.CorrectAns,
-        Option1: data.Option1,
-        Option2: data.Option2,
-        Option3: data.Option3,
-        Category: data.Category,
-        Is_basic: data.IsBasic,
-        Image_url: data.ImageLink,
+        question: data.Question,
+        correctAnswer: data.CorrectAns,
+        option1: data.Option1,
+        option2: data.Option2,
+        option3: data.Option3,
+        category: data.Category,
+        isBasic: data.IsBasic,
+        imageUrl: data.ImageLink,
       })),
     });
+    
+
 
     res.status(200).json({
       message: "Excel data uploaded and stored successfully",
@@ -92,14 +106,14 @@ exports.findAllCategories = async (req, res) => {
   try {
     const categories = await prisma.question.findMany({
       select: {
-        Category: true,
+        category: true,
       },
-      distinct: ["Category"],
+      distinct: ['category'],
     });
 
     res.status(200).json({
       success: true,
-      categories: categories.map((cat) => cat.Category),
+      categories: categories.map((cat) => cat.category),
     });
   } catch (error) {
     console.log("Error while fetching categories: ", error);

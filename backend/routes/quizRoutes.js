@@ -7,6 +7,9 @@ const {
   getAllQuizzes,
 } = require("../controllers/quizController.js");
 
+const { verifyToken, verifyAdmin } = require("../middleware/verifyJWT.js");
+
+router.use(verifyToken, verifyAdmin);
 router.post("/create", createQuiz);
 router.post("/update/:id", updateQuiz);
 router.post("/delete/:id", deleteQuiz);
