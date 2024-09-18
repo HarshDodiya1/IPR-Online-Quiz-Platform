@@ -56,34 +56,30 @@ const Home = () => {
     <div className="bg-orange-50 min-h-screen">
       <div className="container mx-auto p-4">
         {/* Ongoing Quizzes Section */}
-        <section>
-          <h2 className="text-2xl font-bold mb-4 items-center text-center text-orange-600">
+        <section className="mb-8">
+          <h2 className="text-2xl font-bold mb-4 text-center text-orange-600">
             Ongoing Quizzes
           </h2>
-          <div className="relative">
-            <div className="overflow-x-auto flex space-x-4 py-4 scrollbar-hide">
-              {ongoingQuizzes.map((quiz) => (
-                <div key={quiz.id} className="flex-shrink-0 w-80">
-                  <QuizCard quiz={quiz} onStart={handleStart} />
-                </div>
-              ))}
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {ongoingQuizzes.map((quiz) => (
+              <div key={quiz.id}>
+                <QuizCard quiz={quiz} onStart={handleStart} />
+              </div>
+            ))}
           </div>
         </section>
 
         {/* Past Quizzes Section */}
-        <section className="mt-8">
+        <section>
           <h2 className="text-2xl font-bold mb-4 text-center text-orange-600">
             Past Quizzes
           </h2>
-          <div className="relative">
-            <div className="overflow-x-auto flex space-x-4 py-4 scrollbar-hide">
-              {pastQuizzes.map((quiz) => (
-                <div key={quiz.id} className="flex-shrink-0 w-80">
-                  <QuizCard quiz={quiz} onStart={handleStart} />
-                </div>
-              ))}
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {pastQuizzes.map((quiz) => (
+              <div key={quiz.id}>
+                <QuizCard quiz={quiz} onStart={handleStart} />
+              </div>
+            ))}
           </div>
         </section>
       </div>

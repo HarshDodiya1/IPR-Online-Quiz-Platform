@@ -30,7 +30,7 @@ const Dashboard = () => {
   return (
     <div className="flex min-h-screen">
       <DashSidebar />
-      <div className={`flex-1 md:ml-72 transition-all duration-300 ${scrollPosition > 100 ? 'mt-0' : 'mt-28'}`}>
+      <div className={`flex-1 md:ml-72 transition-all duration-300 ${scrollPosition > 100 ? 'mt-0' : 'mt-[2rem]'}`}>
         {tab === "profile" && <DashProfile />}
         {tab === "upload-excel" && <DashUploadExcel />}
         {tab === "create-quiz" && <DashCreateQuiz />}

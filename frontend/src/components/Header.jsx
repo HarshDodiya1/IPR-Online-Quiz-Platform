@@ -42,7 +42,7 @@ const Header = () => {
   };
 
   return (
-    <nav className="bg-white bg-opacity-70 backdrop-blur-md rounded-b-lg shadow-lg z-50 p-4">
+    <nav className="bg-white bg-opacity-70 backdrop-blur-md rounded-b-lg shadow-lg z-50 p-4 sticky top-0">
       <div className="container mx-auto max-w-screen px-4 sm:px-6 lg:px-8 grid grid-cols-8">
         <Link
           to={"/"}
