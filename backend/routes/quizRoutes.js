@@ -6,7 +6,6 @@ const {
   deleteQuiz,
   getAllQuizzes,
 } = require("../controllers/quizController.js");
-
 const { verifyToken, verifyAdmin } = require("../middleware/verifyJWT.js");
 
 router.use(verifyToken, verifyAdmin);
