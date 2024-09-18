@@ -1,1 +1,1 @@
-IPR Quiz Platform
+IPR Quiz Platform Project
