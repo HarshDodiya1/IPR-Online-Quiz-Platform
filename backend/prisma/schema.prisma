@@ -41,8 +41,8 @@ model Quiz {
   title             String
   startDate         DateTime
   endDate           DateTime
-  categories        String[] // Updated to store multiple categories
-  isBasic           Boolean // Standardized isBasic field
+  categories        String[] 
+  isBasic           Boolean 
   imageLink         String
   description       String
   adminId           Int
