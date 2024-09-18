@@ -183,8 +183,13 @@ const Header = () => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={handleSignout}>Yes, Sign Out</Button>
-          <Button color="gray" onClick={() => setShowSignoutModal(false)}>
+          <Button className="bg-orange-500" onClick={handleSignout}>
+            Yes, Sign Out
+          </Button>
+          <Button
+            className="bg-slate-500"
+            onClick={() => setShowSignoutModal(false)}
+          >
             Cancel
           </Button>
         </Modal.Footer>

@@ -11,7 +11,7 @@ import Login from "./pages/Login";
 import Error404 from "./pages/Error404";
 import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
-import QuizPage from "./components/QuizQuestionSection";
+import QuizPage from "./components/QuizQuestions.jsx";
 import PastQuizzes from "./pages/PastQuizzes";
 
 function App() {

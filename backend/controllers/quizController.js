@@ -184,3 +184,67 @@ exports.getAllQuizzes = async (req, res) => {
     });
   }
 };
+
+
+exports.getQuizQuestions = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const quizQuestions = await prisma.quizQuestion.findMany({
+      where: { quizId: parseInt(id) },
+      include: {
+        question: {
+          select: {
+            id: true,
+            question: true,
+            correctAnswer: true,
+            option1: true,
+            option2: true,
+            option3: true,
+            imageUrl: true,
+          },
+        },
+      },
+    });
+
+    const formattedQuestions = quizQuestions.map(({ question }) => {
+      const options = [
+        question.correctAnswer,
+        question.option1,
+        question.option2,
+        question.option3,
+      ];
+
+      // Shuffle options
+      for (let i = options.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [options[i], options[j]] = [options[j], options[i]];
+      }
+
+      return {
+        id: question.id,
+        question: question.question,
+        options: options,
+        imageLink: question.imageUrl || "",
+      };
+    });
+
+    // Shuffle questions
+    for (let i = formattedQuestions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [formattedQuestions[i], formattedQuestions[j]] = [formattedQuestions[j], formattedQuestions[i]];
+    }
+
+    res.status(200).json({
+      success: true,
+      quizQuestions: formattedQuestions,
+    });
+  } catch (error) {
+    console.error("Error fetching quiz questions:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch quiz questions",
+      error: error.message,
+    });
+  }
+};

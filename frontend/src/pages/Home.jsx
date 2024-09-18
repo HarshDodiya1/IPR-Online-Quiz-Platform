@@ -26,7 +26,7 @@ const Home = () => {
     const ongoing = [];
     const past = [];
 
-    quizzes.forEach(quiz => {
+    quizzes.forEach((quiz) => {
       const endDate = new Date(quiz.endDate);
       if (endDate < now) {
         past.push(quiz);

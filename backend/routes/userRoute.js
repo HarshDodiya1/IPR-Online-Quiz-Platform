@@ -4,6 +4,6 @@ const { verifyToken } = require("../middleware/verifyJWT.js");
 const router = express.Router();
 
 router.put("/update/:id", verifyToken, updateProfile);
-router.post("/signout", signout)
+router.post("/signout", signout);
 
 module.exports = router;
