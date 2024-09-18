@@ -1,15 +1,19 @@
 import { FaChevronDown, FaUser } from "react-icons/fa";
 import Logo from "/Logo.jpg";
 import { useTranslation } from "react-i18next";
-import { Button, Navbar } from "flowbite-react";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Button, Modal } from "flowbite-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
+import { signInSuccess } from "../slices/userSlice";
 
 const Header = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [showSignoutModal, setShowSignoutModal] = useState(false);
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { currentUser } = useSelector((state) => state.user);
   console.log("This is the current user:", currentUser);
@@ -17,6 +21,24 @@ const Header = () => {
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
     setDropdownOpen(false);
+  };
+
+  const handleSignout = async () => {
+    try {
+      const response = await fetch("/api/user/signout", {
+        method: "POST",
+        credentials: "include",
+      });
+      if (response.ok) {
+        dispatch(signInSuccess(null));
+        navigate("/");
+      } else {
+        console.error("Signout failed");
+      }
+    } catch (error) {
+      console.error("Error during signout:", error);
+    }
+    setShowSignoutModal(false);
   };
 
   return (
@@ -110,7 +132,6 @@ const Header = () => {
                   onClick={() => setIsOpen(!isOpen)}
                 >
                   <FaUser className="mr-2" />
-                  {/* {t("myProfile")} */}
                   Hello, {currentUser.user.firstName}
                   <FaChevronDown className="-mr-1 h-5 w-5 text-gray-400" />
                 </button>
@@ -130,28 +151,13 @@ const Header = () => {
                     >
                       {t("accountSettings")}
                     </Link>
-                    <Link
-                      to={"/support"}
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                      role="menuitem"
-                    >
-                      {t("support")}
-                    </Link>
-                    <Link
-                      t0={"/license"}
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                      role="menuitem"
-                    >
-                      {t("license")}
-                    </Link>
-
-                    <Link
-                      to={"/"}
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                    <button
+                      onClick={() => setShowSignoutModal(true)}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                       role="menuitem"
                     >
                       {t("signOut")}
-                    </Link>
+                    </button>
                   </div>
                 </div>
               )}
@@ -165,18 +171,26 @@ const Header = () => {
           )}
         </div>
       </div>
+
+      {/* Signout Confirmation Modal */}
+      <Modal show={showSignoutModal} onClose={() => setShowSignoutModal(false)}>
+        <Modal.Header>Confirm Signout</Modal.Header>
+        <Modal.Body>
+          <div className="space-y-6">
+            <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+              Are you sure you want to sign out?
+            </p>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={handleSignout}>Yes, Sign Out</Button>
+          <Button color="gray" onClick={() => setShowSignoutModal(false)}>
+            Cancel
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </nav>
   );
 };
 
 export default Header;
-
-{
-  /* <button
-      type="button"
-      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-      role="menuitem"
-    >
-      {t("signOut")}
-    </button> */
-}

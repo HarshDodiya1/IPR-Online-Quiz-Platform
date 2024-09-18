@@ -8,10 +8,9 @@ const {
 } = require("../controllers/quizController.js");
 const { verifyToken, verifyAdmin } = require("../middleware/verifyJWT.js");
 
-router.use(verifyToken, verifyAdmin);
-router.post("/create", createQuiz);
-router.post("/update/:id", updateQuiz);
-router.post("/delete/:id", deleteQuiz);
+router.post("/create", verifyToken, verifyAdmin, createQuiz);
+router.post("/update/:id", verifyToken, verifyAdmin, updateQuiz);
+router.post("/delete/:id", verifyToken, verifyAdmin, deleteQuiz);
 router.get("/get-all", getAllQuizzes);
 
 module.exports = router;
