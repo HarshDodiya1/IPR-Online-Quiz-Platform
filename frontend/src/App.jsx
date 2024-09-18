@@ -27,8 +27,10 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/quiz" element={<QuizPage />} />
         <Route path="/past-quiz" element={<PastQuizzes />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+
         <Route element={<PrivateRoute />}>
-          <Route path="/dashboard" element={<Dashboard />} />
+          {/* <Route path="/dashboard" element={<Dashboard />} /> */}
         </Route>
         <Route path="*" element={<Error404 />} />
       </Routes>

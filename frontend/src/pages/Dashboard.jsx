@@ -10,31 +10,33 @@ import DashProfile from "../components/DashProfile";
 const Dashboard = () => {
   const location = useLocation();
   const [tab, setTab] = useState("");
+  const [scrollPosition, setScrollPosition] = useState(0);
+
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const tabFromUrl = urlParams.get("tab");
     if (tabFromUrl) {
       setTab(tabFromUrl);
-      console.log("Tab from URL", tabFromUrl);
     }
+
+    const handleScroll = () => {
+      setScrollPosition(window.pageYOffset);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [location.search]);
+
   return (
-    <div className="min-h-screen flex flex-col md:flex-row">
-      <div className="md:w-56">
-        {/* Sidebar */}
-        <DashSidebar />
+    <div className="flex min-h-screen">
+      <DashSidebar />
+      <div className={`flex-1 md:ml-72 transition-all duration-300 ${scrollPosition > 100 ? 'mt-0' : 'mt-28'}`}>
+        {tab === "profile" && <DashProfile />}
+        {tab === "upload-excel" && <DashUploadExcel />}
+        {tab === "create-quiz" && <DashCreateQuiz />}
+        {tab === "past-quizzes" && <DashPastQuizzes />}
+        {tab === "analyitics" && <DashboardAnalytics />}
       </div>
-      {/* profile... */}
-      {tab === "profile" && <DashProfile />}
-      {/* upload-excel... */}
-      {tab === "upload-excel" && <DashUploadExcel />}
-      {/* create-quiz*/}
-      {tab === "create-quiz" && <DashCreateQuiz />}
-      {/* past-quizzes by students  */}
-      {tab === "past-quizzes" && <DashPastQuizzes />}
-      {/* analyitics */}
-      {tab === "analyitics" && <DashboardAnalytics />}
-      
     </div>
   );
 };
