@@ -22,6 +22,32 @@ const Login = () => {
     setFormData((prev) => ({ ...prev, [id]: value.trim() }));
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   if (!formData.email || !formData.password) {
+  //     return dispatch(signInFailure("Please fill all the fields"));
+  //   }
+  //   try {
+  //     dispatch(signInStart());
+  //     const response = await axios.post("http://localhost:3000/api/auth/login", formData, {
+  //       headers: { "Content-Type": "application/json" },
+  //     });
+  //     console.log("Login response:", response.data);
+  //     const { token, ...userData } = response.data;
+  //     if (token) {
+  //       localStorage.setItem('token', token);
+  //       console.log("Token saved in localStorage:", localStorage.getItem('token'));
+  //       dispatch(signInSuccess(userData));
+  //       navigate("/");
+  //     } else {
+  //       dispatch(signInFailure("Login failed: No token received"));
+  //     }
+  //   } catch (error) {
+  //     console.error("Login error:", error);
+  //     dispatch(signInFailure(error.response?.data?.message || "An error occurred during login"));
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
@@ -35,9 +61,11 @@ const Login = () => {
       console.log("Login response:", response.data);
       const { token, ...userData } = response.data;
       if (token) {
+        // Save token in localStorage
         localStorage.setItem('token', token);
         console.log("Token saved in localStorage:", localStorage.getItem('token'));
-        dispatch(signInSuccess(userData));
+        // Dispatch user data along with token
+        dispatch(signInSuccess({ ...userData, token }));
         navigate("/");
       } else {
         dispatch(signInFailure("Login failed: No token received"));
@@ -47,7 +75,7 @@ const Login = () => {
       dispatch(signInFailure(error.response?.data?.message || "An error occurred during login"));
     }
   };
-
+  
   return (
     <div className="flex ">
       <AuthLeftSide />
