@@ -72,6 +72,9 @@ const DashCreateQuiz = () => {
       !newQuiz.endDate ||
       newQuiz.categories.length !== 4
     ) {
+      toast.error(
+        "Please fill all required fields and select exactly 4 categories"
+      );
       setError(
         "Please fill all required fields and select exactly 4 categories"
       );
@@ -95,15 +98,10 @@ const DashCreateQuiz = () => {
           imageLink: "",
           description: "",
         });
-        setError("");
-        toast.success("Quiz created successfully!", {
-          position: "bottom-right",
-        });
+        toast.success("Quiz created successfully!");
       } else {
         setError(response.data.message || "Failed to create quiz");
-        toast.error("Error in creating Quiz", {
-          position: "bottom-right",
-        });
+        toast.error("Error in creating Quiz");
       }
     } catch (error) {
       console.error("Error creating quiz:", error);

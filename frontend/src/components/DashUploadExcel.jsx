@@ -1,10 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
-import axios from 'axios';
-import { useSelector } from 'react-redux';
+import React, { useState, useRef, useEffect } from "react";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 function DashUploadExcel() {
   const [file, setFile] = useState(null);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [isDragging, setIsDragging] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef(null);
@@ -19,7 +20,7 @@ function DashUploadExcel() {
     if (selectedFile) {
       setFile(selectedFile);
       setUploadProgress(0);
-      setMessage(''); // Clear message on new file selection
+      setMessage(""); // Clear message on new file selection
     }
   };
 
@@ -52,7 +53,7 @@ function DashUploadExcel() {
     ) {
       setFile(droppedFile);
       setUploadProgress(0);
-      setMessage(''); // Clear message on new file drop
+      setMessage(""); // Clear message on new file drop
     } else {
       setMessage("Please drop a valid Excel file (.xlsx or .xls)");
     }
@@ -61,12 +62,13 @@ function DashUploadExcel() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!file) {
+      toast.error("Please select a file");
       setMessage("Please select a file");
       return;
     }
 
     // Reset message and progress before new upload
-    setMessage('Uploading...');
+    setMessage("Uploading...");
     setUploadProgress(0);
 
     const formData = new FormData();
@@ -91,13 +93,16 @@ function DashUploadExcel() {
       );
 
       if (response.data.success) {
+        toast.success("File uploaded successfully");
         setMessage("File uploaded successfully");
         setFile(null); // Clear file state
-        fileInputRef.current.value = ''; // Reset file input field
+        fileInputRef.current.value = ""; // Reset file input field
       } else {
-        setMessage(response.data.message || "Error uploading file");
+        toast.error("Error uploading file. Please try again.");
+        setMessage("Error uploading file");
       }
     } catch (error) {
+      toast.error("An error occurred. Please try again later.");
       setMessage("Error uploading file");
     }
   };

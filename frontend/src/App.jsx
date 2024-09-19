@@ -13,6 +13,8 @@ import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
 import QuizPage from "./pages/QuizPage.jsx";
 import PastQuizzes from "./pages/PastQuizzes";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const { t } = useTranslation();
@@ -42,6 +44,7 @@ function App() {
         </Route>
         <Route path="*" element={<Error404 />} />
       </Routes>
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
     </BrowserRouter>
   );
 }

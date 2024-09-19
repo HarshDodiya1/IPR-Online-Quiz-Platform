@@ -9,6 +9,8 @@ import {
 } from "../slices/userSlice.js";
 import AuthLeftSide from "../components/AuthLeftSide.jsx";
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -66,14 +68,20 @@ const Login = () => {
         console.log("Token saved in localStorage:", localStorage.getItem('token'));
         // Dispatch user data along with token
         dispatch(signInSuccess({ ...userData, token }));
+        toast.success("Login successful!");
         navigate("/");
       } else {
-        dispatch(signInFailure("Login failed: No token received"));
+        toast.error("Invalid credentials. Please try again.");
       }
     } catch (error) {
+      toast.error("An error occurred. Please try again later.");
       console.error("Login error:", error);
       dispatch(signInFailure(error.response?.data?.message || "An error occurred during login"));
     }
+    finally {
+      setLoading(false);
+    }
+    
   };
   
   return (

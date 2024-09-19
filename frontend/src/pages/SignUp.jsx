@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
 import AuthLeftSide from "../components/AuthLeftSide.jsx";
-import axios from 'axios';
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SignUp = ({ Logo, myImage }) => {
   const navigate = useNavigate();
@@ -64,20 +66,25 @@ const SignUp = ({ Logo, myImage }) => {
         return;
       }
 
-      const response = await axios.post("http://localhost:3000/api/auth/signup", formData, {
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await axios.post(
+        "http://localhost:3000/api/auth/signup",
+        formData,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
       const data = response.data;
 
       if (data.success) {
-        localStorage.setItem('token', data.token);
-        navigate("/login");
+        localStorage.setItem("token", data.token);
+        toast.success("Registration successful! Redirecting to login...");
+        setTimeout(() => navigate("/login"), 3000);
       } else {
-        setErrorMessage(data.message);
+        toast.error("Registration failed. Please try again.");
       }
     } catch (error) {
-      setErrorMessage("An error occurred. Please try again.");
+      toast.error("An error occurred. Please try again later.");
     } finally {
       setLoading(false);
     }
