@@ -1,40 +1,16 @@
 import React, { useState, useEffect } from "react";
 
-const quizQuestions = [
-  {
-    question: "What is the capital of France?",
-    options: ["Paris", "London", "Rome", "Berlin"],
-    correctAnswer: "Paris",
-    image:
-      "https://img.freepik.com/free-photo/eiffel-tower-paris-with-gorgeous-colors-autumn_268835-828.jpg",
-  },
-  {
-    question: "Which planet is known as the Red Planet?",
-    options: ["Earth", "Mars", "Jupiter", "Saturn"],
-    correctAnswer: "Mars",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRo0sfBghhyvJ0mC6ONbnM7wi1o_H484LZ9PA&s",
-  },
-  {
-    question: 'Who wrote "Hamlet"?',
-    options: ["Shakespeare", "Chaucer", "Milton", "Austen"],
-    correctAnswer: "Shakespeare",
-    image: null,
-  },
-];
-
-const optionLabels = ["A", "B", "C", "D"];
-
-const QuizQuestions = ({ quizId, questions }) => {
+const QuizQuestions = ({ questions }) => {
   const [answers, setAnswers] = useState(
-    new Array(quizQuestions.length).fill(null)
+    new Array(questions.length).fill(null)
   );
   const [submitted, setSubmitted] = useState(false);
   const [showResults, setShowResults] = useState(false);
-  const [showConfirmation, setShowConfirmation] = useState(false);
-  const [timer, setTimer] = useState(1200); // 20 minutes in seconds
+  const [timer, setTimer] = useState(600); // 10 minutes in seconds
   const [reviewMode, setReviewMode] = useState(false);
-  const [quizQuestions, setQuizQuestions] = useState(questions);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+
+  const optionLabels = ['A', 'B', 'C', 'D'];
   useEffect(() => {
     if (timer <= 0 && !submitted) {
       handleSubmitQuiz();
@@ -50,6 +26,7 @@ const QuizQuestions = ({ quizId, questions }) => {
   const cancelSubmission = () => {
     setShowConfirmation(false);
   };
+
   const handleSubmitQuiz = () => {
     setShowConfirmation(true);
   };
@@ -58,11 +35,8 @@ const QuizQuestions = ({ quizId, questions }) => {
     setShowConfirmation(false);
     setSubmitted(true);
     setShowResults(true);
-
-    setTimeout(() => {
-      setShowCelebration(true);
-    }, 2000); // Delay the celebration by 2 seconds
   };
+
   const handleSelectAnswer = (index, answer) => {
     if (!submitted) {
       const updatedAnswers = [...answers];
@@ -82,7 +56,7 @@ const QuizQuestions = ({ quizId, questions }) => {
   };
 
   const calculateScore = () => {
-    return quizQuestions.reduce(
+    return questions.reduce(
       (score, question, index) =>
         calculateResult(question, answers[index]) ? score + 1 : score,
       0
@@ -106,14 +80,13 @@ const QuizQuestions = ({ quizId, questions }) => {
         Quiz Platform
       </h1>
 
-      {/* Quiz Questions */}
       <div className="space-y-8 max-w-4xl mx-auto">
         {submitted && !reviewMode && (
           <div className="mb-8 text-center text-2xl font-bold text-green-600">
-            Your Score: {score} / {quizQuestions.length}
+            Your Score: {score} / {questions.length}
           </div>
         )}
-        {quizQuestions.map((question, index) => (
+        {questions.map((question, index) => (
           <div
             key={index}
             className={`bg-${
@@ -167,7 +140,6 @@ const QuizQuestions = ({ quizId, questions }) => {
         ))}
       </div>
 
-      {/* Submit Button */}
       {!submitted && (
         <div className="mt-12 text-center">
           <button
@@ -203,7 +175,6 @@ const QuizQuestions = ({ quizId, questions }) => {
         </div>
       )}
 
-      {/* Results and Review Buttons */}
       {submitted && showResults && (
         <div className="text-center mt-12 space-x-4">
           <button

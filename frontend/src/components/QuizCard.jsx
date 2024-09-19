@@ -1,14 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   FaClock,
   FaQuestionCircle,
   FaCalendarAlt,
   FaTag,
 } from "react-icons/fa";
-import QuizPopup from "./QuizPopup";
 
 const QuizCard = ({ quiz, onStart }) => {
-  const [showPopup, setShowPopup] = useState(false);
   const currentDate = new Date();
   const startDate = new Date(quiz.startDate);
   const endDate = new Date(quiz.endDate);
@@ -19,10 +17,6 @@ const QuizCard = ({ quiz, onStart }) => {
   const getDaysRemaining = (targetDate) => {
     const timeDiff = targetDate.getTime() - currentDate.getTime();
     return Math.ceil(timeDiff / (1000 * 3600 * 24));
-  };
-
-  const handleStartClick = () => {
-    setShowPopup(true);
   };
 
   return (
@@ -70,18 +64,12 @@ const QuizCard = ({ quiz, onStart }) => {
       </div>
       {isOngoing && (
         <button
-          onClick={() => onStart(quiz.id)}
+          onClick={onStart}
           className="mt-4 bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition duration-300 ease-in-out"
         >
           Start
         </button>
       )}
-      
-      {/* <QuizPopup 
-        show={showPopup} 
-        onClose={() => setShowPopup(false)} 
-        quizId={quiz.id}
-      /> */}
     </div>
   );
 };

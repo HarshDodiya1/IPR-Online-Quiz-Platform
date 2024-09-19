@@ -12,7 +12,9 @@ const QuizPage = () => {
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
-        const response = await axios.get(`/api/quiz/${quizId}`);
+        const response = await axios.get(
+          `/api/quiz/get-quiz-questions/${quizId}`
+        );
         setQuizData(response.data);
         setLoading(false);
       } catch (err) {
@@ -29,11 +31,11 @@ const QuizPage = () => {
   if (error) return <div>{error}</div>;
   return (
     <div>
-      <div>
-        <h1>{quizData.title}</h1>
-        <QuizQuestions quizId={quizId} questions={quizData.questions} />
-      </div>
+    <div>
+      <h1>{quizData.title}</h1>
+      <QuizQuestions questions={quizData.quizQuestions} />
     </div>
+  </div>
   );
 };
 
