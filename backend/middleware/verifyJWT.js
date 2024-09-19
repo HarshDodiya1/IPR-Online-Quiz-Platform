@@ -2,21 +2,32 @@ const jwt = require("jsonwebtoken");
 const config = require("../config/config");
 
 exports.verifyToken = (req, res, next) => {
-  // Get the token from the cookies
-  const token = req.cookies.Bearer;
-  console.log("This is the token:", token);
+  let token;
+
+  // Check for token in cookies
+  if (req.cookies.Bearer) {
+    token = req.cookies.Bearer;
+  }
+
+  // If not in cookies, check Authorization header
+  if (!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+
+  console.log("Token received:", token);
 
   if (!token) {
-    return res.status(400).json({
+    return res.status(401).json({
       success: false,
       message: "No token provided. Unauthorized.",
     });
   }
 
   try {
-    // Verify the token
     const secret = config.jwtSecret;
     const verified = jwt.verify(token, secret);
+
+    console.log("Decoded token:", verified);
 
     if (!verified) {
       return res.status(401).json({
@@ -25,15 +36,16 @@ exports.verifyToken = (req, res, next) => {
       });
     }
 
-    // Store the decoded user information in req.user
     req.user = verified;
-    console.log("Now req.user is:", req.user);
+    console.log("User verified:", req.user);
 
     next();
   } catch (error) {
-    return res.status(500).json({
+    console.error("Token verification error:", error);
+    return res.status(401).json({
       success: false,
       message: "Error verifying token. Unauthorized.",
+      error: error.message,
     });
   }
 };

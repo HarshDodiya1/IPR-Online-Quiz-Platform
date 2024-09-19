@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
 import AuthLeftSide from "../components/AuthLeftSide.jsx";
+import axios from 'axios';
 
 const SignUp = ({ Logo, myImage }) => {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ const SignUp = ({ Logo, myImage }) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: name === "standard" ? parseInt(value, 10) : value, // Convert standard to integer
+      [name]: name === "standard" ? parseInt(value, 10) : value,
     });
   };
 
@@ -37,14 +38,12 @@ const SignUp = ({ Logo, myImage }) => {
       setLoading(true);
       setErrorMessage(null);
 
-      // Validate form fields
       if (Object.values(formData).some((field) => field === "")) {
         setErrorMessage("Please fill in all the fields.");
         setLoading(false);
         return;
       }
 
-      // Email validation
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(formData.email)) {
         setErrorMessage("Please enter a valid email address.");
@@ -52,7 +51,6 @@ const SignUp = ({ Logo, myImage }) => {
         return;
       }
 
-      // Mobile number validation
       const mobileRegex = /^[0-9]{10}$/;
       if (!mobileRegex.test(formData.mobileNumber)) {
         setErrorMessage("Please enter a valid mobile number (10 digits).");
@@ -60,24 +58,20 @@ const SignUp = ({ Logo, myImage }) => {
         return;
       }
 
-      // Password validation
       if (formData.password.length < 8) {
         setErrorMessage("Password must be at least 8 characters long.");
         setLoading(false);
         return;
       }
 
-      const response = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+      const response = await axios.post("http://localhost:3000/api/auth/signup", formData, {
+        headers: { "Content-Type": "application/json" },
       });
 
-      const data = await response.json();
+      const data = response.data;
 
       if (data.success) {
+        localStorage.setItem('token', data.token);
         navigate("/login");
       } else {
         setErrorMessage(data.message);
@@ -154,7 +148,7 @@ const SignUp = ({ Logo, myImage }) => {
                 name="schoolName"
                 placeholder="School Name"
                 className="w-full p-3 border border-gray-300 rounded"
-                value={formData.schoolName} // Fixed: changed from `formData.school` to `formData.schoolName`
+                value={formData.schoolName}
                 onChange={handleInputChange}
               />
               <select
