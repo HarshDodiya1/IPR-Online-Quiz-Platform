@@ -1,7 +1,15 @@
 import React from "react";
 import { Transition } from "@headlessui/react";
+import { useNavigate } from "react-router-dom";
 
-const LoginPopup = ({ show, onClose, onLogin }) => {
+const LoginPopup = ({ show, onClose }) => {
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    navigate("/login");
+    onClose();
+  };
+
   return (
     <Transition
       show={show}
@@ -25,9 +33,9 @@ const LoginPopup = ({ show, onClose, onLogin }) => {
             </button>
             <button
               className="px-4 sm:px-6 py-2 sm:py-3 bg-orange-500 text-white text-sm sm:text-base rounded-lg hover:bg-orange-600 transition"
-              onClick={onLogin}
+              onClick={handleLogin}
             >
-              Login
+              Go to Login
             </button>
           </div>
         </div>
