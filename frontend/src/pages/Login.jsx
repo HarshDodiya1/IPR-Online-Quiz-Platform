@@ -8,6 +8,7 @@ import {
   signInFailure,
 } from "../slices/userSlice.js";
 import AuthLeftSide from "../components/AuthLeftSide.jsx";
+import axios from 'axios';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -28,21 +29,22 @@ const Login = () => {
     }
     try {
       dispatch(signInStart());
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
+      const response = await axios.post("http://localhost:3000/api/auth/login", formData, {
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
       });
-      const data = await res.json();
-      if (data.success === false) {
-        dispatch(signInFailure(data.message));
-      }
-      if (data.success) {
-        dispatch(signInSuccess(data));
+      console.log("Login response:", response.data);
+      const { token, ...userData } = response.data;
+      if (token) {
+        localStorage.setItem('token', token);
+        console.log("Token saved in localStorage:", localStorage.getItem('token'));
+        dispatch(signInSuccess(userData));
         navigate("/");
+      } else {
+        dispatch(signInFailure("Login failed: No token received"));
       }
     } catch (error) {
-      dispatch(signInFailure(error.message));
+      console.error("Login error:", error);
+      dispatch(signInFailure(error.response?.data?.message || "An error occurred during login"));
     }
   };
 
