@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 
@@ -19,6 +19,7 @@ function DashUploadExcel() {
     if (selectedFile) {
       setFile(selectedFile);
       setUploadProgress(0);
+      setMessage(''); // Clear message on new file selection
     }
   };
 
@@ -51,6 +52,7 @@ function DashUploadExcel() {
     ) {
       setFile(droppedFile);
       setUploadProgress(0);
+      setMessage(''); // Clear message on new file drop
     } else {
       setMessage("Please drop a valid Excel file (.xlsx or .xls)");
     }
@@ -62,6 +64,10 @@ function DashUploadExcel() {
       setMessage("Please select a file");
       return;
     }
+
+    // Reset message and progress before new upload
+    setMessage('Uploading...');
+    setUploadProgress(0);
 
     const formData = new FormData();
     formData.append("file", file);
@@ -83,7 +89,14 @@ function DashUploadExcel() {
           },
         }
       );
-      setMessage("File uploaded successfully");
+
+      if (response.data.success) {
+        setMessage("File uploaded successfully");
+        setFile(null); // Clear file state
+        fileInputRef.current.value = ''; // Reset file input field
+      } else {
+        setMessage(response.data.message || "Error uploading file");
+      }
     } catch (error) {
       setMessage("Error uploading file");
     }
