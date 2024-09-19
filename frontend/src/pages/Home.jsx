@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import QuizCard from "../components/QuizCard";
-import Popup from "../components/QuizPopup";
+import QuizPopup from "../components/QuizPopup";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  const [isPopupVisible, setPopupVisible] = useState(false);
   const [ongoingQuizzes, setOngoingQuizzes] = useState([]);
   const [upcomingQuizzes, setUpcomingQuizzes] = useState([]);
   const [pastQuizzes, setPastQuizzes] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [selectedQuizId, setSelectedQuizId] = useState(null);
 
   useEffect(() => {
     fetchQuizzes();
@@ -22,12 +22,6 @@ const Home = () => {
       console.error("Error fetching quizzes:", error);
     }
   };
-  const navigate = useNavigate();
-
-  const handleStartQuiz = (quizId) => {
-    setPopupVisible(false);
-    navigate(`/quiz/${quizId}`);
-  };
 
   const categorizeQuizzes = (quizzes) => {
     const now = new Date();
@@ -38,12 +32,12 @@ const Home = () => {
     quizzes.forEach((quiz) => {
       const startDate = new Date(quiz.startDate);
       const endDate = new Date(quiz.endDate);
-      if (endDate < now) {
-        past.push(quiz);
-      } else if (startDate > now) {
+      if (now >= startDate && now <= endDate) {
+        ongoing.push(quiz);
+      } else if (now < startDate) {
         upcoming.push(quiz);
       } else {
-        ongoing.push(quiz);
+        past.push(quiz);
       }
     });
 
@@ -51,13 +45,9 @@ const Home = () => {
     setUpcomingQuizzes(upcoming);
     setPastQuizzes(past);
   };
-
-  const handleStart = () => {
-    setPopupVisible(true);
-  };
-
-  const handleClosePopup = () => {
-    setPopupVisible(false);
+  const handleStartQuiz = (quizId) => {
+    setSelectedQuizId(quizId);
+    setShowPopup(true);
   };
 
   return (
@@ -70,9 +60,11 @@ const Home = () => {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {ongoingQuizzes.map((quiz) => (
-              <div key={quiz.id}>
-                <QuizCard quiz={quiz} onStart={() => handleStart(quiz.id)} />
-              </div>
+              <QuizCard
+                key={quiz.id}
+                quiz={quiz}
+                onStart={() => handleStartQuiz(quiz.id)}
+              />
             ))}
           </div>
         </section>
@@ -84,9 +76,7 @@ const Home = () => {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {upcomingQuizzes.map((quiz) => (
-              <div key={quiz.id}>
-                <QuizCard quiz={quiz} onStart={handleStart} />
-              </div>
+              <QuizCard key={quiz.id} quiz={quiz} />
             ))}
           </div>
         </section>
@@ -98,17 +88,16 @@ const Home = () => {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {pastQuizzes.map((quiz) => (
-              <div key={quiz.id}>
-                <QuizCard quiz={quiz} onStart={handleStart} />
-              </div>
+              <QuizCard key={quiz.id} quiz={quiz} />
             ))}
           </div>
         </section>
       </div>
-      <Popup
-        show={isPopupVisible}
-        onClose={handleClosePopup}
-        onStart={handleStartQuiz}
+
+      <QuizPopup
+        show={showPopup}
+        onClose={() => setShowPopup(false)}
+        quizId={selectedQuizId}
       />
     </div>
   );

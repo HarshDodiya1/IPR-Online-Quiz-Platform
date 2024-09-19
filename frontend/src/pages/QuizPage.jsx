@@ -23,6 +23,7 @@ const QuizPage = () => {
 
     fetchQuizData();
   }, [quizId]);
+  console.log("This is the quiz data", quizData);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
