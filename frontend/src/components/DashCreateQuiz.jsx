@@ -20,13 +20,6 @@ const DashCreateQuiz = () => {
 
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    if (!currentUser || !currentUser.isAdmin) {
-      navigate("/dashboard");
-    }
-  }, [currentUser, navigate]);
-
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -39,6 +32,13 @@ const DashCreateQuiz = () => {
 
     fetchCategories();
   }, []);
+  useEffect(() => {
+    if (!currentUser.user || !currentUser.user.isAdmin) {
+      navigate("/dashboard");
+    }
+  }, [currentUser, navigate]);
+
+  console.log("This is the category options", categoryOptions);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;

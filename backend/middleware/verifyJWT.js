@@ -10,12 +10,17 @@ exports.verifyToken = (req, res, next) => {
   }
 
   // If not in cookies, check Authorization header
-  if (!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-    token = req.headers.authorization.split(' ')[1];
+  if (
+    !token &&
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
   }
 
   console.log("Token received:", token);
 
+  // If no token is found in both cookies and header
   if (!token) {
     return res.status(401).json({
       success: false,
@@ -24,11 +29,13 @@ exports.verifyToken = (req, res, next) => {
   }
 
   try {
+    // Verify the token
     const secret = config.jwtSecret;
     const verified = jwt.verify(token, secret);
 
     console.log("Decoded token:", verified);
 
+    // If token verification fails
     if (!verified) {
       return res.status(401).json({
         success: false,
@@ -36,6 +43,7 @@ exports.verifyToken = (req, res, next) => {
       });
     }
 
+    // Store the decoded user information in req.user
     req.user = verified;
     console.log("User verified:", req.user);
 
@@ -49,6 +57,7 @@ exports.verifyToken = (req, res, next) => {
     });
   }
 };
+
 
 exports.verifyAdmin = (req, res, next) => {
   if (req.user.role !== "admin") {

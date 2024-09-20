@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import axios from 'axios';
+import React, { useState, useRef } from "react";
+import axios from "axios";
 
 function DashUploadExcel() {
   const [file, setFile] = useState(null);
@@ -40,46 +40,58 @@ function DashUploadExcel() {
     setIsDragging(false);
 
     const droppedFile = e.dataTransfer.files[0];
-    if (droppedFile && (droppedFile.name.endsWith('.xlsx') || droppedFile.name.endsWith('.xls'))) {
+    if (
+      droppedFile &&
+      (droppedFile.name.endsWith(".xlsx") || droppedFile.name.endsWith(".xls"))
+    ) {
       setFile(droppedFile);
       setUploadProgress(0);
       setMessage(""); // Clear message on new file drop
     } else {
-      setMessage('Please drop a valid Excel file (.xlsx or .xls)');
+      setMessage("Please drop a valid Excel file (.xlsx or .xls)");
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!file) {
-      setMessage('Please select a file');
+      setMessage("Please select a file");
       return;
     }
-  
+
     const formData = new FormData();
-    formData.append('file', file);
-  
+    formData.append("file", file);
+
     try {
-      const response = await axiosInstance.post('https://localhost:3000/api/questions/upload-excel', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-          setUploadProgress(percentCompleted);
-        },
-      });
-      setMessage('File uploaded successfully');
+      const response = await axios.post(
+        "/api/questions/upload-excel",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            setUploadProgress(percentCompleted);
+          },
+        }
+      );
+      console.log("This is the response while upload excel : ", response);
+      setMessage("File uploaded successfully");
     } catch (error) {
-      setMessage('Error uploading file');
+      setMessage("Error uploading file");
     }
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white shadow-md rounded-lg p-6 space-y-4 w-full max-w-md">
-        <div 
-          className={`border-2 border-dashed ${isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-200'} rounded-lg flex flex-col gap-1 p-6 items-center cursor-pointer`}
+        <div
+          className={`border-2 border-dashed ${
+            isDragging ? "border-blue-500 bg-blue-50" : "border-gray-200"
+          } rounded-lg flex flex-col gap-1 p-6 items-center cursor-pointer`}
           onDragEnter={handleDragEnter}
           onDragLeave={handleDragLeave}
           onDragOver={handleDragOver}
@@ -88,20 +100,26 @@ function DashUploadExcel() {
         >
           <FileIcon className="w-12 h-12 text-gray-400" />
           <span className="text-sm font-medium text-gray-500">
-            {file ? file.name : 'Drag and drop a file or click to browse'}
+            {file ? file.name : "Drag and drop a file or click to browse"}
           </span>
-          <span className="text-xs text-gray-500">Excel files (.xlsx, .xls)</span>
+          <span className="text-xs text-gray-500">
+            Excel files (.xlsx, .xls)
+          </span>
         </div>
         {file && (
           <div className="mt-4">
-            <p className="text-sm font-medium text-gray-700">Selected file: {file.name}</p>
+            <p className="text-sm font-medium text-gray-700">
+              Selected file: {file.name}
+            </p>
             <div className="mt-2 bg-gray-200 rounded-full h-2.5">
-              <div 
-                className="bg-blue-600 h-2.5 rounded-full transition-all duration-300" 
+              <div
+                className="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
                 style={{ width: `${uploadProgress}%` }}
               ></div>
             </div>
-            <p className="text-xs text-gray-500 mt-1">{uploadProgress}% uploaded</p>
+            <p className="text-xs text-gray-500 mt-1">
+              {uploadProgress}% uploaded
+            </p>
           </div>
         )}
         <form onSubmit={handleSubmit} className="space-y-4">

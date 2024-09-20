@@ -8,9 +8,9 @@ import {
   signInFailure,
 } from "../slices/userSlice.js";
 import AuthLeftSide from "../components/AuthLeftSide.jsx";
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import axios from "axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -31,14 +31,17 @@ const Login = () => {
     }
     try {
       dispatch(signInStart());
-      const response = await axios.post("http://localhost:3000/api/auth/login", formData, {
+      const response = await axios.post("/api/auth/login", formData, {
         headers: { "Content-Type": "application/json" },
       });
       console.log("Login response:", response.data);
       const { token, ...userData } = response.data;
       if (token) {
-        localStorage.setItem('token', token);
-        console.log("Token saved in localStorage:", localStorage.getItem('token'));
+        localStorage.setItem("token", token);
+        console.log(
+          "Token saved in localStorage:",
+          localStorage.getItem("token")
+        );
         dispatch(signInSuccess(userData));
         navigate("/");
       } else {
@@ -47,12 +50,12 @@ const Login = () => {
     } catch (error) {
       toast.error("An error occurred. Please try again later.");
       console.error("Login error:", error);
-      dispatch(signInFailure(error.response?.data?.message || "An error occurred during login"));
+      dispatch(
+        signInFailure(
+          error.response?.data?.message || "An error occurred during login"
+        )
+      );
     }
-    finally {
-      setLoading(false);
-    }
-    
   };
 
   return (
