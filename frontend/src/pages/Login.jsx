@@ -39,13 +39,7 @@ const Login = () => {
       if (token) {
         localStorage.setItem('token', token);
         console.log("Token saved in localStorage:", localStorage.getItem('token'));
-<<<<<<< HEAD
-        // Dispatch user data along with token
-        dispatch(signInSuccess({ ...userData, token }));
-        toast.success("Login successful!");
-=======
         dispatch(signInSuccess(userData));
->>>>>>> parent of 7fb633b (Upload Excel Issue Resolved)
         navigate("/");
       } else {
         toast.error("Invalid credentials. Please try again.");

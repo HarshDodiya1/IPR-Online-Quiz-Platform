@@ -1,12 +1,5 @@
-<<<<<<< HEAD
-import React, { useState, useRef, useEffect } from "react";
-import axios from "axios";
-import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
-=======
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
->>>>>>> parent of 7fb633b (Upload Excel Issue Resolved)
 
 function DashUploadExcel() {
   const [file, setFile] = useState(null);
@@ -59,57 +52,14 @@ function DashUploadExcel() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!file) {
-<<<<<<< HEAD
-      toast.error("Please select a file");
-      setMessage("Please select a file");
-      return;
-    }
-
-    // Reset message and progress before new upload
-    setMessage("Uploading...");
-    setUploadProgress(0);
-
-=======
       setMessage('Please select a file');
       return;
     }
   
->>>>>>> parent of 7fb633b (Upload Excel Issue Resolved)
     const formData = new FormData();
     formData.append('file', file);
   
     try {
-<<<<<<< HEAD
-      const response = await axios.post(
-        "http://localhost:3000/api/questions/upload-excel",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-          onUploadProgress: (progressEvent) => {
-            const percentCompleted = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-            setUploadProgress(percentCompleted);
-          },
-        }
-      );
-
-      if (response.data.success) {
-        toast.success("File uploaded successfully");
-        setMessage("File uploaded successfully");
-        setFile(null); // Clear file state
-        fileInputRef.current.value = ""; // Reset file input field
-      } else {
-        toast.error("Error uploading file. Please try again.");
-        setMessage("Error uploading file");
-      }
-    } catch (error) {
-      toast.error("An error occurred. Please try again later.");
-      setMessage("Error uploading file");
-=======
       const response = await axiosInstance.post('https://localhost:3000/api/questions/upload-excel', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -122,7 +72,6 @@ function DashUploadExcel() {
       setMessage('File uploaded successfully');
     } catch (error) {
       setMessage('Error uploading file');
->>>>>>> parent of 7fb633b (Upload Excel Issue Resolved)
     }
   };
 
