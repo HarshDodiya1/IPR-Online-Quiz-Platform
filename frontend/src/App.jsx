@@ -13,8 +13,9 @@ import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
 import QuizPage from "./pages/QuizPage.jsx";
 import PastQuizzes from "./pages/PastQuizzes";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { AboutUs } from "./pages/AboutUs.jsx";
 
 function App() {
   const { t } = useTranslation();
@@ -25,8 +26,8 @@ function App() {
       setIsMobile(window.innerWidth < 768);
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (
@@ -38,13 +39,17 @@ function App() {
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         <Route path="/quiz/:quizId" element={<QuizPage />} />
-        <Route path="/past-quiz" element={<PastQuizzes />} />
+        <Route path="/about-us" element={<AboutUs />} />
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>
         <Route path="*" element={<Error404 />} />
       </Routes>
-      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+      />
     </BrowserRouter>
   );
 }

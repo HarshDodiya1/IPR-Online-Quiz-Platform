@@ -69,7 +69,7 @@ const Header = () => {
         </div>
         <div className="flex items-center justify-end space-x-6 col-span-3">
           <Link
-            to={"/past-quizzes"}
+            to={"/past-quiz"}
             className="flex items-center text-black hover:text-orange-600 transition duration-300 ease-in-out "
           >
             {t("pastQuizzes")}
