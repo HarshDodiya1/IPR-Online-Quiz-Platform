@@ -1,15 +1,78 @@
 const prisma = require("../db/db.config.js");
+const bcrypt = require("bcrypt");
 
 exports.updateProfile = async (req, res) => {
   try {
     if (req.user.userId !== req.params.id) {
       return res.status(403).json({
-        status: false,
+        success: false,
         message: "You are not authorized to update this profile",
       });
     }
 
-    console.log("req.body", req.body);
+    const updateData = {};
+    const fields = [
+      'firstName',
+      'middleName',
+      'lastName',
+      'mobileNumber',
+      'dateOfBirth',
+      'schoolName',
+      'standard',
+      'city',
+      'password'
+    ];
+
+    for (const field of fields) {
+      if (req.body[field] !== undefined) {
+        if (field === 'dateOfBirth') {
+          const dobDate = new Date(req.body[field]);
+          if (!isNaN(dobDate.getTime())) {
+            updateData[field] = dobDate;
+          }
+        } else if (field === 'standard') {
+          updateData[field] = parseInt(req.body[field]);
+        } else if (field === 'mobileNumber') {
+          const mobileRegex = /^[0-9]{10}$/;
+          if (mobileRegex.test(req.body[field])) {
+            updateData[field] = req.body[field];
+          }
+        } else if (field === 'password') {
+          if (req.body[field].length >= 8) {
+            updateData[field] = await bcrypt.hash(req.body[field], 10);
+          } else {
+            return res.status(400).json({
+              success: false,
+              message: "Password must be at least 8 characters long",
+            });
+          }
+        } else {
+          updateData[field] = req.body[field];
+        }
+      }
+    }
+
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "No valid fields to update",
+      });
+    }
+
+    console.log("Fields being updated:", Object.keys(updateData));
+
+    const updatedUser = await prisma.user.update({
+      where: { id: parseInt(req.params.id) },
+      data: updateData,
+    });
+
+    delete updatedUser.password;
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      user: updatedUser,
+    });
   } catch (error) {
     console.log("Error while updating the profile: ", error);
     res.status(500).json({
@@ -18,6 +81,7 @@ exports.updateProfile = async (req, res) => {
     });
   }
 };
+
 
 exports.signout = (req, res, next) => {
   try {
