@@ -5,12 +5,12 @@ exports.verifyToken = (req, res, next) => {
   let token;
 
   // Check for token in cookies
-  if (req.cookies && req.cookies.Bearer) {
+  if (req.cookies.Bearer) {
     token = req.cookies.Bearer;
   }
 
   // If not in cookies, check Authorization header
-  if (!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+  if (!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1];
   }
 
@@ -24,7 +24,7 @@ exports.verifyToken = (req, res, next) => {
   }
 
   try {
-    const secret = config.jwtSecret; // Ensure this secret is the same as used for signing tokens
+    const secret = config.jwtSecret;
     const verified = jwt.verify(token, secret);
 
     console.log("Decoded token:", verified);
@@ -41,7 +41,7 @@ exports.verifyToken = (req, res, next) => {
 
     next();
   } catch (error) {
-    console.error("Token verification error:", error.message);
+    console.error("Token verification error:", error);
     return res.status(401).json({
       success: false,
       message: "Error verifying token. Unauthorized.",
