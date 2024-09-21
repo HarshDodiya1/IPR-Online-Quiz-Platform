@@ -15,7 +15,7 @@ import QuizPage from "./pages/QuizPage.jsx";
 import Results from "./pages/Results.jsx";
 import PastQuizzes from "./pages/PastQuizzes";
 import { AboutUs } from "./pages/AboutUs.jsx";
-import { FaLanguage } from 'react-icons/fa';
+import { FaLanguage } from "react-icons/fa";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -34,28 +34,28 @@ function App() {
 
   return (
     <>
-    <BrowserRouter>
-      <div className="flex flex-col h-screen ">
-        <div>
-          {isMobile ? <MobileNav /> : <Header />}
+      <BrowserRouter>
+        <div className="flex flex-col h-screen ">
+          <div>{isMobile ? <MobileNav /> : <Header />}</div>
+          <div className="flex-grow">
+            <ScrollToTop />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/sign-up" element={<SignUp />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/about-us" element={<AboutUs />} />
+              <Route element={<PrivateRoute />}>
+                <Route path="/quiz/:id" element={<QuizPage />} />
+                <Route path="/result/:id" element={<Results />} />
+              </Route>
+              <Route element={<PrivateRoute />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+              </Route>
+              <Route path="*" element={<Error404 />} />
+            </Routes>
+          </div>
         </div>
-        <div className="flex-grow">
-          <ScrollToTop />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/sign-up" element={<SignUp />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/quiz/:quizId" element={<QuizPage />} />
-            <Route path="/result/:quizId" element={<Results />} />
-            <Route path="/about-us" element={<AboutUs />} />
-            <Route element={<PrivateRoute />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-            </Route>
-            <Route path="*" element={<Error404 />} />
-          </Routes>
-        </div>
-      </div>
-    </BrowserRouter>
+      </BrowserRouter>
     </>
   );
 }
