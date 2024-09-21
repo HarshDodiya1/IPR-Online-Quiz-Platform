@@ -67,7 +67,7 @@ const SignUp = ({ Logo, myImage }) => {
       }
 
       const response = await axios.post(
-        "http://localhost:3000/api/auth/signup",
+        "/api/auth/signup",
         formData,
         {
           headers: { "Content-Type": "application/json" },

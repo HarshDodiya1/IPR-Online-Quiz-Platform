@@ -23,7 +23,7 @@ function AdminUploadExcel() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/questions/upload-excel",
+        "/api/questions/upload-excel",
         formData,
         {
           headers: {
