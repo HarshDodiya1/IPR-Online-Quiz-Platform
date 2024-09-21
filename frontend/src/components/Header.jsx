@@ -143,8 +143,8 @@ const Header = () => {
               </div>            
             ) : (
               <Link to="/sign-up">
-                <Button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-md text-xl font-medium transition duration-300">
-                  Sign Up
+                <Button className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-2 rounded-md text-5xl font-medium transition duration-300">
+                  <span className="text-xl">Sign Up</span>
                 </Button>
               </Link>
             )}

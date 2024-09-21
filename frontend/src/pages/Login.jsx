@@ -7,7 +7,7 @@ import {
   signInSuccess,
   signInFailure,
 } from "../slices/userSlice.js";
-import AuthLeftSide from "../components/AuthLeftSide.jsx";
+// import AuthLeftSide from "../components/AuthLeftSide.jsx";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
