@@ -74,34 +74,29 @@ const SignUp = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      setErrorMessage(null);
-
+  
       if (Object.values(formData).some((field) => field === "")) {
-        setErrorMessage("Please fill in all the fields.");
-        setLoading(false);
+        toast.error("Please fill in all the fields.");
         return;
       }
-
+  
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(formData.email)) {
-        setErrorMessage("Please enter a valid email address.");
-        setLoading(false);
+        toast.error("Please enter a valid email address.");
         return;
       }
-
+  
       const mobileRegex = /^[0-9]{10}$/;
       if (!mobileRegex.test(formData.mobileNumber)) {
-        setErrorMessage("Please enter a valid mobile number (10 digits).");
-        setLoading(false);
+        toast.error("Please enter a valid mobile number (10 digits).");
         return;
       }
-
+  
       if (formData.password.length < 8) {
-        setErrorMessage("Password must be at least 8 characters long.");
-        setLoading(false);
+        toast.error("Password must be at least 8 characters long.");
         return;
       }
-
+  
       const response = await axios.post(
         "/api/auth/signup",
         formData,
@@ -109,9 +104,9 @@ const SignUp = () => {
           headers: { "Content-Type": "application/json" },
         }
       );
-
+  
       const data = response.data;
-
+  
       if (data.success) {
         localStorage.setItem("token", data.token);
         toast.success("Registration successful! Redirecting to login...");
@@ -120,14 +115,27 @@ const SignUp = () => {
         toast.error("Registration failed. Please try again.");
       }
     } catch (error) {
-      toast.error("An error occurred. Please try again later.");
+      toast.error(error.response?.data?.message || "An error occurred. Please try again later.");
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="flex flex-col lg:flex-row bg-gray-100 py-2">
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <div className="hidden lg:flex flex-col w-1/2">
         <div className="flex-grow flex items-center justify-center ml-36">
           <img src={login} alt="Feature image" className="h-auto w-auto" />

@@ -9,7 +9,7 @@ import {
 } from "../slices/userSlice.js";
 import login from "../../assets/login.svg";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
@@ -26,48 +26,70 @@ const Login = () => {
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
-      return dispatch(signInFailure("Please fill all the fields"));
+      const errorMsg = "Please fill all the fields";
+      toast.error(errorMsg);
+      return dispatch(signInFailure(errorMsg));
+    }
+    if (!validateEmail(formData.email)) {
+      const errorMsg = "Invalid email address";
+      toast.error(errorMsg);
+      return dispatch(signInFailure(errorMsg));
+    }
+    if (formData.password.length < 6) {
+      const errorMsg = "Password must be at least 6 characters long";
+      toast.error(errorMsg);
+      return dispatch(signInFailure(errorMsg));
     }
     try {
       dispatch(signInStart());
       const response = await axios.post("/api/auth/login", formData, {
         headers: { "Content-Type": "application/json" },
       });
-      console.log("Login response:", response.data);
       const { token, ...userData } = response.data;
       if (token) {
         localStorage.setItem("token", token);
-        console.log(
-          "Token saved in localStorage:",
-          localStorage.getItem("token")
-        );
         dispatch(signInSuccess(userData));
         navigate("/");
       } else {
-        toast.error("Invalid credentials. Please try again.");
+        const errorMsg = "Invalid credentials. Please try again.";
+        toast.error(errorMsg);
+        dispatch(signInFailure(errorMsg));
       }
     } catch (error) {
-      toast.error("An error occurred. Please try again later.");
-      console.error("Login error:", error);
-      dispatch(
-        signInFailure(
-          error.response?.data?.message || "An error occurred during login"
-        )
-      );
+      const errorMsg = error.response?.data?.message || "An error occurred during login";
+      toast.error(errorMsg);
+      dispatch(signInFailure(errorMsg));
     }
   };
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100">
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <div className="hidden lg:flex flex-col w-1/2">
-        <div className="flex ml-36">
-          <img src={login} alt="Feature image" className="h-auto w-auto"/>
+        <div className="flex-grow flex items-center justify-center ml-36">
+          <img src={login} alt="Feature image" className="h-auto w-auto" />
         </div>
       </div>
-      <div className="w-full lg:w-1/2 flex items-center justify-center lg:p-8 pb-14">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-4 lg:p-8 pt-16 pb-14">
         <div className="bg-white px-4 lg:px-8 py-8 rounded-2xl shadow-md border-2 border-orange-200 w-full max-w-md">
           <h1 className="text-2xl lg:text-3xl font-bold text-center mb-6 text-orange-500">
             Let's Sign you in
@@ -75,9 +97,9 @@ const Login = () => {
           <p className="text-gray-500 text-center mb-6">
             Welcome back! You've been missed
           </p>
-          {errorMessage && (
+          {/* {errorMessage && (
             <div className="text-red-500 mb-4 text-center">{errorMessage}</div>
-          )}
+          )} */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="email" className="block mb-1 font-medium">Email</label>
