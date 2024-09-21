@@ -88,8 +88,8 @@ const Header = () => {
           </Link>
 
           <div className="hidden md:flex items-center space-x-4 lg:space-x-8" ref={dropdownRef}>
-            <Link to="/past-quiz" className="text-gray-800 hover:text-orange-500 text-base lg:text-lg font-medium transition duration-300">
-              {t("myQuizzes")}
+            <Link to="/about-us" className="text-gray-800 hover:text-orange-500 text-base lg:text-lg font-medium transition duration-300">
+              About us
             </Link>
             <div className="relative">
               <button
@@ -138,14 +138,14 @@ const Header = () => {
                   onClick={() => setShowSignoutModal(true)}
                   className="block w-full text-left px-4 py-2 text-sm lg:text-lg text-gray-700 hover:bg-orange-100 transition duration-300"
                 >
-                  {t("signOut")}
+                  Sign out
                 </button>
               </div>
             </div>            
             ) : (
               <Link to="/sign-up">
                 <Button className="bg-orange-500 hover:bg-orange-600 text-white px-4 lg:px-6 py-2 rounded-md text-sm lg:text-xl font-medium transition duration-300">
-                  {t("signUp")}
+                  Sign up
                 </Button>
               </Link>
             )}
