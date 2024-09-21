@@ -31,6 +31,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
+        <ToastContainer />
         <div className="flex flex-col h-screen ">
           <div>{isMobile ? <MobileNav /> : <Header />}</div>
           <div className="flex-grow">

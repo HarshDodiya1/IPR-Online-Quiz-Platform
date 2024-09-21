@@ -24,7 +24,7 @@ exports.updateProfile = async (req, res) => {
     ];
 
     for (const field of fields) {
-      if (req.body[field] !== undefined) {
+      if (req.body[field] !== undefined && req.body[field] !== '') {
         if (field === 'dateOfBirth') {
           const dobDate = new Date(req.body[field]);
           if (!isNaN(dobDate.getTime())) {
@@ -38,12 +38,12 @@ exports.updateProfile = async (req, res) => {
             updateData[field] = req.body[field];
           }
         } else if (field === 'password') {
-          if (req.body[field].length >= 8) {
+          if (req.body[field].length >= 6) {
             updateData[field] = await bcrypt.hash(req.body[field], 10);
           } else {
             return res.status(400).json({
               success: false,
-              message: "Password must be at least 8 characters long",
+              message: "Password must be at least 6 characters long",
             });
           }
         } else {
@@ -58,8 +58,6 @@ exports.updateProfile = async (req, res) => {
         message: "No valid fields to update",
       });
     }
-
-    console.log("Fields being updated:", Object.keys(updateData));
 
     const updatedUser = await prisma.user.update({
       where: { id: parseInt(req.params.id) },
@@ -81,6 +79,7 @@ exports.updateProfile = async (req, res) => {
     });
   }
 };
+
 
 
 exports.signout = (req, res, next) => {

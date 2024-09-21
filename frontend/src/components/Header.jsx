@@ -122,7 +122,7 @@ const Header = () => {
                   className="flex justify-center items-center text-gray-800 text-xl font-medium transition duration-300 border-2 h-14 w-64 border-gray-400 rounded-md hover:border-orange-500"
                 >
                   <FaUser className="mr-2 text-2xl" />
-                  <span className="text-lg">Welcome, <span className="text-orange-500 opacity-85">{currentUser.user.firstName}</span></span>
+                  <span className="text-lg">Welcome, <span className="text-orange-500 opacity-85">{currentUser?.user.firstName ? ` ${currentUser.user.firstName}` : ' Guest'}</span></span>
                   <FaChevronDown className={`ml-2 w-5 h-5 transition-transform ${openDropdown === 'user' ? "rotate-180" : "rotate-0"}`} />
                 </button>
                 <div className={`absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-10 transition-opacity duration-300 ${openDropdown === 'user' ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
