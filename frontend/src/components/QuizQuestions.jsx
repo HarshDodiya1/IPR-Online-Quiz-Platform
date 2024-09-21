@@ -3,11 +3,16 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const QuizQuestions = ({ questions, quizId }) => {
-  console.log("this is the quizid", quizId);
-  const [answers, setAnswers] = useState(new Array(questions.length).fill(null));
+const QuizQuestions = ({ questions, quizId, onSubmit }) => {
+  const [answers, setAnswers] = useState(() => {
+    const savedAnswers = localStorage.getItem(`answers_${quizId}`);
+    return savedAnswers ? JSON.parse(savedAnswers) : new Array(questions.length).fill(null);
+  });
   const [submitted, setSubmitted] = useState(false);
-  const [timer, setTimer] = useState(600); // 10 minutes in seconds
+  const [timer, setTimer] = useState(() => {
+    const savedTimer = localStorage.getItem(`timer_${quizId}`);
+    return savedTimer ? parseInt(savedTimer) : 600;
+  });
   const [showConfirmation, setShowConfirmation] = useState(false);
   const navigate = useNavigate();
 
@@ -15,21 +20,27 @@ const QuizQuestions = ({ questions, quizId }) => {
 
   useEffect(() => {
     if (submitted || timer <= 0) {
-      return; // Skip if already submitted or time is up
+      return;
     }
 
     const intervalId = setInterval(() => {
       setTimer((prev) => {
-        if (prev <= 1) {
+        const newTimer = prev - 1;
+        localStorage.setItem(`timer_${quizId}`, newTimer.toString());
+        if (newTimer <= 0) {
           handleSubmitQuiz();
           return 0;
         }
-        return prev - 1;
+        return newTimer;
       });
     }, 1000);
 
-    return () => clearInterval(intervalId); // Clean up on unmount
-  }, [timer, submitted]);
+    return () => clearInterval(intervalId);
+  }, [timer, submitted, quizId]);
+
+  useEffect(() => {
+    localStorage.setItem(`answers_${quizId}`, JSON.stringify(answers));
+  }, [answers, quizId]);
 
   const handleSubmitQuiz = useCallback(() => {
     setShowConfirmation(true);
@@ -42,18 +53,19 @@ const QuizQuestions = ({ questions, quizId }) => {
     }));
 
     try {
-      // const response = await axios.post(`/api/quiz-result/${quizId}`, {
-      //   quizResults,
-      // });
-      const response = {
-        data: {
-          success: true,
-        },
-      };
-      console.log("This is the quiz results:", quizResults);
+      const response = await axios.post(`/api/quiz-result/${quizId}`, {
+        quizResults,
+      }, {
+        headers: {
+          'X-Quiz-Token': sessionStorage.getItem('quizToken')
+        }
+      });
+
       if (response.data.success) {
         toast.success("Quiz submitted successfully!");
-        navigate(`/result/${quizId}`);
+        localStorage.removeItem(`answers_${quizId}`);
+        localStorage.removeItem(`timer_${quizId}`);
+        onSubmit();
       } else {
         toast.error("Failed to submit quiz. Please try again.");
       }
@@ -61,7 +73,7 @@ const QuizQuestions = ({ questions, quizId }) => {
       console.error("Error submitting quiz:", error);
       toast.error("An error occurred while submitting the quiz.");
     }
-  }, [answers, quizId, navigate]);
+  }, [answers, quizId, onSubmit, questions]);
 
   const confirmSubmission = useCallback(async () => {
     setShowConfirmation(false);
@@ -84,6 +96,20 @@ const QuizQuestions = ({ questions, quizId }) => {
     const seconds = timer % 60;
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   }, [timer]);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        toast.warning("Please do not leave the quiz page!");
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
 
   return (
     <div className="min-h-screen mt-28 bg-[#fffaf7] p-4 sm:p-8 relative">
@@ -131,8 +157,7 @@ const QuizQuestions = ({ questions, quizId }) => {
       )}
     </div>
   );
-};
-
+}
 const QuestionBlock = ({ question, index, selectedAnswer, optionLabels, onSelectAnswer, submitted }) => (
   <div className="bg-white p-8 rounded-xl shadow-xl border border-gray-200 relative overflow-hidden">
     <div className="absolute top-0 left-0 bg-gradient-to-r from-orange-500 to-yellow-500 w-2 h-full rounded-br-lg"></div>
