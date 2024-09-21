@@ -54,8 +54,8 @@ const Home = () => {
   };
 
   return (
-    <div className="bg-orange-50 min-h-screen">
-      <div className="container mx-auto p-4">
+    <div className="bg-orange-50 h-screen overflow-hidden">
+      <div className="container mx-auto pt-10 p-4">
         {/* Ongoing Quizzes Section */}
         <section className="mb-8">
           <h2 className="text-2xl font-bold mb-4 text-center text-orange-600">
