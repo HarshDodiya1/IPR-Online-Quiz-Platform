@@ -12,6 +12,7 @@ import Error404 from "./pages/Error404";
 import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
 import QuizPage from "./pages/QuizPage.jsx";
+import Results from "./pages/Results.jsx";
 import PastQuizzes from "./pages/PastQuizzes";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -39,6 +40,7 @@ function App() {
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         <Route path="/quiz/:quizId" element={<QuizPage />} />
+        <Route path="/result/:quizId" element={<Results />} />
         <Route path="/about-us" element={<AboutUs />} />
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />

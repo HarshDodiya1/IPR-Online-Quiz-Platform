@@ -1,5 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+
+
 exports.createQuiz = async (req, res) => {
   try {
     const {
@@ -151,6 +153,7 @@ exports.deleteQuiz = async (req, res) => {
     });
   }
 };
+
 exports.getAllQuizzes = async (req, res) => {
   try {
     const quizzes = await prisma.quiz.findMany({
@@ -184,7 +187,6 @@ exports.getAllQuizzes = async (req, res) => {
     });
   }
 };
-
 
 exports.getQuizQuestions = async (req, res) => {
   try {
@@ -232,7 +234,10 @@ exports.getQuizQuestions = async (req, res) => {
     // Shuffle questions
     for (let i = formattedQuestions.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [formattedQuestions[i], formattedQuestions[j]] = [formattedQuestions[j], formattedQuestions[i]];
+      [formattedQuestions[i], formattedQuestions[j]] = [
+        formattedQuestions[j],
+        formattedQuestions[i],
+      ];
     }
 
     res.status(200).json({

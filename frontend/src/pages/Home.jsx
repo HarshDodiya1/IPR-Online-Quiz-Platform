@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import QuizCard from "../components/QuizCard";
 import QuizPopup from "../components/QuizPopup";
 import axios from "axios";
@@ -9,6 +10,8 @@ const Home = () => {
   const [pastQuizzes, setPastQuizzes] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedQuizId, setSelectedQuizId] = useState(null);
+
+  const isLoggedIn = useSelector((state) => !!state.user.currentUser);
 
   useEffect(() => {
     fetchQuizzes();
@@ -64,6 +67,7 @@ const Home = () => {
                 key={quiz.id}
                 quiz={quiz}
                 onStart={() => handleStartQuiz(quiz.id)}
+                isLoggedIn={isLoggedIn}
               />
             ))}
           </div>
@@ -76,7 +80,7 @@ const Home = () => {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {upcomingQuizzes.map((quiz) => (
-              <QuizCard key={quiz.id} quiz={quiz} />
+              <QuizCard key={quiz.id} quiz={quiz} isLoggedIn={isLoggedIn} />
             ))}
           </div>
         </section>
@@ -88,7 +92,7 @@ const Home = () => {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {pastQuizzes.map((quiz) => (
-              <QuizCard key={quiz.id} quiz={quiz} />
+              <QuizCard key={quiz.id} quiz={quiz} isLoggedIn={isLoggedIn} />
             ))}
           </div>
         </section>

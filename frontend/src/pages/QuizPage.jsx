@@ -31,11 +31,11 @@ const QuizPage = () => {
   if (error) return <div>{error}</div>;
   return (
     <div>
-    <div>
-      <h1>{quizData.title}</h1>
-      <QuizQuestions questions={quizData.quizQuestions} />
+      <div>
+        <h1>{quizData.title}</h1>
+        <QuizQuestions questions={quizData.quizQuestions} quizId={quizId} />
+      </div>
     </div>
-  </div>
   );
 };
 
