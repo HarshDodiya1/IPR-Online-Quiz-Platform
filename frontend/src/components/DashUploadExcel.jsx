@@ -1,5 +1,7 @@
 import React, { useState, useRef } from "react";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 function DashUploadExcel() {
   const [file, setFile] = useState(null);
@@ -55,6 +57,7 @@ function DashUploadExcel() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!file) {
+      toast.error("Please select a file");
       setMessage("Please select a file");
       return;
     }

@@ -1,9 +1,123 @@
-import React from 'react'
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
+import AdminQuizCard from "./AdminQuizCard";
+import UpdateQuizPopup from "./UpdateQuizPopup";
 
 const DashManageQuiz = () => {
-  return (
-    <div>DashManageQuiz</div>
-  )
-}
+  const [quizzes, setQuizzes] = useState([]);
+  const [filteredQuizzes, setFilteredQuizzes] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filter, setFilter] = useState("all");
+  const [selectedQuiz, setSelectedQuiz] = useState(null);
+  const [showUpdatePopup, setShowUpdatePopup] = useState(false);
 
-export default DashManageQuiz
+  useEffect(() => {
+    fetchQuizzes();
+  }, []);
+
+  const fetchQuizzes = async () => {
+    try {
+      const response = await axios.get("/api/quiz/get-all");
+      setQuizzes(response.data.quizzes);
+      setFilteredQuizzes(response.data.quizzes);
+    } catch (error) {
+      console.error("Error fetching quizzes:", error);
+      toast.error("Failed to fetch quizzes");
+    }
+  };
+
+  useEffect(() => {
+    const filtered = quizzes.filter(
+      (quiz) =>
+        quiz.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        (filter === "all" || getQuizStatus(quiz) === filter)
+    );
+    setFilteredQuizzes(filtered);
+  }, [searchTerm, filter, quizzes]);
+
+  const getQuizStatus = (quiz) => {
+    const now = new Date();
+    const startDate = new Date(quiz.startDate);
+    const endDate = new Date(quiz.endDate);
+    if (now < startDate) return "upcoming";
+    if (now > endDate) return "past";
+    return "ongoing";
+  };
+
+  const handleEditQuiz = (quiz) => {
+    setSelectedQuiz(quiz);
+    setShowUpdatePopup(true);
+  };
+
+  const handleUpdateQuiz = async (updatedQuiz) => {
+    try {
+      await axios.post(`/api/quiz/update/${updatedQuiz.id}`, updatedQuiz);
+      toast.success("Quiz updated successfully");
+      setShowUpdatePopup(false);
+      fetchQuizzes();
+    } catch (error) {
+      console.error("Error updating quiz:", error);
+      toast.error("Failed to update quiz");
+    }
+  };
+
+  const handleDeleteQuiz = async (quizId) => {
+    try {
+      await axios.post(`/api/quiz/delete/${quizId}`);
+      toast.success('Quiz deleted successfully');
+      setShowUpdatePopup(false);
+      fetchQuizzes();
+    } catch (error) {
+      console.error('Error deleting quiz:', error);
+      toast.error('Failed to delete quiz');
+    }
+  };
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-6">Manage Quizzes</h1>
+
+      <div className="mb-6 flex flex-col sm:flex-row justify-between items-center">
+        <input
+          type="text"
+          placeholder="Search quizzes..."
+          className="mb-4 sm:mb-0 p-2 border rounded"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <select
+          className="p-2 border rounded"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        >
+          <option value="all">All Quizzes</option>
+          <option value="upcoming">Upcoming</option>
+          <option value="ongoing">Ongoing</option>
+          <option value="past">Past</option>
+        </select>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredQuizzes.map((quiz) => (
+          <AdminQuizCard
+            key={quiz.id}
+            quiz={quiz}
+            onEdit={() => handleEditQuiz(quiz)}
+          />
+        ))}
+      </div>
+
+      {showUpdatePopup && (
+        <UpdateQuizPopup
+          quiz={selectedQuiz}
+          onClose={() => setShowUpdatePopup(false)}
+          onUpdate={handleUpdateQuiz}
+          onDelete={handleDeleteQuiz}
+        />
+      )}
+    </div>
+  );
+};
+
+export default DashManageQuiz;
