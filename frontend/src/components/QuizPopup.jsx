@@ -27,7 +27,23 @@ const Popup = ({ show, onClose, quizId }) => {
             Rules
           </h2>
           <p className="mb-4 text-base">
-            Here are the rules for the quiz...
+            <ul className="list-disc list-inside">
+              <li>
+                You have 15 minutes to complete the quiz.
+              </li>
+              <li>
+                There are 20 questions in total.
+              </li>
+              <li>
+                Each question has 4 options.
+              </li>
+              <li>
+                You can skip questions if you're unsure.
+              </li>
+              <li>
+                You can see your results after the quiz.
+              </li>
+            </ul>
           </p>
           <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2">
             <button
