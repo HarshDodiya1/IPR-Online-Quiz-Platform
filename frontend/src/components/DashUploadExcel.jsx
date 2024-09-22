@@ -1,14 +1,46 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import * as XLSX from "xlsx"; // Import xlsx to parse the excel file
+import * as XLSX from "xlsx";
+
+const checkImageLink = (url) => {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve(true);
+    img.onerror = () => resolve(false);
+    img.src = url;
+  });
+};
+
+const ImageWithFallback = ({ src, alt, ...props }) => {
+  const [imgSrc, setImgSrc] = useState(src);
+
+  useEffect(() => {
+    const validateImage = async () => {
+      const isValid = await checkImageLink(src);
+      if (!isValid) {
+        setImgSrc(null);
+      }
+    };
+    validateImage();
+  }, [src]);
+
+  return (
+    <div className="w-10 h-10 flex items-center justify-center mx-auto">
+      {imgSrc ? (
+        <img src={imgSrc} alt={alt} {...props} className="w-full h-full object-cover" />
+      ) : null}
+    </div>
+  );
+};
 
 function DashUploadExcel() {
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState("");
   const [isDragging, setIsDragging] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [filePreview, setFilePreview] = useState([]); // State to hold the preview data
+  const [filePreview, setFilePreview] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
   const fileInputRef = useRef(null);
 
   const handleFileChange = (e) => {
@@ -17,7 +49,7 @@ function DashUploadExcel() {
       setFile(selectedFile);
       setUploadProgress(0);
       setMessage("");
-      previewExcel(selectedFile); // Preview the excel file upon selection
+      previewExcel(selectedFile);
     }
   };
 
@@ -28,7 +60,7 @@ function DashUploadExcel() {
       const workbook = XLSX.read(data, { type: "array" });
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
-      const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 }).slice(0, 15); // Get top 5 rows
+      const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 }).slice(0, 16);
       setFilePreview(rows);
     };
     reader.readAsArrayBuffer(file);
@@ -92,45 +124,50 @@ function DashUploadExcel() {
         },
       });
       setMessage("File uploaded successfully");
+      toast.success("File uploaded successfully");
     } catch (error) {
       setMessage("Error uploading file");
+      toast.error("Error uploading file");
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center  px-4 md:px-10 min-h-[48.5rem] ">
-      <div className="bg-white shadow-md rounded-lg p-6 md:p-10 m-5 space-y-4 w-full max-w-md md:max-w-lg lg:max-w-2xl">
+    <div className="flex flex-col items-center justify-center min-h-[calc(88vh)] px-4 py-8">
+      <div className="bg-white rounded-lg shadow-2xl border-2 p-6 md:p-8 w-full max-w-2xl mx-auto mb-8">
+        <h1 className="text-3xl md:text-4xl font-bold text-center text-blue-600 mb-6">
+          Upload Excel File
+        </h1>
         <div
           className={`border-2 border-dashed ${
-            isDragging ? "border-orange-500 bg-orange-50" : "border-gray-200"
-          } rounded-lg flex flex-col gap-1 p-6 items-center cursor-pointer`}
+            isDragging ? "border-blue-500 bg-blue-50" : "border-gray-300"
+          } rounded-lg flex flex-col gap-2 p-6 items-center cursor-pointer mb-6`}
           onDragEnter={handleDragEnter}
           onDragLeave={handleDragLeave}
           onDragOver={handleDragOver}
           onDrop={handleDrop}
           onClick={() => fileInputRef.current.click()}
         >
-          <FileIcon className="w-12 h-12 text-gray-400" />
-          <span className="text-sm font-medium text-gray-500 text-center">
+          <FileIcon className="w-12 h-12 text-blue-500" />
+          <span className="text-sm font-medium text-gray-600 text-center">
             {file ? file.name : "Drag and drop a file or click to browse"}
           </span>
           <span className="text-xs text-gray-500">Excel files (.xlsx, .xls)</span>
         </div>
         {file && (
-          <div className="mt-4">
-            <p className="text-sm font-medium text-gray-700">
+          <div className="mb-6">
+            <p className="text-sm font-medium text-gray-700 mb-2">
               Selected file: {file.name}
             </p>
-            <div className="mt-2 bg-gray-200 rounded-full h-2.5">
+            <div className="bg-gray-200 rounded-full h-2.5">
               <div
-                className="bg-orange-500 h-2.5 rounded-full transition-all duration-300"
+                className="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
                 style={{ width: `${uploadProgress}%` }}
               ></div>
             </div>
             <p className="text-xs text-gray-500 mt-1">{uploadProgress}% uploaded</p>
           </div>
         )}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="mb-6">
           <input
             id="file"
             type="file"
@@ -141,42 +178,67 @@ function DashUploadExcel() {
           />
           <button
             type="submit"
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300"
+            className="w-full py-3 rounded-xl bg-blue-600 text-white text-lg font-bold transition-all hover:bg-blue-700 active:scale-[.98]"
           >
             Upload
           </button>
         </form>
-        {message && <p className="text-center text-green-500">{message}</p>}
-        {filePreview.length > 0 && (
-          <div className="mt-6 bg-white p-4 md:p-6 rounded-lg shadow-md">
-            <h3 className="text-lg md:text-xl font-semibold mb-4 text-gray-800">File Preview (Top 15 Rows):</h3>
-            <div className="overflow-x-auto max-w-full" style={{ maxHeight: 'calc(100vh - 400px)' }}>
-              <table className="table-auto w-full text-left border-collapse border border-gray-300 shadow-lg">
-                <thead>
-                  <tr className="bg-orange-100">
-                    {filePreview[0].map((col, index) => (
-                      <th key={index} className="border border-gray-300 px-3 py-2 text-xs md:text-sm font-semibold text-gray-700">
-                        {col}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {filePreview.slice(1).map((row, rowIndex) => (
-                    <tr key={rowIndex} className="bg-white hover:bg-orange-50 transition-colors duration-200">
-                      {row.map((cell, cellIndex) => (
-                        <td key={cellIndex} className="border border-gray-300 px-3 py-2 text-xs md:text-sm">
-                          {cell}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
+        {message && <p className="text-center text-green-500 mb-6">{message}</p>}
       </div>
+
+      {filePreview.length > 0 && (
+        <div className="bg-white rounded-lg shadow-xl p-6 md:p-8 w-full max-w-[95rem] mx-auto">
+          <h3 className="text-3xl font-semibold mb-4 text-blue-600">File Preview</h3>
+          <div className="overflow-x-auto">
+            <table className="w-full border-2">
+              <thead>
+                <tr className="bg-blue-100">
+                  {filePreview[0].map((col, index) => (
+                    <th key={index} className="border-b border-blue-200 px-2 py-2 text-sm font-semibold text-blue-800">
+                      {col}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {filePreview.slice(1, 16).map((row, rowIndex) => (
+                  <tr key={rowIndex} className={rowIndex % 2 === 0 ? "bg-gray-50 text-center" : "bg-white text-center"}>
+                    {row.map((cell, cellIndex) => {
+                      const isLinkColumn = filePreview[0][cellIndex].toLowerCase().includes('link');
+                      return (
+                        <td key={cellIndex} className="border-b border-gray-200 px-2 py-2 text-sm text-gray-700">
+                          {isLinkColumn ? (
+                            cell ? (
+                              <ImageWithFallback
+                                src={cell}
+                                alt="Preview"
+                                className="w-10 h-10 object-cover cursor-pointer"
+                                onClick={() => setSelectedImage(cell)}
+                              />
+                            ) : null
+                          ) : (
+                            cell
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {filePreview.length > 16 && (
+            <p className="text-sm text-gray-500 mt-4 text-center">
+              Showing first 15 rows out of {filePreview.length - 1} total rows.
+            </p>
+          )}
+        </div>
+      )}
+      {selectedImage && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setSelectedImage(null)}>
+          <img src={selectedImage} alt="Full size" className="max-w-full max-h-full" />
+        </div>
+      )}
     </div>
   );
 }
