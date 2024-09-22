@@ -7,11 +7,14 @@ const {
   deleteQuiz,
   getAllQuizzes,
   getQuizQuestions,
+  submitQuiz,
 } = require("../controllers/quizController.js");
 const { verifyToken, verifyAdmin } = require("../middleware/verifyJWT.js");
 
 router.get("/get-all", getAllQuizzes);
 router.get("/get-quiz-questions/:id", verifyToken, getQuizQuestions);
+// router.post("/submit", verifyToken, submitQuiz);
+
 
 router.use(verifyToken, verifyAdmin);
 

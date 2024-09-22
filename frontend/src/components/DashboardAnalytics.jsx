@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import { Bar, Line, Pie, Doughnut } from "react-chartjs-2";
+import { Bar, Doughnut } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   BarElement,
-  LineElement,
-  PointElement,
   ArcElement,
   Title,
   Tooltip,
@@ -17,8 +15,6 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
-  LineElement,
-  PointElement,
   ArcElement,
   Title,
   Tooltip,
@@ -26,21 +22,24 @@ ChartJS.register(
 );
 
 const DashboardAnalytics = () => {
-  const [analyticsData, setAnalyticsData] = useState({
+  const [analyticsData] = useState({
     totalParticipants: 1200,
     completionRatio: 0.85,
     averageScore: 75.5,
-    quizzesByCategory: { Math: 15, Science: 20, History: 10, Literature: 5 },
-    regionWiseParticipation: { North: 400, South: 300, East: 250, West: 250 },
-    participationByCity: { NYC: 300, LA: 200, SF: 150, Chicago: 100 },
-    participationByStd: { Std1: 100, Std2: 200, Std3: 150, Std4: 120 },
-    participationTrend: { Jan: 100, Feb: 150, Mar: 200, Apr: 180, May: 250 },
+    participationByStd: { 
+      "5th": 100, "6th": 120, "7th": 150, "8th": 180, 
+      "9th": 200, "10th": 220, "11th": 130, "12th": 100 
+    },
+    participationByCity: { 
+      "Mumbai": 300, "Delhi": 250, "Bangalore": 200, 
+      "Chennai": 150, "Kolkata": 100 
+    },
     topPerformers: [
-      { name: "John Doe", score: 98 },
-      { name: "Jane Smith", score: 95 },
-      { name: "Alice Johnson", score: 93 },
-      { name: "Bob Brown", score: 91 },
-      { name: "Chris Lee", score: 90 },
+      { name: "John Doe", city: "Mumbai", std: "10th", timeTaken: "45 min" },
+      { name: "Jane Smith", city: "Delhi", std: "12th", timeTaken: "50 min" },
+      { name: "Alice Johnson", city: "Bangalore", std: "11th", timeTaken: "48 min" },
+      { name: "Bob Brown", city: "Chennai", std: "9th", timeTaken: "52 min" },
+      { name: "Chris Lee", city: "Kolkata", std: "10th", timeTaken: "47 min" },
     ],
   });
 
@@ -74,10 +73,10 @@ const DashboardAnalytics = () => {
   };
 
   return (
-    <div className="bg-white rounded px-6 py-4 mb-6 h-full overflow-y-auto">
+    <div className="bg-white rounded px-4 sm:px-6 py-4 mb-6 h-full overflow-y-auto">
       <h2 className="text-2xl font-semibold mb-4 text-black">Quiz Analytics Dashboard</h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         {[
           { title: "Total Participants", value: analyticsData.totalParticipants },
           { title: "Completion Ratio", value: (analyticsData.completionRatio * 100).toFixed(2) + "%" },
@@ -90,20 +89,60 @@ const DashboardAnalytics = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 md:mb-14 p-2">
-        {[
-          { title: "Quizzes by Category", chart: <Pie data={{ labels: Object.keys(analyticsData.quizzesByCategory), datasets: [{ data: Object.values(analyticsData.quizzesByCategory), backgroundColor: ["#ff7043", "#ffab91", "#ffe0b2", "#ffccbc"] }] }} options={chartOptions} /> },
-          { title: "Participation Trend", chart: <Line data={{ labels: Object.keys(analyticsData.participationTrend), datasets: [{ label: "Participants", data: Object.values(analyticsData.participationTrend), borderColor: "#ff7043", backgroundColor: "rgba(255, 112, 67, 0.2)", tension: 0.1 }] }} options={chartOptions} /> },
-          { title: "Region-wise Participation", chart: <Bar data={{ labels: Object.keys(analyticsData.regionWiseParticipation), datasets: [{ label: "Participants", data: Object.values(analyticsData.regionWiseParticipation), backgroundColor: "#ff7043" }] }} options={chartOptions} /> },
-          { title: "Participation by City", chart: <Doughnut data={{ labels: Object.keys(analyticsData.participationByCity), datasets: [{ data: Object.values(analyticsData.participationByCity), backgroundColor: ["#ff7043", "#ffab91", "#ffe0b2", "#ffccbc"] }] }} options={chartOptions} /> },
-          { title: "Participation by Std", chart: <Doughnut data={{ labels: Object.keys(analyticsData.participationByStd), datasets: [{ data: Object.values(analyticsData.participationByStd), backgroundColor: ["#ff7043", "#ffab91", "#ffe0b2", "#ffccbc"] }] }} options={chartOptions} /> },
-          { title: "Top 5 Performers", chart: <Bar data={{ labels: analyticsData.topPerformers.map(performer => performer.name), datasets: [{ label: "Score", data: analyticsData.topPerformers.map(performer => performer.score), backgroundColor: "#ff7043" }] }} options={chartOptions} /> },
-        ].map((item, index) => (
-          <div key={index} className="h-64 md:h-80 p-5 bg-white bg-opacity-70 backdrop-blur-lg rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out hover:bg-opacity-80 transform hover:scale-105">
-            <h3 className="text-lg font-semibold mb-2 text-black">{item.title}</h3>
-            {item.chart}
-          </div>
-        ))}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <div className="h-64 sm:h-80 p-5 bg-white bg-opacity-70 backdrop-blur-lg rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out hover:bg-opacity-80 transform hover:scale-105">
+          <h3 className="text-lg font-semibold mb-2 text-black">Participation by Standard</h3>
+          <Bar 
+            data={{
+              labels: Object.keys(analyticsData.participationByStd),
+              datasets: [{
+                label: "Participants",
+                data: Object.values(analyticsData.participationByStd),
+                backgroundColor: "#ff7043"
+              }]
+            }} 
+            options={chartOptions} 
+          />
+        </div>
+        <div className="h-64 sm:h-80 p-5 bg-white bg-opacity-70 backdrop-blur-lg rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out hover:bg-opacity-80 transform hover:scale-105">
+          <h3 className="text-lg font-semibold mb-2 text-black">Participation by City</h3>
+          <Doughnut 
+            data={{
+              labels: Object.keys(analyticsData.participationByCity),
+              datasets: [{
+                data: Object.values(analyticsData.participationByCity),
+                backgroundColor: ["#ff7043", "#ffab91", "#ffe0b2", "#ffccbc", "#fbe9e7"]
+              }]
+            }} 
+            options={chartOptions} 
+          />
+        </div>
+      </div>
+
+      <div className="bg-white bg-opacity-70 backdrop-blur-lg p-5 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out hover:bg-opacity-80">
+        <h3 className="text-lg font-semibold mb-4 text-black">Top 5 Performing Students</h3>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm text-left text-gray-500">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+              <tr>
+                <th scope="col" className="px-6 py-3">Name</th>
+                <th scope="col" className="px-6 py-3">City</th>
+                <th scope="col" className="px-6 py-3">Standard</th>
+                <th scope="col" className="px-6 py-3">Time Taken</th>
+              </tr>
+            </thead>
+            <tbody>
+              {analyticsData.topPerformers.map((performer, index) => (
+                <tr key={index} className="bg-white border-b hover:bg-gray-50">
+                  <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{performer.name}</td>
+                  <td className="px-6 py-4">{performer.city}</td>
+                  <td className="px-6 py-4">{performer.std}</td>
+                  <td className="px-6 py-4">{performer.timeTaken}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

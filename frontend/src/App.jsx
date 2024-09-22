@@ -14,6 +14,9 @@ import PrivateRoute from "./components/PrivateRoute";
 import QuizPage from "./pages/QuizPage.jsx";
 import Results from "./pages/Results.jsx";
 import { AboutUs } from "./pages/AboutUs.jsx";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 function App() {
   const { t } = useTranslation();
