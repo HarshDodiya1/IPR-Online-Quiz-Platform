@@ -21,7 +21,6 @@ model User {
   city              String
   totalQuizzesTaken Int           @default(0)
   isAdmin           Boolean       @default(false)
-  certificates      Certificate[]
   quizResults       QuizResult[]
   createdQuizzes    Quiz[]
 
@@ -38,7 +37,6 @@ model Quiz {
   description       String
   adminId           Int
   categories        String[]
-  certificates      Certificate[]
   quizAnalytics     QuizAnalytics?
   selectedQuestions QuizQuestion[]
   quizResults       QuizResult[]
@@ -73,39 +71,34 @@ model QuizQuestion {
 }
 
 model QuizResult {
-  id               Int  @id @default(autoincrement())
+  id               Int      @id @default(autoincrement())
   userId           Int
   quizId           Int
-  score            Int
+  score            Float
   correctAnswers   Int
   incorrectAnswers Int
   skippedQuestions Int
-  quiz             Quiz @relation(fields: [quizId], references: [id])
-  user             User @relation(fields: [userId], references: [id])
+  timeTaken        String
+  submittedAt      DateTime @default(now())
+  quiz             Quiz     @relation(fields: [quizId], references: [id])
+  user             User     @relation(fields: [userId], references: [id])
 
   @@map("quiz_results")
 }
 
-model Certificate {
-  id             Int      @id @default(autoincrement())
-  userId         Int
-  quizId         Int
-  certificateURL String
-  issuedDate     DateTime
-  quiz           Quiz     @relation(fields: [quizId], references: [id])
-  user           User     @relation(fields: [userId], references: [id])
 
-  @@map("certificates")
-}
 
 model QuizAnalytics {
-  id                Int   @id @default(autoincrement())
-  quizId            Int   @unique
+  id                Int     @id @default(autoincrement())
+  quizId            Int     @unique
   totalParticipants Int
   averageScore      Float
-  highestScore      Int
-  lowestScore       Int
-  quiz              Quiz  @relation(fields: [quizId], references: [id])
+  highestScore      Float
+  lowestScore       Float
+  completionRatio   Float
+  participationByStd Json
+  participationByCity Json
+  quiz              Quiz    @relation(fields: [quizId], references: [id])
 
   @@map("quiz_analytics")
 }
