@@ -1,11 +1,12 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import React, { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import Confetti from "../components/Confetti";
 import confetti from "canvas-confetti";
-import axios from 'axios';
-import { useSelector } from 'react-redux';
-
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Results = () => {
   const navigate = useNavigate();
@@ -16,19 +17,19 @@ const Results = () => {
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const user = useSelector((state) => state.user);
-  const userEmail = user.currentUser.user.email; 
+  const userEmail = user.currentUser.user.email;
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    const storedResults = localStorage.getItem('quizResults');
-    const storedAnswers = localStorage.getItem('submittedAnswers');
-    const storedQuestions = localStorage.getItem('quizQuestions');
+    const storedResults = localStorage.getItem("quizResults");
+    const storedAnswers = localStorage.getItem("submittedAnswers");
+    const storedQuestions = localStorage.getItem("quizQuestions");
 
     if (storedResults && storedAnswers && storedQuestions) {
       setResults(JSON.parse(storedResults));
       setSubmittedAnswers(JSON.parse(storedAnswers));
       setQuestions(JSON.parse(storedQuestions));
-      
+
       // Trigger confetti
       const end = Date.now() + 3 * 1000; // 3 seconds
       const colors = ["#a786ff", "#fd8bbc", "#eca184", "#f8deb1"];
@@ -59,26 +60,31 @@ const Results = () => {
 
       frame();
     } else {
-      navigate('/');
+      navigate("/");
     }
   }, [navigate]);
+  window.history.pushState(null, null, window.location.pathname);
+  window.addEventListener("popstate", () => {
+    window.history.pushState(null, null, window.location.pathname);
+  });
 
   const sendCertificateEmail = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.post('/api/quiz/generate-certificate', {
+      const response = await axios.post("/api/quiz/generate-certificate", {
         studentName: results.userName,
         quizName: results.quizName,
         percentage: results.scorePercentage,
-        email: userEmail // Make sure this is available in the results object
+        email: userEmail,
       });
       if (response.data.message) {
         setIsEmailSent(true);
-        alert('Certificate sent successfully!');
+        toast.success("Certificate sent successfully!");
+        navigate("/", { replace: true });
       }
     } catch (error) {
-      console.log('Error sending certificate:', error);
-      alert('Failed to send certificate. Please try again.');
+      console.log("Error sending certificate:", error);
+      toast.error("Failed to send certificate. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -87,12 +93,12 @@ const Results = () => {
   if (!results || !questions.length) return <div>Loading...</div>;
 
   const tableData = [
-    { label: 'User Name', value: results.userName },
-    { label: 'Quiz Name', value: results.quizName },
-    { label: 'Skipped Questions', value: results.skippedQuestions },
-    { label: 'Incorrect Answers', value: results.incorrectAnswers },
-    { label: 'Correct Answers', value: results.correctAnswers },
-    { label: 'Score Percentage', value: `${results.scorePercentage}%` },
+    { label: "User Name", value: results.userName },
+    { label: "Quiz Name", value: results.quizName },
+    { label: "Skipped Questions", value: results.skippedQuestions },
+    { label: "Incorrect Answers", value: results.incorrectAnswers },
+    { label: "Correct Answers", value: results.correctAnswers },
+    { label: "Score Percentage", value: `${results.scorePercentage}%` },
   ];
 
   return (
@@ -102,23 +108,13 @@ const Results = () => {
       transition={{ duration: 0.5 }}
       className="container mx-auto px-4 py-8 relative"
     >
-      {/* <Confetti
-        ref={confettiRef}
-        className="fixed left-0 top-0 w-full h-full pointer-events-none size-full"
-      />
-       <Confetti
-        ref={confettiRef}
-        className="fixed left-0 top-0 w-full h-full pointer-events-none size-full"
-      /> */}
-      
-      
       <h1 className="text-3xl font-bold mb-8 text-center">Quiz Results</h1>
       
       <motion.table 
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2 }}
-        className="w-full mb-8 bg-white shadow-md rounded-lg overflow-hidden"
+        className="w-full mb-0 bg-white shadow-md rounded-lg overflow-hidden"
       >
         <tbody>
           {tableData.map(({ label, value }) => (
@@ -129,6 +125,43 @@ const Results = () => {
           ))}
         </tbody>
       </motion.table>
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        className="mt-8 bg-blue-500 mb-8 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        onClick={sendCertificateEmail}
+        disabled={isEmailSent || isLoading}
+      >
+        {isLoading ? (
+          <span className="flex items-center">
+            <svg
+              className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+            Sending...
+          </span>
+        ) : isEmailSent ? (
+          "Certificate Sent!"
+        ) : (
+          "Send Certificate to Email"
+        )}
+      </motion.button>
 
       <h2 className="text-2xl font-bold mb-4">Detailed Results</h2>
       {questions.map((question, index) => {
@@ -138,24 +171,26 @@ const Results = () => {
         const isCorrect = submittedAnswer === correctAnswer;
 
         return (
-          <motion.div 
+          <motion.div
             key={question.id}
             initial={{ x: -50, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: index * 0.1 }}
             className="mb-6 p-4 bg-white shadow-md rounded-lg"
           >
-            <h3 className="font-semibold mb-2">Question {index + 1}: {question.question}</h3>
+            <h3 className="font-semibold mb-2">
+              Question {index + 1}: {question.question}
+            </h3>
             <div className="grid grid-cols-2 gap-2 mb-2">
               {question.options.map((option, optIndex) => (
-                <div 
-                  key={optIndex} 
+                <div
+                  key={optIndex}
                   className={`p-2 rounded ${
-                    option === correctAnswer 
-                      ? 'bg-green-100 border-green-500 border' 
+                    option === correctAnswer
+                      ? "bg-green-200 border-green-500 border"
                       : option === submittedAnswer && !isCorrect
-                      ? 'bg-red-100 border-red-500 border'
-                      : 'bg-gray-100'
+                      ? "bg-red-200 border-red-500 border"
+                      : "bg-gray-100"
                   }`}
                 >
                   {option}
@@ -163,35 +198,23 @@ const Results = () => {
               ))}
             </div>
             <p className="mb-1">
-              Your Answer: 
-              <span className={
-                isSkipped ? 'text-yellow-600' : (isCorrect ? 'text-green-600' : 'text-red-600')
-              }>
-                {isSkipped ? ' Skipped' : ` ${submittedAnswer}`}
+              Your Answer:
+              <span
+                className={
+                  isSkipped
+                    ? "text-yellow-600"
+                    : isCorrect
+                    ? "text-green-600"
+                    : "text-red-600"
+                }
+              >
+                {isSkipped ? " Skipped" : ` ${submittedAnswer}`}
               </span>
             </p>
             <p className="text-green-600">Correct Answer: {correctAnswer}</p>
           </motion.div>
         );
       })}
-
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        className="mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        onClick={sendCertificateEmail}
-        disabled={isEmailSent || isLoading}
-      >
-        {isLoading ? (
-          <span className="flex items-center">
-            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            Sending...
-          </span>
-        ) : isEmailSent ? 'Certificate Sent!' : 'Send Certificate to Email'}
-      </motion.button>
     </motion.div>
   );
 };

@@ -406,7 +406,7 @@ const transporter = nodemailer.createTransport({
 exports.generateAndEmailCertificate = async (req, res) => {
   const { studentName, quizName, percentage, email } = req.body;
 
-  if (!studentName || !quizName || !percentage || !email) {
+  if (!studentName || !quizName || !email) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
