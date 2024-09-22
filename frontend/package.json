@@ -13,6 +13,7 @@
     "@headlessui/react": "^2.1.8",
     "@reduxjs/toolkit": "^2.2.7",
     "axios": "^1.7.7",
+    "canvas-confetti": "^1.9.3",
     "chart.js": "^4.4.4",
     "flowbite-react": "^0.10.1",
     "framer-motion": "^11.5.6",

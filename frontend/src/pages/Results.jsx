@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import Confetti from "../components/Confetti";
+import confetti from "canvas-confetti";
 
 const Results = () => {
   const navigate = useNavigate();
   const [results, setResults] = useState(null);
   const [submittedAnswers, setSubmittedAnswers] = useState({});
   const [questions, setQuestions] = useState([]);
+  const confettiRef = useRef(null);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const storedResults = localStorage.getItem('quizResults');
     const storedAnswers = localStorage.getItem('submittedAnswers');
     const storedQuestions = localStorage.getItem('quizQuestions');
@@ -17,6 +21,36 @@ const Results = () => {
       setResults(JSON.parse(storedResults));
       setSubmittedAnswers(JSON.parse(storedAnswers));
       setQuestions(JSON.parse(storedQuestions));
+      
+      // Trigger confetti
+      const end = Date.now() + 3 * 1000; // 3 seconds
+      const colors = ["#a786ff", "#fd8bbc", "#eca184", "#f8deb1"];
+
+      const frame = () => {
+        if (Date.now() > end) return;
+
+        confetti({
+          particleCount: 2,
+          angle: 60,
+          spread: 55,
+          startVelocity: 60,
+          origin: { x: 0, y: 0.5 },
+          colors: colors,
+        });
+
+        confetti({
+          particleCount: 2,
+          angle: 120,
+          spread: 55,
+          startVelocity: 60,
+          origin: { x: 1, y: 0.5 },
+          colors: colors,
+        });
+
+        requestAnimationFrame(frame);
+      };
+
+      frame();
     } else {
       navigate('/');
     }
@@ -38,8 +72,18 @@ const Results = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="container mx-auto px-4 py-8"
+      className="container mx-auto px-4 py-8 relative"
     >
+      {/* <Confetti
+        ref={confettiRef}
+        className="fixed left-0 top-0 w-full h-full pointer-events-none size-full"
+      />
+       <Confetti
+        ref={confettiRef}
+        className="fixed left-0 top-0 w-full h-full pointer-events-none size-full"
+      /> */}
+      
+      
       <h1 className="text-3xl font-bold mb-8 text-center">Quiz Results</h1>
       
       <motion.table 
