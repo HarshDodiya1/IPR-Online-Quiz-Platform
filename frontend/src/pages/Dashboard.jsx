@@ -13,7 +13,7 @@ const Dashboard = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [tab, setTab] = useState("");
-  const [scrollPosition, setScrollPosition] = useState(0);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
@@ -24,19 +24,31 @@ const Dashboard = () => {
     } else {
       navigate("/dashboard?tab=profile");
     }
-
-    const handleScroll = () => {
-      setScrollPosition(window.pageYOffset);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
   }, [location.search, navigate]);
 
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setSidebarOpen(true);
+      } else {
+        setSidebarOpen(false);
+      }
+    };
+  
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Call it initially
+  
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
-    <div className="flex min-h-screen">
-      <DashSidebar />
-      <div className={`flex-1 md:ml-72 transition-all duration-300 ${scrollPosition > 100 ? 'mt-0' : 'mt-[2rem]'}`}>
+    <div className="flex grow">
+      <DashSidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+      <div className={`flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-72' : 'ml-0'} lg:ml-72 p-6`}>
         {tab === "profile" && <DashProfile />}
         {currentUser?.user.isAdmin && tab === "upload-excel" && <DashUploadExcel />}
         {currentUser?.user.isAdmin && tab === "create-quiz" && <DashCreateQuiz />}

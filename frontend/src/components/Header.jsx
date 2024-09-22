@@ -75,7 +75,7 @@ const Header = () => {
   };
 
   return (
-    <nav className="bg-white bg-opacity-90 backdrop-blur-md shadow-lg w-full">
+    <nav className="fixed bg-white shadow-lg w-full">
       <div className="mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex justify-between items-center h-20">
           <Link to="/" className="flex items-center space-x-4">

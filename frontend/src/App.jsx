@@ -17,7 +17,6 @@ import { AboutUs } from "./pages/AboutUs.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-
 function App() {
   const { t } = useTranslation();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -32,31 +31,31 @@ function App() {
   }, []);
 
   return (
-    <>
-      <BrowserRouter>
+    <BrowserRouter>
+      <div className="flex flex-col min-h-screen">
         <ToastContainer />
-        <div className="flex flex-col h-screen ">
-          <div>{isMobile ? <MobileNav /> : <Header />}</div>
-          <div className="flex-grow">
-            <ScrollToTop />
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/sign-up" element={<SignUp />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/about-us" element={<AboutUs />} />
-              <Route element={<PrivateRoute />}>
-                <Route path="/quiz/:id" element={<QuizPage />} />
-                <Route path="/result/:id" element={<Results />} />
-              </Route>
-              <Route element={<PrivateRoute />}>
-                <Route path="/dashboard" element={<Dashboard />} />
-              </Route>
-              <Route path="*" element={<Error404 />} />
-            </Routes>
-          </div>
+        <div className="fixed top-0 left-0 right-0 z-30">
+          {isMobile ? <MobileNav /> : <Header />}
         </div>
-      </BrowserRouter>
-    </>
+        <main className="flex-grow mt-28 z-0">
+          <ScrollToTop />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/sign-up" element={<SignUp />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/about-us" element={<AboutUs />} />
+            <Route element={<PrivateRoute />}>
+              <Route path="/quiz/:id" element={<QuizPage />} />
+              <Route path="/result/:id" element={<Results />} />
+            </Route>
+            <Route element={<PrivateRoute />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+            </Route>
+            <Route path="*" element={<Error404 />} />
+          </Routes>
+        </main>
+      </div>
+    </BrowserRouter>
   );
 }
 

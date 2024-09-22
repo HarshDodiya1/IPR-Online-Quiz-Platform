@@ -64,7 +64,7 @@ function DashUploadExcel() {
       setFile(droppedFile);
       setUploadProgress(0);
       setMessage("");
-      previewExcel(droppedFile); // Preview the excel file on drop
+      previewExcel(droppedFile);
     } else {
       setMessage("Please drop a valid Excel file (.xlsx or .xls)");
     }
@@ -98,11 +98,12 @@ function DashUploadExcel() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-orange-50 px-4 md:px-10"> {/* Adjust padding for responsiveness */}
-      <div className="bg-white shadow-md rounded-lg p-10  m-5 space-y-4 w-full max-w-md md:max-w-md lg:max-w-2xl"> {/* Responsive width */}
+    <div className="flex flex-col items-center justify-center bg-orange-50 px-4 md:px-10 min-h-[48.5rem] my-[2rem] mr-[2rem]">
+      <div className="bg-white shadow-md rounded-lg p-6 md:p-10 m-5 space-y-4 w-full max-w-md md:max-w-lg lg:max-w-2xl">
         <div
-          className={`border-2 border-dashed ${isDragging ? "border-orange-500 bg-orange-50" : "border-gray-200"
-            } rounded-lg flex flex-col gap-1 p-6 items-center cursor-pointer`}
+          className={`border-2 border-dashed ${
+            isDragging ? "border-orange-500 bg-orange-50" : "border-gray-200"
+          } rounded-lg flex flex-col gap-1 p-6 items-center cursor-pointer`}
           onDragEnter={handleDragEnter}
           onDragLeave={handleDragLeave}
           onDragOver={handleDragOver}
@@ -110,7 +111,7 @@ function DashUploadExcel() {
           onClick={() => fileInputRef.current.click()}
         >
           <FileIcon className="w-12 h-12 text-gray-400" />
-          <span className="text-sm font-medium text-gray-500">
+          <span className="text-sm font-medium text-gray-500 text-center">
             {file ? file.name : "Drag and drop a file or click to browse"}
           </span>
           <span className="text-xs text-gray-500">Excel files (.xlsx, .xls)</span>
@@ -147,14 +148,14 @@ function DashUploadExcel() {
         </form>
         {message && <p className="text-center text-green-500">{message}</p>}
         {filePreview.length > 0 && (
-          <div className="mt-4">
-            <h3 className="text-lg font-semibold mb-2">File Preview (Top 15 Rows):</h3>
-            <div className="overflow-x-auto"> {/* Enable horizontal scroll */}
-              <table className="table-auto w-md text-left border-collapse border border-gray-200">
+          <div className="mt-6 bg-white p-4 md:p-6 rounded-lg shadow-md">
+            <h3 className="text-lg md:text-xl font-semibold mb-4 text-gray-800">File Preview (Top 15 Rows):</h3>
+            <div className="overflow-x-auto max-w-full" style={{ maxHeight: 'calc(100vh - 400px)' }}>
+              <table className="table-auto w-full text-left border-collapse border border-gray-300 shadow-lg">
                 <thead>
-                  <tr className="bg-gray-50">
+                  <tr className="bg-orange-100">
                     {filePreview[0].map((col, index) => (
-                      <th key={index} className="border border-gray-200 px-4 py-2 text-xs">
+                      <th key={index} className="border border-gray-300 px-3 py-2 text-xs md:text-sm font-semibold text-gray-700">
                         {col}
                       </th>
                     ))}
@@ -162,9 +163,9 @@ function DashUploadExcel() {
                 </thead>
                 <tbody>
                   {filePreview.slice(1).map((row, rowIndex) => (
-                    <tr key={rowIndex} className="bg-white hover:bg-gray-50">
+                    <tr key={rowIndex} className="bg-white hover:bg-orange-50 transition-colors duration-200">
                       {row.map((cell, cellIndex) => (
-                        <td key={cellIndex} className="border border-gray-200 px-4 py-2 text-xs">
+                        <td key={cellIndex} className="border border-gray-300 px-3 py-2 text-xs md:text-sm">
                           {cell}
                         </td>
                       ))}
