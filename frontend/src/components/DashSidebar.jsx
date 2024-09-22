@@ -132,7 +132,7 @@ const DashSidebar = ({ isOpen, toggleSidebar }) => {
         <h2 className="text-3xl font-bold mb-8 text-blue-600">
           IPR Quiz Dashboard
         </h2>
-        <nav className="flex flex-col justify-between h-[calc(100%-12.5rem)]">
+        <nav className="flex flex-col justify-between h-[calc(100%-13.5rem)]">
           <ul className="space-y-6">
             {sidebarItems.map((item) => (
               <li key={item.param}>

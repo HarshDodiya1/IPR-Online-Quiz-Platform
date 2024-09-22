@@ -113,9 +113,9 @@ const DashProfile = () => {
   };
 
   return (
-    <div className="bg-gray-100 flex grow py-20 items-center justify-center">
+    <div className="bg-gray-100 flex grow min-h-[calc(83vh)] items-center justify-center">
       <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-2xl">
-        <h1 className="text-3xl font-bold text-center text-orange-500 mb-6">
+        <h1 className="text-4xl font-bold text-center text-blue-600 mb-6">
           Your Profile
         </h1>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -130,7 +130,7 @@ const DashProfile = () => {
                 type="text"
                 value={formData.firstName}
                 onChange={handleChange}
-                className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             {/* Middle Name */}
@@ -143,7 +143,7 @@ const DashProfile = () => {
                 type="text"
                 value={formData.middleName}
                 onChange={handleChange}
-                className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             {/* Last Name */}
@@ -156,7 +156,7 @@ const DashProfile = () => {
                 type="text"
                 value={formData.lastName}
                 onChange={handleChange}
-                className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             {/* Email */}
@@ -169,7 +169,7 @@ const DashProfile = () => {
                 type="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 disabled
               />
             </div>
@@ -183,7 +183,7 @@ const DashProfile = () => {
                 type="tel"
                 value={formData.mobileNumber}
                 onChange={handleChange}
-                className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             {/* Date of Birth */}
@@ -196,7 +196,7 @@ const DashProfile = () => {
                 type="date"
                 value={formData.dateOfBirth}
                 onChange={handleChange}
-                className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             {/* School Name */}
@@ -209,7 +209,7 @@ const DashProfile = () => {
                 type="text"
                 value={formData.schoolName}
                 onChange={handleChange}
-                className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             {/* Standard */}
@@ -221,7 +221,7 @@ const DashProfile = () => {
                 id="standard"
                 value={formData.standard}
                 onChange={handleChange}
-                className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="" disabled>
                   Select your standard
@@ -242,7 +242,7 @@ const DashProfile = () => {
                 id="city"
                 value={formData.city}
                 onChange={handleChange}
-                className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">Select your city</option>
                 {cities.map((city, index) => (
@@ -264,7 +264,7 @@ const DashProfile = () => {
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="Enter new password to change"
-                  className="w-full p-3 border border-gray-300 rounded pr-10 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full p-3 border border-gray-300 rounded pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <button
                   type="button"
@@ -282,7 +282,7 @@ const DashProfile = () => {
           </div>
           <button
             type="submit"
-            className="w-full py-3 rounded-xl bg-orange-500 text-white text-lg font-bold transition-all hover:bg-orange-600 active:scale-[.98]"
+            className="w-full py-3 rounded-xl bg-blue-600 text-white text-lg font-bold transition-all hover:bg-blue-700 active:scale-[.98]"
           >
             Update Profile
           </button>
