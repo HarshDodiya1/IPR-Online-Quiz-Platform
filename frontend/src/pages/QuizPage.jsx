@@ -83,21 +83,15 @@ const QuizPage = () => {
       timeTaken: `${minutes}:${seconds.toString().padStart(2, "0")}`,
       answers,
     };
-
-    console.log("Quiz submission data:", quizData);
-
+  
     try {
-      // const response = await axios.post('/api/quiz/submit', quizData, {
-      //   withCredentials: true,
-      // });
-      const response = {
-        data: {
-          success: true,
-          message: "Quiz submitted successfully!",
-        },
-      };
+      const response = await axios.post('/api/quiz/submit', quizData, {
+        withCredentials: true,
+      });
       if (response.data.success) {
-        localStorage.setItem("quizCompleted", "true");
+        localStorage.setItem("quizResults", JSON.stringify(response.data.data));
+        localStorage.setItem("submittedAnswers", JSON.stringify(answers));
+        localStorage.setItem("quizQuestions", JSON.stringify(questions));
         navigate(`/result/${id}`, { replace: true });
       } else {
         toast.error("Failed to submit quiz");

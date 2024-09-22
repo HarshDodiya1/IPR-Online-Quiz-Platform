@@ -1,5 +1,6 @@
-const { PrismaClient } = require("@prisma/client");
+const { PrismaClient, Prisma } = require("@prisma/client");
 const prisma = new PrismaClient();
+
 
 exports.createQuiz = async (req, res) => {
   try {
@@ -253,39 +254,129 @@ exports.getQuizQuestions = async (req, res) => {
   }
 };
 
+
+
 exports.submitQuiz = async (req, res) => {
   try {
-    const { quizId, sessionId, timeTaken, answers } = req.body;
-    const userId = req.user.id;
+    const { userId, quizId, timeTaken, answers } = req.body;
 
-    const quizSession = await prisma.quizSession.findUnique({
-      where: { id: sessionId },
-      include: { questions: true },
+    const quizQuestions = await prisma.quizQuestion.findMany({
+      where: { quizId: parseInt(quizId) },
+      include: { question: true },
     });
 
-    if (!quizSession) {
-      return res.status(404).json({ message: "Quiz session not found" });
-    }
+    let correctAnswers = 0;
+    let incorrectAnswers = 0;
+    let skippedQuestions = 0;
+    const totalQuestions = quizQuestions.length;
+    const correctAnswersList = {};
 
-    const score = calculateScore(quizSession.questions, answers);
+    quizQuestions.forEach((qq) => {
+      const submittedAnswer = answers[qq.question.id];
+      correctAnswersList[qq.question.id] = qq.question.correctAnswer;
+
+      if (!submittedAnswer) {
+        skippedQuestions++;
+      } else if (submittedAnswer === qq.question.correctAnswer) {
+        correctAnswers++;
+      } else {
+        incorrectAnswers++;
+      }
+    });
+
+    const score = Math.round((correctAnswers / totalQuestions) * 100);
 
     const quizResult = await prisma.quizResult.create({
       data: {
         userId,
         quizId: parseInt(quizId),
         score,
+        correctAnswers,
+        incorrectAnswers,
+        skippedQuestions,
         timeTaken,
-        answers: JSON.stringify(answers),
       },
     });
 
-    await prisma.quizSession.delete({
-      where: { id: sessionId },
+    const user = await prisma.user.update({
+      where: { id: userId },
+      data: { totalQuizzesTaken: { increment: 1 } },
+      select: { firstName: true, lastName: true, standard: true, city: true },
+    });
+    console.log("This is the user after update: ", user);
+
+    const existingAnalytics = await prisma.quizAnalytics.findUnique({
+      where: { quizId: parseInt(quizId) },
+    });
+    
+    if (existingAnalytics) {
+      const totalParticipants = existingAnalytics.totalParticipants + 1;
+      const newAverageScore = (existingAnalytics.averageScore * existingAnalytics.totalParticipants + score) / totalParticipants;
+      const newHighestScore = Math.max(existingAnalytics.highestScore, score);
+      const newLowestScore = Math.min(existingAnalytics.lowestScore, score);
+      const newCompletionRatio = (existingAnalytics.completionRatio * existingAnalytics.totalParticipants + (correctAnswers + incorrectAnswers) / totalQuestions) / totalParticipants;
+    
+      const updatedParticipationByStd = {
+        ...existingAnalytics.participationByStd,
+        [user.standard]: (existingAnalytics.participationByStd[user.standard] || 0) + 1,
+      };
+    
+      const updatedParticipationByCity = {
+        ...existingAnalytics.participationByCity,
+        [user.city]: (existingAnalytics.participationByCity[user.city] || 0) + 1,
+      };
+    
+      await prisma.quizAnalytics.update({
+        where: { quizId: parseInt(quizId) },
+        data: {
+          totalParticipants,
+          averageScore: newAverageScore,
+          highestScore: newHighestScore,
+          lowestScore: newLowestScore,
+          completionRatio: newCompletionRatio,
+          participationByStd: updatedParticipationByStd,
+          participationByCity: updatedParticipationByCity,
+        },
+      });
+    } else {
+      await prisma.quizAnalytics.create({
+        data: {
+          quizId: parseInt(quizId),
+          totalParticipants: 1,
+          averageScore: score,
+          highestScore: score,
+          lowestScore: score,
+          completionRatio: (correctAnswers + incorrectAnswers) / totalQuestions,
+          participationByStd: { [user.standard]: 1 },
+          participationByCity: { [user.city]: 1 },
+        },
+      });
+    }
+
+    const quiz = await prisma.quiz.findUnique({
+      where: { id: parseInt(quizId) },
+      select: { title: true },
     });
 
-    res.json({ message: "Quiz submitted successfully", score });
+    res.status(200).json({
+      success: true,
+      message: "Quiz submitted successfully",
+      data: {
+        userName: `${user.firstName} ${user.lastName}`,
+        quizName: quiz.title,
+        skippedQuestions,
+        incorrectAnswers,
+        correctAnswers,
+        scorePercentage: score,
+        correctAnswersList,
+      },
+    });
   } catch (error) {
     console.error("Error submitting quiz:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({
+      success: false,
+      message: "Failed to submit quiz",
+      error: error.message,
+    });
   }
 };
