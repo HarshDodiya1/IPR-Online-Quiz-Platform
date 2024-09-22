@@ -41,47 +41,34 @@ const DashboardAnalytics = () => {
     }
   };
 
-  const handleQuizSelect = (quizId) => {
+  const handleQuizSelect = async (quizId) => {
     setSelectedQuiz(quizId);
-    // Fetch analytics data for the selected quiz (dummy data for now)
-    setAnalyticsData({
-      totalParticipants: Math.floor(Math.random() * 1000) + 500,
-      completionRatio: Math.random().toFixed(2),
-      averageScore: (Math.random() * 40 + 60).toFixed(1),
-      participationByStd: {
-        "5th": Math.floor(Math.random() * 100),
-        "6th": Math.floor(Math.random() * 100),
-        "7th": Math.floor(Math.random() * 100),
-        "8th": Math.floor(Math.random() * 100),
-        "9th": Math.floor(Math.random() * 100),
-        "10th": Math.floor(Math.random() * 100),
-        "11th": Math.floor(Math.random() * 100),
-        "12th": Math.floor(Math.random() * 100),
-      },
-      participationByCity: {
-        "Mumbai": Math.floor(Math.random() * 200) + 100,
-        "Delhi": Math.floor(Math.random() * 200) + 100,
-        "Bangalore": Math.floor(Math.random() * 200) + 100,
-        "Chennai": Math.floor(Math.random() * 200) + 100,
-        "Kolkata": Math.floor(Math.random() * 200) + 100,
-      },
-      topPerformers: [
-        { name: "John Doe", city: "Mumbai", std: "10th", timeTaken: "45 min" },
-        { name: "Jane Smith", city: "Delhi", std: "12th", timeTaken: "50 min" },
-        { name: "Alice Johnson", city: "Bangalore", std: "11th", timeTaken: "48 min" },
-        { name: "Bob Brown", city: "Chennai", std: "9th", timeTaken: "52 min" },
-        { name: "Chris Lee", city: "Kolkata", std: "10th", timeTaken: "47 min" },
-      ],
-    });
+    try {
+      const response = await axios.get(`/api/analytics/dashboard/${quizId}`);
+      setAnalyticsData(response.data.data);
+    } catch (error) {
+      console.error("Error fetching analytics data:", error);
+    }
   };
 
-  const handleExportExcel = () => {
-    // Implement Excel export functionality here
-    console.log("Exporting to Excel...");
+  const handleExportExcel = async () => {
+    if (!selectedQuiz) return;
+    try {
+      const response = await axios.get(`/api/analytics/export/${selectedQuiz}`, {
+        responseType: 'blob',
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `quiz_results_${selectedQuiz}.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+    } catch (error) {
+      console.error("Error exporting to Excel:", error);
+    }
   };
 
-  const chartOptions = {
-    responsive: true,
+  const chartOptions = {    responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
