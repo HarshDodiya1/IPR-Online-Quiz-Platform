@@ -113,8 +113,8 @@ const DashProfile = () => {
   };
 
   return (
-    <div className="bg-gray-100 flex grow min-h-[calc(83vh)] items-center justify-center">
-      <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-2xl">
+    <div className=" flex grow min-h-[calc(83vh)] items-center justify-center">
+      <div className="bg-white rounded-lg shadow-2xl p-8 w-full max-w-2xl">
         <h1 className="text-4xl font-bold text-center text-blue-600 mb-6">
           Your Profile
         </h1>

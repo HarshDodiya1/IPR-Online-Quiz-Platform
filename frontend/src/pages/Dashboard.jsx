@@ -48,7 +48,7 @@ const Dashboard = () => {
   return (
     <div className="flex grow">
       <DashSidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
-      <div className={`flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-72' : 'ml-0'} lg:ml-72 p-6`}>
+      <div className={`flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-72' : 'ml-0'} lg:ml-72 p-0`}>
         {tab === "profile" && <DashProfile />}
         {currentUser?.user.isAdmin && tab === "upload-excel" && <DashUploadExcel />}
         {currentUser?.user.isAdmin && tab === "create-quiz" && <DashCreateQuiz />}

@@ -98,7 +98,7 @@ function DashUploadExcel() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center bg-orange-50 px-4 md:px-10 min-h-[48.5rem] my-[2rem] mr-[2rem]">
+    <div className="flex flex-col items-center justify-center  px-4 md:px-10 min-h-[48.5rem] ">
       <div className="bg-white shadow-md rounded-lg p-6 md:p-10 m-5 space-y-4 w-full max-w-md md:max-w-lg lg:max-w-2xl">
         <div
           className={`border-2 border-dashed ${

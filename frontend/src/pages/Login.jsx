@@ -64,7 +64,8 @@ const Login = () => {
         dispatch(signInFailure(errorMsg));
       }
     } catch (error) {
-      const errorMsg = error.response?.data?.message || "An error occurred during login";
+      const errorMsg =
+        error.response?.data?.message || "An error occurred during login";
       toast.error(errorMsg);
       dispatch(signInFailure(errorMsg));
     }
@@ -102,7 +103,9 @@ const Login = () => {
           )} */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block mb-1 font-medium">Email</label>
+              <label htmlFor="email" className="block mb-1 font-medium">
+                Email
+              </label>
               <input
                 type="email"
                 id="email"
@@ -113,7 +116,9 @@ const Login = () => {
               />
             </div>
             <div>
-              <label htmlFor="password" className="block mb-1 font-medium">Password</label>
+              <label htmlFor="password" className="block mb-1 font-medium">
+                Password
+              </label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -128,13 +133,20 @@ const Login = () => {
                   onClick={togglePasswordVisibility}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
                 >
-                  {showPassword ? <RiEyeOffLine size={20} /> : <RiEyeLine size={20} />}
+                  {showPassword ? (
+                    <RiEyeOffLine size={20} />
+                  ) : (
+                    <RiEyeLine size={20} />
+                  )}
                 </button>
               </div>
             </div>
             <div className="flex justify-between items-center gap-5">
               <span>Didn't remember your password?</span>
-              <Link to="/forgot-password" className="text-orange-500 hover:underline">
+              <Link
+                to="/forgot-password"
+                className="text-orange-500 hover:underline"
+              >
                 Reset it here
               </Link>
             </div>
