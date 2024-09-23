@@ -89,8 +89,8 @@ const DashProfile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(updateStart());
     try {
+      dispatch(updateStart());
       const res = await axios.put(
         `/api/user/update/${currentUser.user.id}`,
         formData
@@ -98,11 +98,11 @@ const DashProfile = () => {
       console.log("this is the formdata from the frontend", formData);
       console.log("This is the response from update:", res);
       if (res.data.success) {
-        dispatch(updateSuccess(res.data.user));
+        dispatch(updateSuccess(res.data));
         toast.success("Profile updated successfully");
       } else {
         dispatch(updateFailure(res.data.message));
-        toast.error(res.data.message);
+        toast.error("Something went wrong, please try again later.");
       }
     } catch (error) {
       dispatch(
@@ -111,6 +111,40 @@ const DashProfile = () => {
       toast.error(error.response?.data?.message || "Something went wrong");
     }
   };
+  // const handleSubmit = async (e) => {
+    // e.preventDefault();
+    // setUpdateUserError(null);
+    // setUpdateUserSuccess(null);
+    // if (Object.keys(formData).length === 0) {
+    //   setUpdateUserError('No changes made');
+    //   return;
+    // }
+  //   if (imageFileUploading) {
+  //     setUpdateUserError('Please wait for image to upload');
+  //     return;
+  //   }
+  //   try {
+  //     dispatch(updateStart());
+  //     const res = await fetch(`/api/user/update/${currentUser._id}`, {
+  //       method: 'PUT',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(formData),
+  //     });
+  //     const data = await res.json();
+  //     if (!res.ok) {
+  //       dispatch(updateFailure(data.message));
+  //       setUpdateUserError(data.message);
+  //     } else {
+  //       dispatch(updateSuccess(data));
+  //       setUpdateUserSuccess("User's profile updated successfully");
+  //     }
+  //   } catch (error) {
+  //     dispatch(updateFailure(error.message));
+  //     setUpdateUserError(error.message);
+  //   }
+  // };
 
   return (
     <div className="flex justify-center min-h-[calc(88vh)] items-center bg-white p-8">
