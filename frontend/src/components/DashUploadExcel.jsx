@@ -28,7 +28,12 @@ const ImageWithFallback = ({ src, alt, ...props }) => {
   return (
     <div className="w-10 h-10 flex items-center justify-center mx-auto">
       {imgSrc ? (
-        <img src={imgSrc} alt={alt} {...props} className="w-full h-full object-cover" />
+        <img
+          src={imgSrc}
+          alt={alt}
+          {...props}
+          className="w-full h-full object-cover"
+        />
       ) : null}
     </div>
   );
@@ -114,15 +119,19 @@ function DashUploadExcel() {
     formData.append("file", file);
 
     try {
-      const response = await axios.post("/api/questions/upload-excel", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-        onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          setUploadProgress(percentCompleted);
-        },
-      });
+      const response = await axios.post(
+        "/api/questions/upload-excel",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+          onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            setUploadProgress(percentCompleted);
+          },
+        }
+      );
       setMessage("File uploaded successfully");
       toast.success("File uploaded successfully");
     } catch (error) {
@@ -132,11 +141,11 @@ function DashUploadExcel() {
   };
 
   return (
-    <div className="flex justify-center min-h-[calc(88vh)] items-center bg-white p-8">
+    <div className="flex flex-col justify-center min-h-[calc(88vh)] items-center bg-white p-8">
       <div className="bg-white rounded-xl shadow-2xl p-8 max-w-[98rem] min-h-[80vh] w-full border-2">
-      <h2 className="text-4xl font-semibold mb-4 text-blue-600">
-        Upload Excel file
-      </h2>
+        <h2 className="text-4xl font-semibold mb-4 text-blue-600">
+          Upload Excel file
+        </h2>
         <div
           className={`border-2 border-dashed ${
             isDragging ? "border-blue-500 bg-blue-50" : "border-gray-300"
@@ -151,7 +160,9 @@ function DashUploadExcel() {
           <span className="text-sm font-medium text-gray-600 text-center">
             {file ? file.name : "Drag and drop a file or click to browse"}
           </span>
-          <span className="text-xs text-gray-500">Excel files (.xlsx, .xls)</span>
+          <span className="text-xs text-gray-500">
+            Excel files (.xlsx, .xls)
+          </span>
         </div>
         {file && (
           <div className="mb-6">
@@ -164,7 +175,9 @@ function DashUploadExcel() {
                 style={{ width: `${uploadProgress}%` }}
               ></div>
             </div>
-            <p className="text-xs text-gray-500 mt-1">{uploadProgress}% uploaded</p>
+            <p className="text-xs text-gray-500 mt-1">
+              {uploadProgress}% uploaded
+            </p>
           </div>
         )}
         <form onSubmit={handleSubmit} className="mb-6">
@@ -183,18 +196,23 @@ function DashUploadExcel() {
             Upload
           </button>
         </form>
-        {message && <p className="text-center text-green-500 mb-6">{message}</p>}
-      </div>
-
-      {filePreview.length > 0 && (
-        <div className="bg-white rounded-lg shadow-xl p-6 md:p-8 w-full max-w-[95rem] mx-auto">
-          <h3 className="text-3xl font-semibold mb-4 text-blue-600">File Preview</h3>
+        {message && (
+          <p className="text-center text-green-500 mb-6">{message}</p>
+        )}
+        {filePreview.length > 0 && (
+        <div>
+          <h3 className="text-3xl font-semibold mb-4 text-blue-600">
+            File Preview
+          </h3>
           <div className="overflow-x-auto">
             <table className="w-full border-2">
               <thead>
                 <tr className="bg-blue-100">
                   {filePreview[0].map((col, index) => (
-                    <th key={index} className="border-b border-blue-200 px-2 py-2 text-sm font-semibold text-blue-800">
+                    <th
+                      key={index}
+                      className="border-b border-blue-200 px-2 py-2 text-sm font-semibold text-blue-800"
+                    >
                       {col}
                     </th>
                   ))}
@@ -202,11 +220,23 @@ function DashUploadExcel() {
               </thead>
               <tbody>
                 {filePreview.slice(1, 16).map((row, rowIndex) => (
-                  <tr key={rowIndex} className={rowIndex % 2 === 0 ? "bg-gray-50 text-center" : "bg-white text-center"}>
+                  <tr
+                    key={rowIndex}
+                    className={
+                      rowIndex % 2 === 0
+                        ? "bg-gray-50 text-center"
+                        : "bg-white text-center"
+                    }
+                  >
                     {row.map((cell, cellIndex) => {
-                      const isLinkColumn = filePreview[0][cellIndex].toLowerCase().includes('link');
+                      const isLinkColumn = filePreview[0][cellIndex]
+                        .toLowerCase()
+                        .includes("link");
                       return (
-                        <td key={cellIndex} className="border-b border-gray-200 px-2 py-2 text-sm text-gray-700">
+                        <td
+                          key={cellIndex}
+                          className="border-b border-gray-200 px-2 py-2 text-sm text-gray-700"
+                        >
                           {isLinkColumn ? (
                             cell ? (
                               <ImageWithFallback
@@ -234,9 +264,19 @@ function DashUploadExcel() {
           )}
         </div>
       )}
+      </div>
+
+      
       {selectedImage && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setSelectedImage(null)}>
-          <img src={selectedImage} alt="Full size" className="max-w-full max-h-full" />
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+          onClick={() => setSelectedImage(null)}
+        >
+          <img
+            src={selectedImage}
+            alt="Full size"
+            className="max-w-full max-h-full"
+          />
         </div>
       )}
     </div>

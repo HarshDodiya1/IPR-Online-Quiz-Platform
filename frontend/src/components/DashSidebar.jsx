@@ -112,11 +112,11 @@ const DashSidebar = ({ isOpen, toggleSidebar }) => {
     <>
       <button
         className={`fixed top-32 z-30 text-blue-600 p-3 rounded-md lg:hidden transition-all duration-300 ${
-          isOpen ? 'left-56 top-36' : 'left-4'
+          isOpen ? 'left-56 top-36' : ' top-[6.9rem]'
         }`}
         onClick={toggleSidebar}
       >
-        {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+        {isOpen ? <FaTimes size={24} /> : <FaBars size={26} />}
       </button>
       {isOpen && (
         <div

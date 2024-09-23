@@ -109,170 +109,164 @@ const DashCreateQuiz = () => {
     }
   };  
 
+
   return (
-    <div className="flex justify-center min-h-[calc(88vh)] items-center bg-white p-8">
-      <div className="bg-white rounded-xl shadow-2xl p-8 max-w-[98rem] min-h-[80vh] w-full border-2">
-      <h2 className="text-4xl font-semibold mb-4 text-blue-600">
-        Create New Quiz
-      </h2>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-lg font-bold mb-2"
-            htmlFor="title"
-          >
-            Title *
-          </label>
-          <input
-            id="title"
-            name="title"
-            type="text"
-            placeholder="Quiz Title"
-            value={newQuiz.title}
-            onChange={handleInputChange}
-            required
-            className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        <div className="mb-4 flex space-x-4">
-          <div className="w-1/2">
+    <div className="flex justify-center min-h-[calc(88vh)] items-center bg-white p-8 sm:p-8 md:p-8">
+      <div className="bg-white rounded-xl shadow-2xl p-4 sm:p-6 md:p-8 max-w-[98rem] w-full border-2">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold mb-4 text-blue-600">
+          Create New Quiz
+        </h2>
+        {error && <p className="text-red-500 mb-4">{error}</p>}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="mb-4">
             <label
-              className="block text-gray-700 text-lg font-bold mb-2"
-              htmlFor="startDate"
+              className="block text-gray-700 text-base sm:text-lg font-bold mb-2"
+              htmlFor="title"
             >
-              Start Date *
+              Title *
             </label>
             <input
-              id="startDate"
-              name="startDate"
-              type="datetime-local"
-              value={newQuiz.startDate}
+              id="title"
+              name="title"
+              type="text"
+              placeholder="Quiz Title"
+              value={newQuiz.title}
               onChange={handleInputChange}
-              min={new Date().toISOString().slice(0, 16)}
               required
               className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <div className="w-1/2">
-            <label
-              className="block text-gray-700 text-lg font-bold mb-2"
-              htmlFor="endDate"
-            >
-              End Date *
-            </label>
-            <input
-              id="endDate"
-              name="endDate"
-              type="datetime-local"
-              value={newQuiz.endDate}
-              onChange={handleInputChange}
-              min={newQuiz.startDate}
-              required
-              className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-lg font-bold mb-2">
-            Categories * (Select exactly 4)
-          </label>
-          <div className="flex flex-wrap">
-            {categoryOptions.map((category) => (
+          <div className="mb-4 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+            <div className="w-full sm:w-1/2">
               <label
-                key={category}
-                className="inline-flex items-center mr-4 mb-2"
+                className="block text-gray-700 text-base sm:text-lg font-bold mb-2"
+                htmlFor="startDate"
               >
-                <input
-                  type="checkbox"
-                  name="categories"
-                  value={category}
-                  checked={newQuiz.categories.includes(category)}
-                  onChange={handleCategoryChange}
-                  disabled={
-                    newQuiz.categories.length >= 4 &&
-                    !newQuiz.categories.includes(category)
-                  }
-                  className="form-checkbox h-5 w-5 text-blue-600"
-                />
-                <span className="ml-2 text-gray-700">{category}</span>
+                Start Date *
               </label>
-            ))}
+              <input
+                id="startDate"
+                name="startDate"
+                type="datetime-local"
+                value={newQuiz.startDate}
+                onChange={handleInputChange}
+                min={new Date().toISOString().slice(0, 16)}
+                required
+                className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div className="w-full sm:w-1/2">
+              <label
+                className="block text-gray-700 text-base sm:text-lg font-bold mb-2"
+                htmlFor="endDate"
+              >
+                End Date *
+              </label>
+              <input
+                id="endDate"
+                name="endDate"
+                type="datetime-local"
+                value={newQuiz.endDate}
+                onChange={handleInputChange}
+                min={newQuiz.startDate}
+                required
+                className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
           </div>
-        </div>
-        <div className="mb-4">
-          <label className="inline-flex items-center">
+          <div className="mb-4">
+            <label className="block text-gray-700 text-base sm:text-lg font-bold mb-2">
+              Categories * (Select exactly 4)
+            </label>
+            <div className="flex flex-wrap">
+              {categoryOptions.map((category) => (
+                <label
+                  key={category}
+                  className="inline-flex items-center mr-4 mb-2"
+                >
+                  <input
+                    type="checkbox"
+                    name="categories"
+                    value={category}
+                    checked={newQuiz.categories.includes(category)}
+                    onChange={handleCategoryChange}
+                    disabled={
+                      newQuiz.categories.length >= 4 &&
+                      !newQuiz.categories.includes(category)
+                    }
+                    className="form-checkbox h-5 w-5 text-blue-600"
+                  />
+                  <span className="ml-2 text-gray-700 text-sm sm:text-base">{category}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+          <div className="mb-4">
+            <label className="inline-flex items-center">
+              <input
+                type="checkbox"
+                name="isBasic"
+                checked={newQuiz.isBasic}
+                onChange={handleInputChange}
+                className="form-checkbox h-5 w-5 text-blue-600"
+              />
+              <span className="ml-2 text-gray-700 text-sm sm:text-base">Is Basic Quiz</span>
+            </label>
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-base sm:text-lg font-bold mb-2"
+              htmlFor="imageLink"
+            >
+              Image Link
+            </label>
             <input
-              type="checkbox"
-              name="isBasic"
-              checked={newQuiz.isBasic}
+              id="imageLink"
+              name="imageLink"
+              type="text"
+              placeholder="Image URL"
+              value={newQuiz.imageLink}
               onChange={handleInputChange}
-              className="form-checkbox h-5 w-5 text-blue-600"
+              className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <span className="ml-2 text-gray-700">Is Basic Quiz</span>
-          </label>
-        </div>
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-lg font-bold mb-2"
-            htmlFor="imageLink"
-          >
-            Image Link
-          </label>
-          <input
-            id="imageLink"
-            name="imageLink"
-            type="text"
-            placeholder="Image URL"
-            value={newQuiz.imageLink}
-            onChange={handleInputChange}
-            className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-lg font-bold mb-2"
-            htmlFor="description"
-          >
-            Description
-          </label>
-          <textarea
-            id="description"
-            name="description"
-            placeholder="Quiz description"
-            value={newQuiz.description}
-            onChange={handleInputChange}
-            className="border border-gray-300 rounded-md p-2 w-full h-32 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        <div className="flex items-center justify-between">
-          <button
-            type="submit"
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-md transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-            disabled={loading}
-          >
-            {loading ? (
-              <span className="flex items-center justify-center">
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Creating...
-              </span>
-            ) : (
-              "Create Quiz"
-            )}
-          </button>
-          {/* <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            disabled={loading}
-          >
-            {loading ? "Creating..." : "Create Quiz"}
-          </button> */}
-        </div>
-      </form>
-    </div>
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-base sm:text-lg font-bold mb-2"
+              htmlFor="description"
+            >
+              Description
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              placeholder="Quiz description"
+              value={newQuiz.description}
+              onChange={handleInputChange}
+              className="border border-gray-300 rounded-md p-2 w-full h-32 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="flex items-center justify-between">
+            <button
+              type="submit"
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-md transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+              disabled={loading}
+            >
+              {loading ? (
+                <span className="flex items-center justify-center">
+                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Creating...
+                </span>
+              ) : (
+                "Create Quiz"
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
