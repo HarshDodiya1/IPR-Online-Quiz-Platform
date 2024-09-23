@@ -1,72 +1,77 @@
-import React, { useState, useEffect } from 'react';
-import { useTranslation } from "react-i18next";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { FaClock, FaCalendarAlt, FaPercent, FaTrophy } from "react-icons/fa";
 
 const DashPastQuizzes = () => {
-  const { t } = useTranslation();
-  const [quizzes, setQuizzes] = useState([
-    { id: 1, title: 'Math Quiz 1', startDate: '2024-09-01', endDate: '2024-09-10', category: 'math', participants: 45, image: '/api/placeholder/300/200' },
-    { id: 2, title: 'Science Quiz 1', startDate: '2024-09-05', endDate: '2024-09-15', category: 'science', participants: 38, image: '/api/placeholder/300/200' },
-    { id: 3, title: 'History Quiz 1', startDate: '2024-09-10', endDate: '2024-09-20', category: 'history', participants: 52, image: '/api/placeholder/300/200' },
-  ]);
-  const [filteredQuizzes, setFilteredQuizzes] = useState(quizzes);
-  const [filterCategory, setFilterCategory] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [pastQuizzes, setPastQuizzes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
-    const filtered = quizzes.filter(quiz => 
-      (filterCategory === '' || quiz.category === filterCategory) &&
-      quiz.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredQuizzes(filtered);
-  }, [filterCategory, searchTerm, quizzes]);
+    const fetchPastQuizzes = async () => {
+      try {
+        const response = await axios.get("/api/user/past-quizzes", {
+          withCredentials: true,
+        });
+        setPastQuizzes(response.data.pastQuizzes);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching past quizzes:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchPastQuizzes();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="flex justify-center min-h-[calc(88vh)] items-center bg-white p-8">
       <div className="bg-white rounded-xl shadow-2xl p-8 max-w-[98rem] min-h-[80vh] w-full border-2">
-      <h2 className="text-4xl font-semibold mb-4 text-blue-600">
-        Past Quizzes
-      </h2>
-      <div className="mb-4 flex justify-between items-center">
-        <div className="flex items-center space-x-4">
-          <select
-            value={filterCategory}
-            onChange={(e) => setFilterCategory(e.target.value)}
-            className="border border-gray-300 rounded-md p-2"
-          >
-            <option value="">{t("allCategories")}</option>
-            <option value="math">{t("math")}</option>
-            <option value="science">{t("science")}</option>
-            <option value="history">{t("history")}</option>
-            <option value="literature">{t("literature")}</option>
-          </select>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder={t("searchQuizzes")}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="border border-gray-300 rounded-md p-2 pl-10"
-            />
-            <span className="absolute left-3 top-2.5 text-gray-400">🔍</span>
-          </div>
+        <h2 className="text-4xl font-semibold mb-8 text-blue-600">
+          Past Quizzes
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {pastQuizzes.map((quiz) => (
+            <div
+              key={quiz.id}
+              className="bg-white rounded-lg shadow-md p-6 border border-gray-200 hover:shadow-lg transition-shadow duration-300"
+            >
+              <h3 className="text-xl font-semibold mb-3 text-gray-800">
+                Quiz Name: {quiz.quizName}
+              </h3>
+              <div className="flex flex-wrap mb-3">
+                {quiz.categories.map((category, index) => (
+                  <span
+                    key={index}
+                    className="bg-blue-100 text-blue-800 text-xs font-medium mr-2 mb-2 px-2.5 py-0.5 rounded"
+                  >
+                    {category}
+                  </span>
+                ))}
+              </div>
+              <div className="space-y-2 text-sm text-gray-600">
+                <p className="flex items-center">
+                  <FaPercent className="mr-2 text-purple-500" />
+                  Result: {quiz.percentage.toFixed(2)}%
+                </p>
+                <p className="flex items-center">
+                  <FaCalendarAlt className="mr-2 text-green-500" />
+                  Submitted: {new Date(quiz.submittedAt).toLocaleDateString()}
+                </p>
+                <p className="flex items-center">
+                  <FaClock className="mr-2 text-red-500" />
+                  Time Taken: {quiz.timeTaken}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredQuizzes.map((quiz) => (
-          <div key={quiz.id} className="bg-white shadow rounded-lg overflow-hidden">
-            <img src={quiz.image} alt={quiz.title} className="w-full h-48 object-cover" />
-            <div className="p-4">
-              <h3 className="font-semibold text-lg mb-2">{quiz.title}</h3>
-              <p className="text-sm text-gray-600 mb-2">{quiz.startDate} - {quiz.endDate}</p>
-              <p className="text-sm text-gray-600 mb-2">{t("category")}: {quiz.category}</p>
-              <p className="text-sm font-medium text-orange-500">
-                {quiz.participants} {t("studentsParticipated", { count: quiz.participants })}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
     </div>
   );
 };

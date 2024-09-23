@@ -109,7 +109,7 @@ const DashboardAnalytics = () => {
   };
 
   return (
-    <div className="flex justify-center min-h-[calc(88vh)] items-center bg-white p-0 sm:p-4 md:p-8 mt-10">
+    <div className="flex justify-center min-h-[calc(88vh)] items-center bg-white p-0 sm:p-4 md:p-8 sm:mt-0 mt-10">
       <div className="bg-white rounded-xl shadow-2xl p-4 sm:p-6 md:p-8 max-w-[98rem] min-h-[80vh] w-full border-2">
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold mb-4 sm:mb-6 text-blue-600">
           Quiz Analytics Dashboard
