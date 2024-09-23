@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const DashCreateQuiz = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -39,7 +39,6 @@ const DashCreateQuiz = () => {
     }
   }, [currentUser, navigate]);
 
-  console.log("This is the category options", categoryOptions);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -86,6 +85,7 @@ const DashCreateQuiz = () => {
       });
   
       if (response.data.success) {
+        toast.success("Quiz created successfully!");
         setNewQuiz({
           title: "",
           startDate: "",
@@ -95,7 +95,6 @@ const DashCreateQuiz = () => {
           imageLink: "",
           description: "",
         });
-        toast.success("Quiz created successfully!");
       } else {
         toast.error(response.data.message || "Failed to create quiz");
       }

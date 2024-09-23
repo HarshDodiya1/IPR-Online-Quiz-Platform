@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { toast } from "react-toastify";
 import AdminQuizCard from "./AdminQuizCard";
 import UpdateQuizPopup from "./UpdateQuizPopup";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 const DashManageQuiz = () => {
   const [quizzes, setQuizzes] = useState([]);

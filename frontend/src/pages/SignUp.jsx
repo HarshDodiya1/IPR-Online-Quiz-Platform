@@ -57,7 +57,7 @@ const SignUp = () => {
     "Surendranagar",
     "Tapi",
     "Vadodara",
-    "Valsad"
+    "Valsad",
   ];
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
@@ -74,39 +74,35 @@ const SignUp = () => {
     e.preventDefault();
     try {
       setLoading(true);
-  
+
       if (Object.values(formData).some((field) => field === "")) {
         toast.error("Please fill in all the fields.");
         return;
       }
-  
+
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(formData.email)) {
         toast.error("Please enter a valid email address.");
         return;
       }
-  
+
       const mobileRegex = /^[0-9]{10}$/;
       if (!mobileRegex.test(formData.mobileNumber)) {
         toast.error("Please enter a valid mobile number (10 digits).");
         return;
       }
-  
+
       if (formData.password.length < 6) {
         toast.error("Password must be at least 6 characters long.");
         return;
       }
-  
-      const response = await axios.post(
-        "/api/auth/signup",
-        formData,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-  
+
+      const response = await axios.post("/api/auth/signup", formData, {
+        headers: { "Content-Type": "application/json" },
+      });
+
       const data = response.data;
-  
+
       if (data.success) {
         localStorage.setItem("token", data.token);
         toast.success("Registration successful! Redirecting to login...");
@@ -115,27 +111,17 @@ const SignUp = () => {
         toast.error("Registration failed. Please try again.");
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "An error occurred. Please try again later.");
+      toast.error(
+        error.response?.data?.message ||
+          "An error occurred. Please try again later."
+      );
     } finally {
       setLoading(false);
     }
   };
-  
 
   return (
     <div className="flex flex-col lg:flex-row bg-gray-100 py-2">
-      <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
       <div className="hidden lg:flex flex-col w-1/2">
         <div className="flex-grow flex items-center justify-center ml-36">
           <img src={login} alt="Feature image" className="h-auto w-auto" />
@@ -152,7 +138,9 @@ const SignUp = () => {
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label htmlFor="firstName" className="block mb-1 font-medium">First Name</label>
+                <label htmlFor="firstName" className="block mb-1 font-medium">
+                  First Name
+                </label>
                 <input
                   id="firstName"
                   type="text"
@@ -164,7 +152,9 @@ const SignUp = () => {
                 />
               </div>
               <div>
-                <label htmlFor="middleName" className="block mb-1 font-medium">Middle Name</label>
+                <label htmlFor="middleName" className="block mb-1 font-medium">
+                  Middle Name
+                </label>
                 <input
                   id="middleName"
                   type="text"
@@ -176,7 +166,9 @@ const SignUp = () => {
                 />
               </div>
               <div>
-                <label htmlFor="lastName" className="block mb-1 font-medium">Last Name</label>
+                <label htmlFor="lastName" className="block mb-1 font-medium">
+                  Last Name
+                </label>
                 <input
                   id="lastName"
                   type="text"
@@ -188,7 +180,9 @@ const SignUp = () => {
                 />
               </div>
               <div>
-                <label htmlFor="email" className="block mb-1 font-medium">Email</label>
+                <label htmlFor="email" className="block mb-1 font-medium">
+                  Email
+                </label>
                 <input
                   id="email"
                   type="email"
@@ -200,7 +194,12 @@ const SignUp = () => {
                 />
               </div>
               <div>
-                <label htmlFor="mobileNumber" className="block mb-1 font-medium">Mobile Number</label>
+                <label
+                  htmlFor="mobileNumber"
+                  className="block mb-1 font-medium"
+                >
+                  Mobile Number
+                </label>
                 <input
                   id="mobileNumber"
                   type="text"
@@ -212,7 +211,9 @@ const SignUp = () => {
                 />
               </div>
               <div>
-                <label htmlFor="dateOfBirth" className="block mb-1 font-medium">Date of Birth</label>
+                <label htmlFor="dateOfBirth" className="block mb-1 font-medium">
+                  Date of Birth
+                </label>
                 <input
                   id="dateOfBirth"
                   type="date"
@@ -224,7 +225,9 @@ const SignUp = () => {
                 />
               </div>
               <div>
-                <label htmlFor="schoolName" className="block mb-1 font-medium">School Name</label>
+                <label htmlFor="schoolName" className="block mb-1 font-medium">
+                  School Name
+                </label>
                 <input
                   id="schoolName"
                   type="text"
@@ -236,7 +239,9 @@ const SignUp = () => {
                 />
               </div>
               <div>
-                <label htmlFor="standard" className="block mb-1 font-medium">Standard</label>
+                <label htmlFor="standard" className="block mb-1 font-medium">
+                  Standard
+                </label>
                 <select
                   id="standard"
                   name="standard"
@@ -256,7 +261,9 @@ const SignUp = () => {
               </div>
             </div>
             <div>
-              <label htmlFor="city" className="block mb-1 font-medium">City</label>
+              <label htmlFor="city" className="block mb-1 font-medium">
+                City
+              </label>
               <select
                 id="city"
                 name="city"
@@ -273,7 +280,9 @@ const SignUp = () => {
               </select>
             </div>
             <div>
-              <label htmlFor="password" className="block mb-1 font-medium">Password</label>
+              <label htmlFor="password" className="block mb-1 font-medium">
+                Password
+              </label>
               <div className="relative">
                 <input
                   id="password"

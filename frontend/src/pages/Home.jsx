@@ -54,7 +54,7 @@ const Home = () => {
   };
 
   return (
-    <div className="bg-orange-50 h-screen ">
+    <div className=" ">
       <div className="container mx-auto pt-10 p-4">
         {/* Ongoing Quizzes Section */}
         <section className="mb-8">

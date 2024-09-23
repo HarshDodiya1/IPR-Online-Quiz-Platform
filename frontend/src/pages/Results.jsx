@@ -80,7 +80,6 @@ const Results = () => {
       if (response.data.message) {
         setIsEmailSent(true);
         toast.success("Certificate sent successfully!");
-        navigate("/", { replace: true });
       }
     } catch (error) {
       console.log("Error sending certificate:", error);
@@ -102,15 +101,15 @@ const Results = () => {
   ];
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
       className="container mx-auto px-4 py-8 relative"
     >
       <h1 className="text-3xl font-bold mb-8 text-center">Quiz Results</h1>
-      
-      <motion.table 
+
+      <motion.table
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2 }}
@@ -128,7 +127,7 @@ const Results = () => {
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className="mt-8 bg-blue-500 mb-8 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        className="mt-8 bg-blue-500 mb-8 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4"
         onClick={sendCertificateEmail}
         disabled={isEmailSent || isLoading}
       >
@@ -161,6 +160,15 @@ const Results = () => {
         ) : (
           "Send Certificate to Email"
         )}
+      </motion.button>
+
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        className="mt-8 bg-green-500 mb-8 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+        onClick={() => navigate("/", { replace: true })}
+      >
+        Go Home
       </motion.button>
 
       <h2 className="text-2xl font-bold mb-4">Detailed Results</h2>

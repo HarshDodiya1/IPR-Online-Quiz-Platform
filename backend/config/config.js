@@ -7,4 +7,5 @@ module.exports = {
   jwtSecret: process.env.JWT_SECRET,
   admin_email: process.env.ADMIN_EMAIL,
   admin_password: process.env.ADMIN_PASSWORD,
+  linkedIn: process.env.LINKEDIN,
 };

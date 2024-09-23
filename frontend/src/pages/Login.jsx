@@ -73,18 +73,7 @@ const Login = () => {
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100">
-      <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+      
       <div className="hidden lg:flex flex-col w-1/2">
         <div className="flex-grow flex items-center justify-center ml-36">
           <img src={login} alt="Feature image" className="h-auto w-auto" />

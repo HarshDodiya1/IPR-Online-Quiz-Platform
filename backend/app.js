@@ -32,6 +32,15 @@ app.use("/api/user", userRoutes);
 app.use("/api/quiz", quizRoutes);
 app.use("/api/analytics", analyticsRoutes);
 
+
+
+app.get("/", (req, res) => {
+  res.status(200).json({
+    message: "Welcome to the IPR's Project Quiz-App APIs",
+    developer: config.linkedIn || "Harsh Dodiya"    
+  });
+});
+
 app.listen(config.port, () => {
   console.log(`⚙️ Server is running at port : ${config.port}`);
 });
