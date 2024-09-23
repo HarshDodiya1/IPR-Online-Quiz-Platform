@@ -75,19 +75,19 @@ const DashManageQuiz = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Manage Quizzes</h1>
-
-      <div className="mb-6 flex flex-col sm:flex-row justify-between items-center">
+    <div className="flex justify-center min-h-[calc(88vh)] items-center bg-white py-8">
+    <div className="bg-white rounded-xl shadow-2xl p-8 max-w-[98rem] min-h-[80vh] w-full border-2">
+    <h1 className="text-4xl font-bold mb-6 text-blue-600">Manage Quizzes</h1>
+      <div className="mb-6 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 sm:space-x-4">
         <input
           type="text"
           placeholder="Search quizzes..."
-          className="mb-4 sm:mb-0 p-2 border rounded"
+          className="p-2 border rounded-md w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <select
-          className="p-2 border rounded"
+          className="p-2 border rounded-md w-full sm:w-auto focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
         >
@@ -97,7 +97,6 @@ const DashManageQuiz = () => {
           <option value="past">Past</option>
         </select>
       </div>
-
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredQuizzes.map((quiz) => (
           <AdminQuizCard
@@ -116,6 +115,7 @@ const DashManageQuiz = () => {
           onDelete={handleDeleteQuiz}
         />
       )}
+    </div>
     </div>
   );
 };

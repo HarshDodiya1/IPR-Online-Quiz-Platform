@@ -114,7 +114,7 @@ const DashProfile = () => {
 
   return (
     <div className=" flex grow min-h-[calc(83vh)] items-center justify-center">
-      <div className="bg-white rounded-lg shadow-2xl border-2 p-8 w-full max-w-2xl">
+      <div className="bg-white rounded-xl shadow-2xl border-2 p-8 w-full max-w-2xl">
         <h1 className="text-4xl font-bold text-center text-blue-600 mb-6">
           Your Profile
         </h1>
