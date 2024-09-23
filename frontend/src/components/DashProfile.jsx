@@ -113,11 +113,11 @@ const DashProfile = () => {
   };
 
   return (
-    <div className=" flex grow min-h-[calc(83vh)] items-center justify-center">
-      <div className="bg-white rounded-xl shadow-2xl border-2 p-8 w-full max-w-2xl">
-        <h1 className="text-4xl font-bold text-center text-blue-600 mb-6">
-          Your Profile
-        </h1>
+    <div className="flex justify-center min-h-[calc(88vh)] items-center bg-white p-8">
+      <div className="bg-white rounded-xl shadow-2xl p-8 max-w-[98rem] min-h-[80vh] w-full border-2">
+      <h2 className="text-4xl font-semibold mb-4 text-blue-600">
+        Update Profile
+      </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* First Name */}

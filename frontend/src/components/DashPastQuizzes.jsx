@@ -21,8 +21,11 @@ const DashPastQuizzes = () => {
   }, [filterCategory, searchTerm, quizzes]);
 
   return (
-    <div className="bg-white bg-opacity-70 backdrop-blur-md rounded-lg shadow-lg p-6">
-      <h2 className="text-3xl font-bold mb-6 text-orange-600">{t("pastQuizzes")}</h2>
+    <div className="flex justify-center min-h-[calc(88vh)] items-center bg-white p-8">
+      <div className="bg-white rounded-xl shadow-2xl p-8 max-w-[98rem] min-h-[80vh] w-full border-2">
+      <h2 className="text-4xl font-semibold mb-4 text-blue-600">
+        Past Quizzes
+      </h2>
       <div className="mb-4 flex justify-between items-center">
         <div className="flex items-center space-x-4">
           <select
@@ -63,6 +66,7 @@ const DashPastQuizzes = () => {
           </div>
         ))}
       </div>
+    </div>
     </div>
   );
 };

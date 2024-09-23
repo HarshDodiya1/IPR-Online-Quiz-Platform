@@ -1,10 +1,5 @@
 const { PrismaClient, Prisma } = require("@prisma/client");
 const prisma = new PrismaClient();
-const PDFDocument = require("pdfkit");
-const nodemailer = require("nodemailer");
-const path = require("path");
-const { admin_email, admin_password } = require("../config/config");
-const fs = require("fs");
 
 exports.createQuiz = async (req, res) => {
   try {
@@ -134,18 +129,32 @@ exports.updateQuiz = async (req, res) => {
 exports.deleteQuiz = async (req, res) => {
   try {
     const { id } = req.params;
+    const quizId = parseInt(id);
 
-    await prisma.quizQuestion.deleteMany({
-      where: { quizId: parseInt(id) },
+    // Delete related data in the following order:
+    // 1. QuizResults
+    await prisma.quizResult.deleteMany({
+      where: { quizId },
     });
 
+    // 2. QuizAnalytics
+    await prisma.quizAnalytics.deleteMany({
+      where: { quizId },
+    });
+
+    // 3. QuizQuestions
+    await prisma.quizQuestion.deleteMany({
+      where: { quizId },
+    });
+
+    // 4. Finally, delete the Quiz itself
     const deletedQuiz = await prisma.quiz.delete({
-      where: { id: parseInt(id) },
+      where: { id: quizId },
     });
 
     res.status(200).json({
       success: true,
-      message: "Quiz deleted successfully",
+      message: "Quiz and all related data deleted successfully",
       quiz: deletedQuiz,
     });
   } catch (error) {
@@ -153,106 +162,6 @@ exports.deleteQuiz = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to delete quiz",
-      error: error.message,
-    });
-  }
-};
-
-exports.getAllQuizzes = async (req, res) => {
-  try {
-    const quizzes = await prisma.quiz.findMany({
-      include: {
-        admin: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-          },
-        },
-        quizResults: true,
-        quizAnalytics: true,
-      },
-    });
-
-    // Calculate the total number of quizzes
-    const totalQuizzes = quizzes.length;
-
-    res.status(200).json({
-      success: true,
-      totalQuizzes, // Add the total number of quizzes in the response
-      quizzes,
-    });
-  } catch (error) {
-    console.error("Error fetching quizzes:", error);
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch quizzes",
-      error: error.message,
-    });
-  }
-};
-
-exports.getQuizQuestions = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const quizQuestions = await prisma.quizQuestion.findMany({
-      where: { quizId: parseInt(id) },
-      include: {
-        question: {
-          select: {
-            id: true,
-            question: true,
-            correctAnswer: true,
-            option1: true,
-            option2: true,
-            option3: true,
-            imageUrl: true,
-          },
-        },
-      },
-    });
-
-    const formattedQuestions = quizQuestions.map(({ question }) => {
-      const options = [
-        question.correctAnswer,
-        question.option1,
-        question.option2,
-        question.option3,
-      ];
-
-      // Shuffle options
-      for (let i = options.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [options[i], options[j]] = [options[j], options[i]];
-      }
-
-      return {
-        id: question.id,
-        question: question.question,
-        options: options,
-        imageLink: question.imageUrl || "",
-      };
-    });
-
-    // Shuffle questions
-    for (let i = formattedQuestions.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [formattedQuestions[i], formattedQuestions[j]] = [
-        formattedQuestions[j],
-        formattedQuestions[i],
-      ];
-    }
-
-    res.status(200).json({
-      success: true,
-      quizQuestions: formattedQuestions,
-    });
-  } catch (error) {
-    console.error("Error fetching quiz questions:", error);
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch quiz questions",
       error: error.message,
     });
   }
@@ -392,96 +301,102 @@ exports.submitQuiz = async (req, res) => {
   }
 };
 
-
-
-// Create a transporter using SMTP
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: admin_email,
-    pass: admin_password,
-  }
-});
-
-exports.generateAndEmailCertificate = async (req, res) => {
-  const { studentName, quizName, percentage, email } = req.body;
-
-  if (!studentName || !quizName || !email) {
-    return res.status(400).json({ error: 'Missing required fields' });
-  }
-
+exports.getAllQuizzes = async (req, res) => {
   try {
-    const pdfBuffer = await generateCertificatePDF(studentName, quizName, percentage);
-    await emailCertificate(email, studentName, quizName, pdfBuffer);
-    res.status(200).json({ message: 'Certificate generated and emailed successfully' });
+    const quizzes = await prisma.quiz.findMany({
+      include: {
+        admin: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+        quizResults: true,
+        quizAnalytics: true,
+      },
+    });
+
+    // Calculate the total number of quizzes
+    const totalQuizzes = quizzes.length;
+
+    res.status(200).json({
+      success: true,
+      totalQuizzes, // Add the total number of quizzes in the response
+      quizzes,
+    });
   } catch (error) {
-    console.error('Error in certificate generation or emailing:', error);
+    console.error("Error fetching quizzes:", error);
     res.status(500).json({
-      error: 'Error generating or emailing certificate',
-      details: error.message
+      success: false,
+      message: "Failed to fetch quizzes",
+      error: error.message,
     });
   }
 };
 
-async function generateCertificatePDF(studentName, quizName, percentage) {
-  return new Promise((resolve, reject) => {
-    const doc = new PDFDocument({
-      layout: 'landscape',
-      size: 'A4',
+exports.getQuizQuestions = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const quizQuestions = await prisma.quizQuestion.findMany({
+      where: { quizId: parseInt(id) },
+      include: {
+        question: {
+          select: {
+            id: true,
+            question: true,
+            correctAnswer: true,
+            option1: true,
+            option2: true,
+            option3: true,
+            imageUrl: true,
+          },
+        },
+      },
     });
 
-    const buffers = [];
-    doc.on('data', buffers.push.bind(buffers));
-    doc.on('end', () => {
-      const pdfBuffer = Buffer.concat(buffers);
-      resolve(pdfBuffer);
-    });
+    const formattedQuestions = quizQuestions.map(({ question }) => {
+      const options = [
+        question.correctAnswer,
+        question.option1,
+        question.option2,
+        question.option3,
+      ];
 
-    // Add the template to the document
-    const templatePath = path.join(__dirname, "../assets/certificate_template.png");
-    doc.image(templatePath, 0, 0, {width: 842});
-
-    // Set the font
-    doc.font('Helvetica');
-
-    // Add the dynamic text
-    doc.fontSize(28).text(studentName, 0, 300, {
-      align: 'center'
-    });
-
-    doc.fontSize(18).text(`has participated in the ${quizName}`, 0, 340, {
-      align: 'center'
-    });
-
-    doc.fontSize(24).text(`and secured ${percentage}%`, 0, 380, {
-      align: 'center'
-    });
-
-    // Add the date
-    const date = new Date().toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-    doc.fontSize(12).text(date, 700, 400);
-
-    doc.end();
-  });
-}
-
-async function emailCertificate(email, studentName, quizName, pdfBuffer) {
-  const mailOptions = {
-    from: admin_email,
-    to: email,
-    subject: `Your Certificate for ${quizName}`,
-    text: `Dear ${studentName},\n\nCongratulations on completing the ${quizName}! Please find your certificate attached.\n\nBest regards,\nYour Quiz Team`,
-    attachments: [
-      {
-        filename: `${quizName}_${studentName}.pdf`,
-        content: pdfBuffer
+      // Shuffle options
+      for (let i = options.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [options[i], options[j]] = [options[j], options[i]];
       }
-    ]
-  };
 
-  await transporter.sendMail(mailOptions);
-}
+      return {
+        id: question.id,
+        question: question.question,
+        options: options,
+        imageLink: question.imageUrl || "",
+      };
+    });
+
+    // Shuffle questions
+    for (let i = formattedQuestions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [formattedQuestions[i], formattedQuestions[j]] = [
+        formattedQuestions[j],
+        formattedQuestions[i],
+      ];
+    }
+
+    res.status(200).json({
+      success: true,
+      quizQuestions: formattedQuestions,
+    });
+  } catch (error) {
+    console.error("Error fetching quiz questions:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch quiz questions",
+      error: error.message,
+    });
+  }
+};

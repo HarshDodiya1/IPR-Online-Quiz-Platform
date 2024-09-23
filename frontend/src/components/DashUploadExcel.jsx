@@ -132,11 +132,11 @@ function DashUploadExcel() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(88vh)]">
-      <div className="bg-white rounded-lg shadow-2xl border-2 p-6 md:p-8 w-full max-w-2xl mx-auto mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-center text-blue-600 mb-6">
-          Upload Excel File
-        </h1>
+    <div className="flex justify-center min-h-[calc(88vh)] items-center bg-white p-8">
+      <div className="bg-white rounded-xl shadow-2xl p-8 max-w-[98rem] min-h-[80vh] w-full border-2">
+      <h2 className="text-4xl font-semibold mb-4 text-blue-600">
+        Upload Excel file
+      </h2>
         <div
           className={`border-2 border-dashed ${
             isDragging ? "border-blue-500 bg-blue-50" : "border-gray-300"

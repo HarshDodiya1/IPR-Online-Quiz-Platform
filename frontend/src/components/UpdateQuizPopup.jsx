@@ -5,8 +5,8 @@ const UpdateQuizPopup = ({ quiz, onClose, onUpdate, onDelete }) => {
   const [updatedQuiz, setUpdatedQuiz] = useState({
     id: quiz.id,
     title: quiz.title,
-    startDate: new Date(quiz.startDate).toISOString().split("T")[0],
-    endDate: new Date(quiz.endDate).toISOString().split("T")[0],
+    startDate: new Date(quiz.startDate).toISOString().slice(0, 16),
+    endDate: new Date(quiz.endDate).toISOString().slice(0, 16),
     imageLink: quiz.imageLink,
     description: quiz.description,
   });
@@ -18,17 +18,11 @@ const UpdateQuizPopup = ({ quiz, onClose, onUpdate, onDelete }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onUpdate(updatedQuiz);
-  };
-
-  const handleDelete = () => {
-    if (
-      window.confirm(
-        "Are you sure you want to delete this quiz? This action cannot be undone and all quiz data will be permanently deleted."
-      )
-    ) {
-      onDelete(quiz.id);
+    if (new Date(updatedQuiz.endDate) <= new Date(updatedQuiz.startDate)) {
+      toast.error("End time must be after start time");
+      return;
     }
+    onUpdate(updatedQuiz);
   };
 
   return (
@@ -66,10 +60,10 @@ const UpdateQuizPopup = ({ quiz, onClose, onUpdate, onDelete }) => {
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="startDate"
             >
-              Start Date
+              Start Date and Time
             </label>
             <input
-              type="date"
+              type="datetime-local"
               id="startDate"
               name="startDate"
               value={updatedQuiz.startDate}
@@ -83,10 +77,10 @@ const UpdateQuizPopup = ({ quiz, onClose, onUpdate, onDelete }) => {
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="endDate"
             >
-              End Date
+              End Date and Time
             </label>
             <input
-              type="date"
+              type="datetime-local"
               id="endDate"
               name="endDate"
               value={updatedQuiz.endDate}
@@ -136,7 +130,7 @@ const UpdateQuizPopup = ({ quiz, onClose, onUpdate, onDelete }) => {
             </button>
             <button
               type="button"
-              onClick={handleDelete}
+              onClick={() => onDelete(quiz.id)}
               className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center"
             >
               <FaTrash className="mr-2" />

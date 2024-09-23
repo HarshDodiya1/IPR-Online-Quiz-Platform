@@ -54,13 +54,16 @@ const DashboardAnalytics = () => {
   const handleExportExcel = async () => {
     if (!selectedQuiz) return;
     try {
-      const response = await axios.get(`/api/analytics/export/${selectedQuiz}`, {
-        responseType: 'blob',
-      });
+      const response = await axios.get(
+        `/api/analytics/export/${selectedQuiz}`,
+        {
+          responseType: "blob",
+        }
+      );
       const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
-      link.setAttribute('download', `quiz_results_${selectedQuiz}.xlsx`);
+      link.setAttribute("download", `quiz_results_${selectedQuiz}.xlsx`);
       document.body.appendChild(link);
       link.click();
     } catch (error) {
@@ -68,7 +71,8 @@ const DashboardAnalytics = () => {
     }
   };
 
-  const chartOptions = {    responsive: true,
+  const chartOptions = {
+    responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
@@ -97,111 +101,158 @@ const DashboardAnalytics = () => {
   };
 
   return (
-    <div className="bg-white rounded px-4 sm:px-6 py-4 mb-6 h-full overflow-y-auto">
-      <h2 className="text-2xl font-semibold mb-4 text-black">Quiz Analytics Dashboard</h2>
+    <div className="flex justify-center min-h-[calc(88vh)] items-center bg-white p-8">
+      <div className="bg-white rounded-xl shadow-2xl p-8 max-w-[98rem] min-h-[80vh] w-full border-2">
+        <h2 className="text-4xl font-semibold mb-4 text-blue-600">
+          Quiz Analytics Dashboard
+        </h2>
 
-      <div className="mb-6 flex flex-wrap items-center gap-4">
-        <input
-          type="text"
-          placeholder="Search quizzes..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="p-2 border rounded"
-        />
-        <select
-          value={selectedQuiz || ""}
-          onChange={(e) => handleQuizSelect(e.target.value)}
-          className="p-2 border rounded"
-        >
-          <option value="">Select a quiz</option>
-          {quizzes
-            .filter((quiz) => quiz.title.toLowerCase().includes(searchTerm.toLowerCase()))
-            .map((quiz) => (
-              <option key={quiz.id} value={quiz.id}>
-                {quiz.title}
-              </option>
-            ))}
-        </select>
-        <button
-          onClick={handleExportExcel}
-          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-        >
-          Export as Excel
-        </button>
-      </div>
+        <div className="mb-6 flex flex-wrap items-center gap-4">
+          <input
+            type="text"
+            placeholder="Search quizzes..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="p-2 border rounded"
+          />
+          <select
+            value={selectedQuiz || ""}
+            onChange={(e) => handleQuizSelect(e.target.value)}
+            className="p-2 border rounded"
+          >
+            <option value="">Select a quiz</option>
+            {quizzes
+              .filter((quiz) =>
+                quiz.title.toLowerCase().includes(searchTerm.toLowerCase())
+              )
+              .map((quiz) => (
+                <option key={quiz.id} value={quiz.id}>
+                  {quiz.title}
+                </option>
+              ))}
+          </select>
+          <button
+            onClick={handleExportExcel}
+            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+          >
+            Export as Excel
+          </button>
+        </div>
 
-      {analyticsData && (
-        <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            {[
-              { title: "Total Participants", value: analyticsData.totalParticipants },
-              { title: "Completion Ratio", value: (analyticsData.completionRatio * 100).toFixed(2) + "%" },
-              { title: "Average Score", value: analyticsData.averageScore + "%" },
-            ].map((card, index) => (
-              <div key={index} className="bg-white bg-opacity-70 backdrop-blur-lg p-3 rounded-lg text-black shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out hover:bg-opacity-80 transform hover:scale-105">
-                <h3 className="text-lg font-semibold mb-1">{card.title}</h3>
-                <p className="text-2xl font-bold">{card.value}</p>
+        {analyticsData && (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+              {[
+                {
+                  title: "Total Participants",
+                  value: analyticsData.totalParticipants,
+                },
+                {
+                  title: "Completion Ratio",
+                  value: (analyticsData.completionRatio * 100).toFixed(2) + "%",
+                },
+                {
+                  title: "Average Score",
+                  value: analyticsData.averageScore + "%",
+                },
+              ].map((card, index) => (
+                <div
+                  key={index}
+                  className="bg-white bg-opacity-70 backdrop-blur-lg p-3 rounded-lg text-black shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out hover:bg-opacity-80 transform hover:scale-105"
+                >
+                  <h3 className="text-lg font-semibold mb-1">{card.title}</h3>
+                  <p className="text-2xl font-bold">{card.value}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+              <div className="h-64 sm:h-80 p-5 bg-white bg-opacity-70 backdrop-blur-lg rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out hover:bg-opacity-80 transform hover:scale-105">
+                <h3 className="text-lg font-semibold mb-2 text-black">
+                  Participation by Standard
+                </h3>
+                <Bar
+                  data={{
+                    labels: Object.keys(analyticsData.participationByStd),
+                    datasets: [
+                      {
+                        label: "Participants",
+                        data: Object.values(analyticsData.participationByStd),
+                        backgroundColor: "#ff7043",
+                      },
+                    ],
+                  }}
+                  options={chartOptions}
+                />
               </div>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <div className="h-64 sm:h-80 p-5 bg-white bg-opacity-70 backdrop-blur-lg rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out hover:bg-opacity-80 transform hover:scale-105">
-              <h3 className="text-lg font-semibold mb-2 text-black">Participation by Standard</h3>
-              <Bar 
-                data={{
-                  labels: Object.keys(analyticsData.participationByStd),
-                  datasets: [{
-                    label: "Participants",
-                    data: Object.values(analyticsData.participationByStd),
-                    backgroundColor: "#ff7043"
-                  }]
-                }} 
-                options={chartOptions} 
-              />
+              <div className="h-64 sm:h-80 p-5 bg-white bg-opacity-70 backdrop-blur-lg rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out hover:bg-opacity-80 transform hover:scale-105">
+                <h3 className="text-lg font-semibold mb-2 text-black">
+                  Participation by City
+                </h3>
+                <Doughnut
+                  data={{
+                    labels: Object.keys(analyticsData.participationByCity),
+                    datasets: [
+                      {
+                        data: Object.values(analyticsData.participationByCity),
+                        backgroundColor: [
+                          "#ff7043",
+                          "#ffab91",
+                          "#ffe0b2",
+                          "#ffccbc",
+                          "#fbe9e7",
+                        ],
+                      },
+                    ],
+                  }}
+                  options={chartOptions}
+                />
+              </div>
             </div>
-            <div className="h-64 sm:h-80 p-5 bg-white bg-opacity-70 backdrop-blur-lg rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out hover:bg-opacity-80 transform hover:scale-105">
-              <h3 className="text-lg font-semibold mb-2 text-black">Participation by City</h3>
-              <Doughnut 
-                data={{
-                  labels: Object.keys(analyticsData.participationByCity),
-                  datasets: [{
-                    data: Object.values(analyticsData.participationByCity),
-                    backgroundColor: ["#ff7043", "#ffab91", "#ffe0b2", "#ffccbc", "#fbe9e7"]
-                  }]
-                }} 
-                options={chartOptions} 
-              />
-            </div>
-          </div>
 
-          <div className="bg-white bg-opacity-70 backdrop-blur-lg p-5 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out hover:bg-opacity-80">
-            <h3 className="text-lg font-semibold mb-4 text-black">Top 5 Performing Students</h3>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm text-left text-gray-500">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                  <tr>
-                    <th scope="col" className="px-6 py-3">Name</th>
-                    <th scope="col" className="px-6 py-3">City</th>
-                    <th scope="col" className="px-6 py-3">Standard</th>
-                    <th scope="col" className="px-6 py-3">Time Taken</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {analyticsData.topPerformers.map((performer, index) => (
-                    <tr key={index} className="bg-white border-b hover:bg-gray-50">
-                      <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{performer.name}</td>
-                      <td className="px-6 py-4">{performer.city}</td>
-                      <td className="px-6 py-4">{performer.std}</td>
-                      <td className="px-6 py-4">{performer.timeTaken}</td>
+            <div className="bg-white bg-opacity-70 backdrop-blur-lg p-5 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out hover:bg-opacity-80">
+              <h3 className="text-lg font-semibold mb-4 text-black">
+                Top 5 Performing Students
+              </h3>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm text-left text-gray-500">
+                  <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                      <th scope="col" className="px-6 py-3">
+                        Name
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        City
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        Standard
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        Time Taken
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {analyticsData.topPerformers.map((performer, index) => (
+                      <tr
+                        key={index}
+                        className="bg-white border-b hover:bg-gray-50"
+                      >
+                        <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                          {performer.name}
+                        </td>
+                        <td className="px-6 py-4">{performer.city}</td>
+                        <td className="px-6 py-4">{performer.std}</td>
+                        <td className="px-6 py-4">{performer.timeTaken}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
-        </>
-      )}
+          </>
+        )}
+      </div>
     </div>
   );
 };

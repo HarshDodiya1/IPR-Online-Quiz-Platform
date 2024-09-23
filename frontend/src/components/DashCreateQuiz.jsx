@@ -110,9 +110,8 @@ const DashCreateQuiz = () => {
   };  
 
   return (
-    <div className="flex justify-center h-[calc(88vh)] items-center bg-white py-12">
-    
-    <div className="bg-white rounded-xl shadow-2xl p-8 max-w-[98rem] w-full border-2">
+    <div className="flex justify-center min-h-[calc(88vh)] items-center bg-white p-8">
+      <div className="bg-white rounded-xl shadow-2xl p-8 max-w-[98rem] min-h-[80vh] w-full border-2">
       <h2 className="text-4xl font-semibold mb-4 text-blue-600">
         Create New Quiz
       </h2>
