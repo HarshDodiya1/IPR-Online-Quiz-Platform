@@ -2,8 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import * as XLSX from "xlsx";
-import { useSelector, useDispatch } from "react-redux";
-import { updateStart, updateSuccess, updateFailure } from "../slices/userSlice";
 
 const checkImageLink = (url) => {
   return new Promise((resolve) => {
@@ -37,29 +35,6 @@ const ImageWithFallback = ({ src, alt, ...props }) => {
 };
 
 function DashUploadExcel() {
-  const dispatch = useDispatch();
-  const { currentUser, loading, error } = useSelector((state) => state.user);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) {
-        dispatch(updateStart());
-        try {
-          // Simulating an update action
-          dispatch(updateSuccess(currentUser));
-        } catch (error) {
-          dispatch(updateFailure(error.message));
-        }
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [dispatch, currentUser]);
-
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState("");
   const [isDragging, setIsDragging] = useState(false);
@@ -157,8 +132,8 @@ function DashUploadExcel() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(88vh)] px-4 py-8">
-      <div className="bg-white rounded-xl shadow-2xl border-2 p-6 md:p-8 w-full max-w-2xl mx-auto mb-8">
+    <div className="flex flex-col items-center justify-center min-h-[calc(88vh)]">
+      <div className="bg-white rounded-lg shadow-2xl border-2 p-6 md:p-8 w-full max-w-2xl mx-auto mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-center text-blue-600 mb-6">
           Upload Excel File
         </h1>
@@ -212,49 +187,45 @@ function DashUploadExcel() {
       </div>
 
       {filePreview.length > 0 && (
-        <div className="bg-white rounded-lg border-2 shadow-xl p-4 md:p-6 w-full max-w-[96rem] mx-auto overflow-hidden">
-          <h3 className="text-2xl md:text-3xl font-semibold mb-4 text-blue-600">File Preview</h3>
+        <div className="bg-white rounded-lg shadow-xl p-6 md:p-8 w-full max-w-[95rem] mx-auto">
+          <h3 className="text-3xl font-semibold mb-4 text-blue-600">File Preview</h3>
           <div className="overflow-x-auto">
-            <div className="inline-block min-w-full align-middle">
-              <div className="overflow-hidden shadow-sm ring-1 ring-black ring-opacity-5">
-                <table className="min-w-full divide-y divide-gray-300">
-                  <thead>
-                    <tr>
-                      {filePreview[0].map((col, index) => (
-                        <th key={index} scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                          {col}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200 bg-white">
-                    {filePreview.slice(1, 16).map((row, rowIndex) => (
-                      <tr key={rowIndex}>
-                        {row.map((cell, cellIndex) => {
-                          const isLinkColumn = filePreview[0][cellIndex].toLowerCase().includes('link');
-                          return (
-                            <td key={cellIndex} className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                              {isLinkColumn ? (
-                                cell ? (
-                                  <ImageWithFallback
-                                    src={cell}
-                                    alt="Preview"
-                                    className="w-10 h-10 object-cover cursor-pointer"
-                                    onClick={() => setSelectedImage(cell)}
-                                  />
-                                ) : null
-                              ) : (
-                                cell
-                              )}
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+            <table className="w-full border-2">
+              <thead>
+                <tr className="bg-blue-100">
+                  {filePreview[0].map((col, index) => (
+                    <th key={index} className="border-b border-blue-200 px-2 py-2 text-sm font-semibold text-blue-800">
+                      {col}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {filePreview.slice(1, 16).map((row, rowIndex) => (
+                  <tr key={rowIndex} className={rowIndex % 2 === 0 ? "bg-gray-50 text-center" : "bg-white text-center"}>
+                    {row.map((cell, cellIndex) => {
+                      const isLinkColumn = filePreview[0][cellIndex].toLowerCase().includes('link');
+                      return (
+                        <td key={cellIndex} className="border-b border-gray-200 px-2 py-2 text-sm text-gray-700">
+                          {isLinkColumn ? (
+                            cell ? (
+                              <ImageWithFallback
+                                src={cell}
+                                alt="Preview"
+                                className="w-10 h-10 object-cover cursor-pointer"
+                                onClick={() => setSelectedImage(cell)}
+                              />
+                            ) : null
+                          ) : (
+                            cell
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
           {filePreview.length > 16 && (
             <p className="text-sm text-gray-500 mt-4 text-center">

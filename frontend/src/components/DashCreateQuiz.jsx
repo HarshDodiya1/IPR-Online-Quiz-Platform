@@ -111,18 +111,7 @@ const DashCreateQuiz = () => {
 
   return (
     <div className="flex justify-center h-[calc(88vh)] items-center bg-white py-12">
-    <ToastContainer
-      position="top-center"
-      autoClose={5000}
-      hideProgressBar={false}
-      newestOnTop={false}
-      closeOnClick
-      rtl={false}
-      pauseOnFocusLoss
-      draggable
-      pauseOnHover
-      theme="light"
-    />
+    
     <div className="bg-white rounded-xl shadow-2xl p-8 max-w-[98rem] w-full border-2">
       <h2 className="text-4xl font-semibold mb-4 text-blue-600">
         Create New Quiz

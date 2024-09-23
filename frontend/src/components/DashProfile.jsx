@@ -30,8 +30,8 @@ const DashProfile = () => {
         lastName: currentUser.user.lastName || "",
         email: currentUser.user.email || "",
         mobileNumber: currentUser.user.mobileNumber || "",
-        dateOfBirth: currentUser.dateOfBirth
-          ? new Date(currentUser.dateOfBirth).toISOString().split("T")[0]
+        dateOfBirth: currentUser.user.dateOfBirth
+          ? new Date(currentUser.user.dateOfBirth).toISOString().split("T")[0]
           : "",
         schoolName: currentUser.user.schoolName || "",
         standard: currentUser.user.standard || "",

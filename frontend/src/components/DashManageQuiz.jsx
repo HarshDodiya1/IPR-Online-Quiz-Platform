@@ -77,7 +77,7 @@ const DashManageQuiz = () => {
   };
 
   return (
-    <div className="flex justify-center min-h-[calc(88vh)] items-center bg-white py-8">
+    <div className="flex justify-center min-h-[calc(88vh)] items-center bg-white ">
     <div className="bg-white rounded-xl shadow-2xl p-8 max-w-[98rem] min-h-[80vh] w-full border-2">
     <h1 className="text-4xl font-bold mb-6 text-blue-600">Manage Quizzes</h1>
       <div className="mb-6 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 sm:space-x-4">
