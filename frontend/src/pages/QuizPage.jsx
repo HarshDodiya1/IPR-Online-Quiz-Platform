@@ -137,7 +137,7 @@ const QuizPage = () => {
               {question.question}
             </h2>
             {question.imageLink && (
-              <img src={question.imageLink} alt="Question" className="w-full h-60 object-cover rounded-lg shadow-md mb-4" />
+              <img src={question.imageLink} alt="Question" className="w-full h-[30rem] object-cover rounded-lg shadow-md mb-4" />
             )}
             <div className="grid grid-cols-2 gap-4">
               {question.options.map((option, optionIndex) => (
