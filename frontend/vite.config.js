@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     host: '0.0.0.0', 
     proxy: {
-      "/api": "https://backend-ipr.vercel.app",
+      "/api": "http://localhost:3000",
       secure: false,
     },
   },
