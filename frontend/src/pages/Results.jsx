@@ -1,11 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import Confetti from "../components/Confetti";
 import confetti from "canvas-confetti";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Results = () => {
@@ -13,7 +12,6 @@ const Results = () => {
   const [results, setResults] = useState(null);
   const [submittedAnswers, setSubmittedAnswers] = useState({});
   const [questions, setQuestions] = useState([]);
-  const confettiRef = useRef(null);
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const user = useSelector((state) => state.user);

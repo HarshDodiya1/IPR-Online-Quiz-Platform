@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { FaClock, FaCalendarAlt, FaPercent, FaTrophy } from "react-icons/fa";
+import { FaClock, FaCalendarAlt, FaPercent } from "react-icons/fa";
 
 const DashPastQuizzes = () => {
   const [pastQuizzes, setPastQuizzes] = useState([]);

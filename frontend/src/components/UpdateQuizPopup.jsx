@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FaTimes, FaTrash } from "react-icons/fa";
 
 const UpdateQuizPopup = ({ quiz, onClose, onUpdate, onDelete }) => {

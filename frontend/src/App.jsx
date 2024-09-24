@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import "./App.css";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import Home from "./pages/Home";
 import Header from "./components/Header";

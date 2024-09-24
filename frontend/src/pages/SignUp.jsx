@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
 import login from "../../assets/login.svg";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const SignUp = () => {
@@ -130,7 +130,7 @@ const SignUp = () => {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-4 lg:p-8 pt-16 pb-14">
         <div className="bg-white px-4 lg:px-8 py-8 rounded-2xl shadow-md border-2 border-orange-200 w-full max-w-2xl">
           <h1 className="text-2xl lg:text-3xl font-bold text-center mb-6 text-orange-500">
-            Let's Register Account
+            Let&aposs Register Account
           </h1>
           {errorMessage && (
             <div className="text-red-500 mb-4 text-center">{errorMessage}</div>

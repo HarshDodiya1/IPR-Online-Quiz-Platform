@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FaBars, FaTimes, FaChevronDown, FaUser } from "react-icons/fa";
 import { IoLanguage } from "react-icons/io5";
 import Logo from "/Logo.jpg";
