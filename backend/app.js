@@ -41,6 +41,8 @@ app.get("/", (req, res) => {
   });
 });
 
-app.listen(config.port, () => {
+
+const port = config.port || 3000;
+app.listen(port, () => {
   console.log(`⚙️ Server is running at port : ${config.port}`);
 });
