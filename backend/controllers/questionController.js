@@ -12,7 +12,6 @@ exports.questionUpload = async (req, res) => {
     }
 
     const { path } = req.file;
-    console.log("File path:", path);
 
     const workbook = XLSX.readFile(path);
     const sheetName = workbook.SheetNames[0];
@@ -26,6 +25,7 @@ exports.questionUpload = async (req, res) => {
       option2: row.Option2?.toString() || '',
       option3: row.Option3?.toString() || '',
       category: row.Category?.toString() || '',
+      language: row.Language?.toString() || '',
       isBasic: Boolean(row.IsBasic),
     }));
 
@@ -40,6 +40,7 @@ exports.questionUpload = async (req, res) => {
         q.option2 === data.option2 &&
         q.option3 === data.option3 &&
         q.category === data.category &&
+        q.langauge === data.langauge &&
         q.isBasic === data.isBasic
       );
 
@@ -106,6 +107,31 @@ exports.findAllCategories = async (req, res) => {
   }
 };
 
+exports.getAllLanguages = async (req, res) => {
+  try {
+    const languages = await prisma.question.findMany({
+      select: {
+        language: true,
+      },
+      distinct: ['language'],
+    });
+
+    const languageList = languages.map(lang => lang.language);
+
+    res.status(200).json({
+      success: true,
+      languages: languageList,
+    });
+  } catch (error) {
+    console.error("Error fetching languages:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch languages",
+      error: error.message,
+    });
+  }
+};
+
 exports.getAllQuestions = async (req, res) => {
   try {
     const { selectedTags, totalQuestions } = req.body;
@@ -157,3 +183,4 @@ exports.getAllQuestions = async (req, res) => {
     });
   }
 };
+

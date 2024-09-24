@@ -18,7 +18,6 @@ exports.verifyToken = (req, res, next) => {
     token = req.headers.authorization.split(" ")[1];
   }
 
-  console.log("Token received:", token);
 
   // If no token is found in both cookies and header
   if (!token) {
@@ -33,7 +32,6 @@ exports.verifyToken = (req, res, next) => {
     const secret = config.jwtSecret;
     const verified = jwt.verify(token, secret);
 
-    console.log("Decoded token:", verified);
 
     // If token verification fails
     if (!verified) {
@@ -45,7 +43,6 @@ exports.verifyToken = (req, res, next) => {
 
     // Store the decoded user information in req.user
     req.user = verified;
-    console.log("User verified:", req.user);
 
     next();
   } catch (error) {
@@ -66,7 +63,6 @@ exports.verifyAdmin = (req, res, next) => {
       message: "You are not authorized to access this resource (Admin only).",
     });
   }
-  console.log("Admin verified");
 
   next();
 };

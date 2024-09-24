@@ -95,7 +95,6 @@ exports.signout = (req, res, next) => {
 exports.getPastQuizzes = async (req, res) => {
   try {
     const { userId } = req.body;
-    console.log("This is our ")
 
     const pastQuizzes = await prisma.quizResult.findMany({
       where: { userId: userId },

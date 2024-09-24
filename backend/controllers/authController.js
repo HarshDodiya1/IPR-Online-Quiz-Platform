@@ -23,7 +23,6 @@ exports.studentSignup = async (req, res) => {
       city,
     } = req.body;
 
-    console.log("This the the fields we got from req.body.", req.body);
 
     //Validate the required fields
     if (

@@ -35,6 +35,11 @@ const DashPastQuizzes = () => {
         <h2 className="text-4xl font-semibold mb-8 text-blue-600">
           Past Quizzes
         </h2>
+        {pastQuizzes.length === 0 && (
+          <div className="text-center text-lg sm:text-xl text-gray-600 mt-6 sm:mt-10 p-4 sm:p-6 bg-gray-100 rounded-lg shadow">
+            No past quizzes available. Please attempt a quiz now.
+          </div>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {pastQuizzes.map((quiz) => (
             <div

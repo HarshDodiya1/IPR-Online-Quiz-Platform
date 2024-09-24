@@ -95,8 +95,6 @@ const DashProfile = () => {
         `/api/user/update/${currentUser.user.id}`,
         formData
       );
-      console.log("this is the formdata from the frontend", formData);
-      console.log("This is the response from update:", res);
       if (res.data.success) {
         dispatch(updateSuccess(res.data));
         toast.success("Profile updated successfully");

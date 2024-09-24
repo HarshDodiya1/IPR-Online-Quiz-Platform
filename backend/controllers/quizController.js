@@ -11,11 +11,8 @@ exports.createQuiz = async (req, res) => {
       isBasic,
       imageLink,
       description,
+      language,
     } = req.body;
-    console.log(
-      "This is the categories we get from req.body",
-      req.body.categories,
-    );
 
     if (
       !title ||
@@ -46,12 +43,15 @@ exports.createQuiz = async (req, res) => {
         imageLink,
         description,
         adminId: parseInt(req.user.userId),
+        language,
       },
     });
+
     const selectedQuestions = await prisma.question.findMany({
       where: {
         category: { in: categories },
         isBasic: isBasic,
+        language: language,
       },
       orderBy: {
         createdAt: "desc",
@@ -300,7 +300,6 @@ exports.submitQuiz = async (req, res) => {
     });
   }
 };
-
 exports.getAllQuizzes = async (req, res) => {
   try {
     const quizzes = await prisma.quiz.findMany({

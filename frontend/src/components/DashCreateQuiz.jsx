@@ -17,21 +17,28 @@ const DashCreateQuiz = () => {
     isBasic: false,
     imageLink: "",
     description: "",
+    language: "",
   });
 
   const [categoryOptions, setCategoryOptions] = useState([]);
+  const [languageOptions, setLanguageOptions] = useState([]);
   const [error, setError] = useState("");
+
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchCategoriesAndLanguages = async () => {
       try {
-        const response = await axios.get("/api/questions/category");
-        setCategoryOptions(response.data.categories);
+        const [categoriesResponse, languagesResponse] = await Promise.all([
+          axios.get("/api/questions/category"),
+          axios.get("/api/questions/languages"),
+        ]);
+        setCategoryOptions(categoriesResponse.data.categories);
+        setLanguageOptions(languagesResponse.data.languages);
       } catch (error) {
-        console.error("Error fetching categories:", error);
+        console.error("Error fetching categories and languages:", error);
       }
     };
 
-    fetchCategories();
+    fetchCategoriesAndLanguages();
   }, []);
   useEffect(() => {
     if (!currentUser.user || !currentUser.user.isAdmin) {
@@ -70,20 +77,21 @@ const DashCreateQuiz = () => {
       !newQuiz.title ||
       !newQuiz.startDate ||
       !newQuiz.endDate ||
-      newQuiz.categories.length !== 4
+      newQuiz.categories.length !== 4 ||
+      !newQuiz.language
     ) {
       toast.error(
-        "Please fill all required fields and select exactly 4 categories"
+        "Please fill all required fields, select exactly 4 categories, and choose a language"
       );
       return;
     }
-  
+
     setLoading(true);
     try {
       const response = await axios.post("/api/quiz/create", newQuiz, {
         withCredentials: true,
       });
-  
+
       if (response.data.success) {
         toast.success("Quiz created successfully!");
         setNewQuiz({
@@ -94,6 +102,7 @@ const DashCreateQuiz = () => {
           isBasic: false,
           imageLink: "",
           description: "",
+          language: "",
         });
       } else {
         toast.error(response.data.message || "Failed to create quiz");
@@ -107,7 +116,8 @@ const DashCreateQuiz = () => {
     } finally {
       setLoading(false);
     }
-  };  
+  };
+
 
 
   return (
@@ -173,6 +183,25 @@ const DashCreateQuiz = () => {
                 className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-base sm:text-lg font-bold mb-2">
+              Language *
+            </label>
+            <select
+              name="language"
+              value={newQuiz.language}
+              onChange={handleInputChange}
+              required
+              className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Select a language</option>
+              {languageOptions.map((lang) => (
+                <option key={lang} value={lang}>
+                  {lang}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="mb-4">
             <label className="block text-gray-700 text-base sm:text-lg font-bold mb-2">

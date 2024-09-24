@@ -21,6 +21,7 @@ model User {
   city              String
   totalQuizzesTaken Int           @default(0)
   isAdmin           Boolean       @default(false)
+  attemptedQuizzes  Int[]         // Add this line
   quizResults       QuizResult[]
   createdQuizzes    Quiz[]
 
@@ -37,6 +38,7 @@ model Quiz {
   description       String
   adminId           Int
   categories        String[]
+  language          String 
   quizAnalytics     QuizAnalytics?
   selectedQuestions QuizQuestion[]
   quizResults       QuizResult[]
@@ -53,6 +55,7 @@ model Question {
   option2       String
   option3       String
   category      String
+  language      String
   isBasic       Boolean
   imageUrl      String?
   createdAt     DateTime       @default(now())

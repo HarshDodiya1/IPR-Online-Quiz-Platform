@@ -5,6 +5,7 @@ const {
   questionUpload,
   findAllCategories,
   getAllQuestions,
+  getAllLanguages,
 } = require("../controllers/questionController.js");
 const { multerUpload } = require("../middleware/multerUpload.js");
 
@@ -20,6 +21,7 @@ router.post(
 );
 
 router.get("/category", verifyToken, verifyAdmin, findAllCategories);
+router.get("/languages", verifyToken, verifyAdmin, getAllLanguages);
 router.post("/get-questions", verifyToken, verifyAdmin, getAllQuestions);
 
 module.exports = router;

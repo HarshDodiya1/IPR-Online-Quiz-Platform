@@ -38,7 +38,7 @@ function App() {
           {isMobile ? <MobileNav /> : <Header />}
         </div>
         <main className="flex-grow mt-28 z-0">
-          <ScrollToTop />
+          <ScrollToTop /> 
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/sign-up" element={<SignUp />} />

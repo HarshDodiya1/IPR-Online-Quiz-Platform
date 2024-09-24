@@ -82,7 +82,6 @@ const Results = () => {
         toast.success("Certificate sent successfully!");
       }
     } catch (error) {
-      console.log("Error sending certificate:", error);
       toast.error("Failed to send certificate. Please try again.");
     } finally {
       setIsLoading(false);
