@@ -211,7 +211,8 @@ exports.submitQuiz = async (req, res) => {
 
     const user = await prisma.user.update({
       where: { id: userId },
-      data: { totalQuizzesTaken: { increment: 1 } },
+      // data: { totalQuizzesTaken: { increment: 1 } },//-
+      data: { totalQuizzesTaken: { push: parseInt(quizId) } },
       select: { firstName: true, lastName: true, standard: true, city: true },
     });
     console.log("This is the user after update: ", user);

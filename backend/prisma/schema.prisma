@@ -19,9 +19,8 @@ model User {
   standard          Int
   schoolName        String
   city              String
-  totalQuizzesTaken Int           @default(0)
+  totalQuizzesTaken Int[]    @default([])
   isAdmin           Boolean       @default(false)
-  attemptedQuizzes  Int[]         // Add this line
   quizResults       QuizResult[]
   createdQuizzes    Quiz[]
 
