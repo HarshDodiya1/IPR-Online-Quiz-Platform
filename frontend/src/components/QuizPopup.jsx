@@ -26,8 +26,7 @@ const Popup = ({ show, onClose, quizId }) => {
             <FaRegCheckCircle className="mr-2 text-green-500" />
             Rules
           </h2>
-          <p className="mb-4 text-base">
-            <ul className="list-disc list-inside">
+            <ul className="list-disc list-inside mb-4 text-base">
               <li>
                 You have 15 minutes to complete the quiz.
               </li>
@@ -44,7 +43,6 @@ const Popup = ({ show, onClose, quizId }) => {
                 You can see your results after the quiz.
               </li>
             </ul>
-          </p>
           <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2">
             <button
               onClick={onClose}
