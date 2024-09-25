@@ -9,7 +9,7 @@ const app = express();
 dotenv.config();
 app.use(
   cors({
-    origin: config.cors_origin,
+    origin: ['https://quiz-ipr.vercel.app', 'http://localhost:5173'],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
