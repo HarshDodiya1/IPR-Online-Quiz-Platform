@@ -14,6 +14,10 @@ import navEN from "./locales/en/nav.json";
 import navGU from "./locales/gu/nav.json";
 import navHI from "./locales/hi/nav.json";
 
+import authEN from "./locales/en/auth.json";
+import authGU from "./locales/gu/auth.json";
+import authHI from "./locales/hi/auth.json";
+
 i18n
   .use(LanguageDetector)
   .use(initReactI18next)
@@ -28,16 +32,19 @@ i18n
         translation: translationEN,
         home: homeEN,
         nav: navEN,
+        auth: authEN,
       },
       gu: {
         translation: translationGU,
         home: homeGU,
         nav: navGU,
+        auth: authGU,
       },
       hi: {
         translation: translationHI,
         home: homeHI,
         nav: navHI,
+        auth: authHI,
       },
     },
   });

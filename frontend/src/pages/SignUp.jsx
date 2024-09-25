@@ -5,6 +5,7 @@ import login from "../assets/Login.svg";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useTranslation } from "react-i18next";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ const SignUp = () => {
     standard: "",
     city: "",
   });
+  const { t } = useTranslation("auth");
 
   const cities = [
     "Ahmedabad",
@@ -76,24 +78,24 @@ const SignUp = () => {
       setLoading(true);
 
       if (Object.values(formData).some((field) => field === "")) {
-        toast.error("Please fill in all the fields.");
+        toast.error(t("validation.fillAllFields"));
         return;
       }
 
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(formData.email)) {
-        toast.error("Please enter a valid email address.");
+        toast.error(t("validation.invalidEmail"));
         return;
       }
 
       const mobileRegex = /^[0-9]{10}$/;
       if (!mobileRegex.test(formData.mobileNumber)) {
-        toast.error("Please enter a valid mobile number (10 digits).");
+        toast.error(t("validation.invalidMobile"));
         return;
       }
 
       if (formData.password.length < 6) {
-        toast.error("Password must be at least 6 characters long.");
+        toast.error(t("validation.passwordLength"));
         return;
       }
 
@@ -105,15 +107,14 @@ const SignUp = () => {
 
       if (data.success) {
         localStorage.setItem("token", data.token);
-        toast.success("Registration successful! Redirecting to login...");
+        toast.success(t("validation.registrationSuccess"));
         setTimeout(() => navigate("/login"), 3000);
       } else {
-        toast.error("Registration failed. Please try again.");
+        toast.error(t("validation.registrationFailed"));
       }
     } catch (error) {
       toast.error(
-        error.response?.data?.message ||
-          "An error occurred. Please try again later."
+        error.response?.data?.message || t("validation.genericError")
       );
     } finally {
       setLoading(false);
@@ -130,7 +131,7 @@ const SignUp = () => {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-4 lg:p-8 pt-16 pb-14">
         <div className="bg-white px-4 lg:px-8 py-8 rounded-2xl shadow-md border-2 border-orange-200 w-full max-w-2xl">
           <h1 className="text-2xl lg:text-3xl font-bold text-center mb-6 text-orange-500">
-            Let&aposs Register Account
+            {t("signup.title")}
           </h1>
           {errorMessage && (
             <div className="text-red-500 mb-4 text-center">{errorMessage}</div>
@@ -139,7 +140,7 @@ const SignUp = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label htmlFor="firstName" className="block mb-1 font-medium">
-                  First Name
+                  {t("signup.firstName")}
                 </label>
                 <input
                   id="firstName"
@@ -153,7 +154,7 @@ const SignUp = () => {
               </div>
               <div>
                 <label htmlFor="middleName" className="block mb-1 font-medium">
-                  Middle Name
+                  {t("signup.middleName")}
                 </label>
                 <input
                   id="middleName"
@@ -167,7 +168,7 @@ const SignUp = () => {
               </div>
               <div>
                 <label htmlFor="lastName" className="block mb-1 font-medium">
-                  Last Name
+                  {t("signup.lastName")}
                 </label>
                 <input
                   id="lastName"
@@ -181,7 +182,7 @@ const SignUp = () => {
               </div>
               <div>
                 <label htmlFor="email" className="block mb-1 font-medium">
-                  Email
+                  {t("signup.email")}
                 </label>
                 <input
                   id="email"
@@ -198,7 +199,7 @@ const SignUp = () => {
                   htmlFor="mobileNumber"
                   className="block mb-1 font-medium"
                 >
-                  Mobile Number
+                  {t("signup.mobileNumber")}
                 </label>
                 <input
                   id="mobileNumber"
@@ -212,7 +213,7 @@ const SignUp = () => {
               </div>
               <div>
                 <label htmlFor="dateOfBirth" className="block mb-1 font-medium">
-                  Date of Birth
+                  {t("signup.dateOfBirth")}
                 </label>
                 <input
                   id="dateOfBirth"
@@ -226,7 +227,7 @@ const SignUp = () => {
               </div>
               <div>
                 <label htmlFor="schoolName" className="block mb-1 font-medium">
-                  School Name
+                  {t("signup.schoolName")}
                 </label>
                 <input
                   id="schoolName"
@@ -240,7 +241,7 @@ const SignUp = () => {
               </div>
               <div>
                 <label htmlFor="standard" className="block mb-1 font-medium">
-                  Standard
+                  {t("signup.standard")}
                 </label>
                 <select
                   id="standard"
@@ -250,7 +251,7 @@ const SignUp = () => {
                   onChange={handleInputChange}
                 >
                   <option value="" disabled>
-                    Select your standard
+                    {t("signup.selectStandard")}
                   </option>
                   {[...Array(8)].map((_, index) => (
                     <option key={index + 5} value={index + 5}>
@@ -262,7 +263,7 @@ const SignUp = () => {
             </div>
             <div>
               <label htmlFor="city" className="block mb-1 font-medium">
-                City
+                {t("signup.city")}
               </label>
               <select
                 id="city"
@@ -271,7 +272,7 @@ const SignUp = () => {
                 value={formData.city}
                 onChange={handleInputChange}
               >
-                <option value="">Select your city</option>
+                <option value="">{t("signup.selectCity")}</option>
                 {cities.map((city, index) => (
                   <option key={index} value={city}>
                     {city}
@@ -281,7 +282,7 @@ const SignUp = () => {
             </div>
             <div>
               <label htmlFor="password" className="block mb-1 font-medium">
-                Password
+                {t("signup.password")}
               </label>
               <div className="relative">
                 <input
@@ -311,22 +312,22 @@ const SignUp = () => {
               className="w-full py-3 rounded-xl bg-orange-500 text-white text-lg font-bold transition-all hover:bg-orange-600 active:scale-[.98] disabled:bg-orange-300"
               disabled={loading}
             >
-              {loading ? "Loading..." : "Register"}
+              {loading ? "Loading..." : t("signup.registerButton")}
             </button>
           </form>
           <div className="flex items-center justify-center mt-4">
             <hr className="flex-grow border-t border-gray-300" />
-            <span className="mx-2 text-gray-500">or</span>
+            <span className="mx-2 text-gray-500">{t("signup.or")}</span>
             <hr className="flex-grow border-t border-gray-300" />
           </div>
 
           <p className="text-center mt-4">
-            Already have an account?
+            {t("signup.haveAccount")}
             <Link
               to="/login"
               className="font-medium text-orange-500 ml-2 hover:underline"
             >
-              Login
+              {t("signup.loginHere")}
             </Link>
           </p>
         </div>
