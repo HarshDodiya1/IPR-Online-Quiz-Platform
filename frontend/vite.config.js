@@ -2,7 +2,6 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 
-// https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
     alias: {
@@ -12,9 +11,11 @@ export default defineConfig({
   server: {
     host: "0.0.0.0",
     proxy: {
-      "/api": "https://backend-ipr.vercel.app",
-      changeOrigin: true,
-      secure: true,
+      "/api": {
+        target: "https://backend-ipr.vercel.app",
+        changeOrigin: true,
+        secure: true,
+      },
     },
   },
   plugins: [react()],
