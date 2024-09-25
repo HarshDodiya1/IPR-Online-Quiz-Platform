@@ -16,6 +16,7 @@ import Results from "./pages/Results.jsx";
 import { AboutUs } from "./pages/AboutUs.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "./i18n.js"
 
 function App() {
   const { t } = useTranslation();

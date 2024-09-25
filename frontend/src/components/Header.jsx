@@ -18,10 +18,10 @@ const useOutsideClick = (callback) => {
       }
     };
 
-    document.addEventListener('mousedown', handleClick);
+    document.addEventListener("mousedown", handleClick);
 
     return () => {
-      document.removeEventListener('mousedown', handleClick);
+      document.removeEventListener("mousedown", handleClick);
     };
   }, [callback]);
 
@@ -32,7 +32,7 @@ const Header = () => {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [showSignoutModal, setShowSignoutModal] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation("nav");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -79,37 +79,37 @@ const Header = () => {
       <div className="mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex justify-between items-center h-20">
           <Link to="/" className="flex items-center space-x-4">
-            <img src={Logo} alt="IPR Logo" className="h-18 w-20" />
+            <img src={Logo} alt="IPR Logo" className="h-24 w-26" />
             <div>
-              <div className="text-orange-500 text-xl sm:text-3xl font-black">Institute for Plasma Research</div>
-              <div className="text-gray-600 text-sm sm:text-2xl">{t("instituteHindi")}</div>
+              <div className="text-[#e1823a] text-sm sm:text-3xl font-medium text-center">
+              प्लाज्मा अनुसंधान संस्थान
+              </div>
+              <p className="text-[#23559f] font-normal text-xl sm:text-3xl ">
+                Institute for{" "}
+                <span className="font-black">Plasma Research</span>
+              </p>
             </div>
           </Link>
 
           <div className="hidden md:flex items-center space-x-8" ref={dropdownRef}>
             <Link to="/about-us" className="text-gray-800 hover:text-orange-500 text-lg font-medium transition duration-300">
-              About Us
+              {t("aboutUs")}
             </Link>
             <div className="relative">
-              <button
-                onClick={() => handleDropdownToggle('language')}
-                className="flex items-center text-gray-800 hover:text-orange-500 text-lg font-medium transition duration-300"
-              >
+              <button onClick={() => handleDropdownToggle("language")} className="flex items-center text-gray-800 hover:text-orange-500 text-lg font-medium transition duration-300">
                 <IoLanguage className="mr-2 text-3xl" />
                 <span>{t("language")}</span>
-                <FaChevronDown className={`ml-2 w-5 h-5 transition-transform ${openDropdown === 'language' ? "rotate-180" : "rotate-0"}`} />
+                <FaChevronDown className={`ml-2 w-5 h-5 transition-transform ${openDropdown === "language" ? "rotate-180" : "rotate-0"}`} />
               </button>
-              {openDropdown === 'language' && (
+              {openDropdown === "language" && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
                   {["en", "gu", "hi"].map((lang) => (
                     <button
                       key={lang}
                       onClick={() => changeLanguage(lang)}
-                      className={`block w-full text-left px-4 py-2 text-lg text-gray-700 hover:bg-orange-100 transition duration-300 ${
-                        i18n.language === lang ? "bg-orange-200 text-orange-600 font-semibold" : ""
-                      }`}
+                      className={`block w-full text-left px-4 py-2 text-lg text-gray-700 hover:bg-orange-100 transition duration-300 ${i18n.language === lang ? "bg-orange-200 text-orange-600 font-semibold" : ""}`}
                     >
-                      {lang === "en" ? "English" : lang === "gu" ? "ગુજરાતી" : "हिंदी"}
+                      {t(lang === "en" ? "english" : lang === "gu" ? "gujarati" : "hindi")}
                     </button>
                   ))}
                 </div>
@@ -117,34 +117,29 @@ const Header = () => {
             </div>
             {currentUser ? (
               <div className="relative group">
-                <button
-                  onClick={() => handleDropdownToggle('user')}
-                  className="flex justify-center items-center text-gray-800 text-xl font-medium transition duration-300 border-2 h-14 w-64 border-gray-400 rounded-md hover:border-orange-500"
-                >
+                <button onClick={() => handleDropdownToggle("user")} className="flex justify-center items-center text-gray-800 text-xl font-medium transition duration-300 border-2 h-14 w-64 border-gray-400 rounded-md hover:border-orange-500">
                   <FaUser className="mr-2 text-2xl" />
-                  <span className="text-lg">Welcome, <span className="text-orange-500 opacity-85">{currentUser?.user.firstName ? ` ${currentUser.user.firstName}` : ' Guest'}</span></span>
-                  <FaChevronDown className={`ml-2 w-5 h-5 transition-transform ${openDropdown === 'user' ? "rotate-180" : "rotate-0"}`} />
+                  <span className="text-lg">
+                    {t("welcome")},{" "}
+                    <span className="text-orange-500 opacity-85">
+                      {currentUser?.user.firstName ? ` ${currentUser.user.firstName}` : " Guest"}
+                    </span>
+                  </span>
+                  <FaChevronDown className={`ml-2 w-5 h-5 transition-transform ${openDropdown === "user" ? "rotate-180" : "rotate-0"}`} />
                 </button>
-                <div className={`absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-10 transition-opacity duration-300 ${openDropdown === 'user' ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-                  <Link
-                    to="/dashboard"
-                    className="block px-4 py-2 text-lg text-gray-700 hover:bg-orange-100 transition duration-300"
-                    onClick={closeDropdown}
-                  >
+                <div className={`absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-10 transition-opacity duration-300 ${openDropdown === "user" ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
+                  <Link to="/dashboard" className="block px-4 py-2 text-lg text-gray-700 hover:bg-orange-100 transition duration-300" onClick={closeDropdown}>
                     {t("accountSettings")}
                   </Link>
-                  <button
-                    onClick={() => setShowSignoutModal(true)}
-                    className="block w-full text-left px-4 py-2 text-lg text-gray-700 hover:bg-orange-100 transition duration-300"
-                  >
-                    {t("signOut")}
+                  <button onClick={() => setShowSignoutModal(true)} className="block w-full text-left px-4 py-2 text-lg text-gray-700 hover:bg-orange-100 transition duration-300">
+                    {t("logout")}
                   </button>
                 </div>
-              </div>            
+              </div>
             ) : (
               <Link to="/sign-up">
                 <Button className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-2 rounded-md text-5xl font-medium transition duration-300">
-                  <span className="text-xl">Sign Up</span>
+                  <span className="text-xl">{t("signUp")}</span>
                 </Button>
               </Link>
             )}
@@ -171,24 +166,34 @@ const Header = () => {
                 {t("pastQuizzes")}
               </Link>
               <button
-                onClick={() => handleDropdownToggle('language')}
+                onClick={() => handleDropdownToggle("language")}
                 className="flex items-center w-full text-gray-800 hover:text-orange-500 text-lg font-medium transition duration-300"
               >
                 <IoLanguage className="mr-2 text-xl" />
                 <span className="font-medium">{t("language")}</span>
-                <FaChevronDown className={`ml-2 w-5 h-5 transition-transform ${openDropdown === 'language' ? "rotate-180" : "rotate-0"}`} />
+                <FaChevronDown
+                  className={`ml-2 w-5 h-5 transition-transform ${
+                    openDropdown === "language" ? "rotate-180" : "rotate-0"
+                  }`}
+                />
               </button>
-              {openDropdown === 'language' && (
+              {openDropdown === "language" && (
                 <div className="pl-4">
                   {["en", "gu", "hi"].map((lang) => (
                     <button
                       key={lang}
                       onClick={() => changeLanguage(lang)}
                       className={`block w-full text-left py-2 text-lg text-gray-700 hover:bg-orange-100 transition duration-300 ${
-                        i18n.language === lang ? "bg-orange-200 text-orange-600 font-semibold" : ""
+                        i18n.language === lang
+                          ? "bg-orange-200 text-orange-600 font-semibold"
+                          : ""
                       }`}
                     >
-                      {lang === "en" ? "English" : lang === "gu" ? "ગુજરાતી" : "हिंदी"}
+                      {lang === "en"
+                        ? "English"
+                        : lang === "gu"
+                        ? "ગુજરાતી"
+                        : "हिंदी"}
                     </button>
                   ))}
                 </div>
@@ -200,13 +205,13 @@ const Header = () => {
                     className="block text-gray-800 hover:text-orange-500 text-lg font-medium transition duration-300"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    {t("accountSettings")}
+                    Account Settings
                   </Link>
                   <button
                     onClick={() => setShowSignoutModal(true)}
                     className="block w-full text-left text-gray-800 hover:text-orange-500 text-lg font-medium transition duration-300"
                   >
-                    {t("signOut")}
+                    Logout
                   </button>
                 </>
               ) : (
@@ -224,18 +229,18 @@ const Header = () => {
       </div>
 
       <Modal show={showSignoutModal} onClose={() => setShowSignoutModal(false)}>
-        <Modal.Header>Confirm Sign Out</Modal.Header>
+        <Modal.Header>{t("logout")}</Modal.Header>
         <Modal.Body>
           <p className="text-base leading-relaxed text-gray-500">
-            Are you sure you want to sign out?
+            {t("signOutConfirmation")}
           </p>
         </Modal.Body>
         <Modal.Footer>
           <Button className="bg-orange-500" onClick={handleSignout}>
-            Yes, Sign Out
+            {t("yesSignOut")}
           </Button>
           <Button color="gray" onClick={() => setShowSignoutModal(false)}>
-            Cancel
+            {t("cancel")}
           </Button>
         </Modal.Footer>
       </Modal>

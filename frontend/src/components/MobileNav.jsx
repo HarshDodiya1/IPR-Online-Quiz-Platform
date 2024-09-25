@@ -18,10 +18,10 @@ const useOutsideClick = (callback) => {
       }
     };
 
-    document.addEventListener('mousedown', handleClick);
+    document.addEventListener("mousedown", handleClick);
 
     return () => {
-      document.removeEventListener('mousedown', handleClick);
+      document.removeEventListener("mousedown", handleClick);
     };
   }, [callback]);
 
@@ -32,7 +32,7 @@ const MobileNav = () => {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [showSignoutModal, setShowSignoutModal] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation("nav");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -79,10 +79,18 @@ const MobileNav = () => {
       <div className="mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex justify-between items-center h-20">
           <Link to="/" className="flex items-center space-x-4">
-            <img src={Logo} alt="IPR Logo" className="h-16 w-16 sm:h-18 sm:w-20" />
+            <img
+              src={Logo}
+              alt="IPR Logo"
+              className="h-16 w-16 sm:h-18 sm:w-20"
+            />
             <div>
-              <div className="text-orange-500 text-lg sm:text-xl font-black">Institute for Plasma Research</div>
-              <div className="hidden sm:block text-gray-600 text-xs sm:text-sm">{t("instituteHindi")}</div>
+              <div className="text-orange-500 text-lg sm:text-xl font-black">
+                Institute for Plasma Research
+              </div>
+              <div className="hidden sm:block text-gray-600 text-xs sm:text-sm">
+                {t("instituteHindi")}
+              </div>
             </div>
           </Link>
 
@@ -104,28 +112,40 @@ const MobileNav = () => {
                 className="block text-gray-800 hover:text-orange-500 text-base font-medium transition duration-300"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                About Us
+                {t("aboutUs")}
               </Link>
               <div className="relative">
                 <button
-                  onClick={() => handleDropdownToggle('language')}
+                  onClick={() => handleDropdownToggle("language")}
                   className="flex items-center w-full text-gray-800 hover:text-orange-500 text-base font-medium transition duration-300"
                 >
                   <IoLanguage className="mr-2 text-xl" />
                   <span>{t("language")}</span>
-                  <FaChevronDown className={`ml-auto w-4 h-4 transition-transform ${openDropdown === 'language' ? "rotate-180" : "rotate-0"}`} />
+                  <FaChevronDown
+                    className={`ml-auto w-4 h-4 transition-transform ${
+                      openDropdown === "language" ? "rotate-180" : "rotate-0"
+                    }`}
+                  />
                 </button>
-                {openDropdown === 'language' && (
+                {openDropdown === "language" && (
                   <div className="mt-2 bg-white rounded-md shadow-lg py-1">
                     {["en", "gu", "hi"].map((lang) => (
                       <button
                         key={lang}
                         onClick={() => changeLanguage(lang)}
                         className={`block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-orange-100 transition duration-300 ${
-                          i18n.language === lang ? "bg-orange-200 text-orange-600 font-semibold" : ""
+                          i18n.language === lang
+                            ? "bg-orange-200 text-orange-600 font-semibold"
+                            : ""
                         }`}
                       >
-                        {lang === "en" ? "English" : lang === "gu" ? "ગુજરાતી" : "हिंदी"}
+                        {t(
+                          lang === "en"
+                            ? "english"
+                            : lang === "gu"
+                            ? "gujarati"
+                            : "hindi"
+                        )}
                       </button>
                     ))}
                   </div>
@@ -134,14 +154,23 @@ const MobileNav = () => {
               {currentUser ? (
                 <div className="relative">
                   <button
-                    onClick={() => handleDropdownToggle('user')}
+                    onClick={() => handleDropdownToggle("user")}
                     className="flex items-center w-full text-gray-800 hover:text-orange-500 text-base font-medium transition duration-300"
                   >
                     <FaUser className="mr-2 text-xl" />
-                    <span>Welcome, <span className="text-orange-500">{currentUser.user.firstName}</span></span>
-                    <FaChevronDown className={`ml-auto w-4 h-4 transition-transform ${openDropdown === 'user' ? "rotate-180" : "rotate-0"}`} />
+                    <span>
+                      {t("welcome")},{" "}
+                      <span className="text-orange-500">
+                        {currentUser.user.firstName}
+                      </span>
+                    </span>
+                    <FaChevronDown
+                      className={`ml-auto w-4 h-4 transition-transform ${
+                        openDropdown === "user" ? "rotate-180" : "rotate-0"
+                      }`}
+                    />
                   </button>
-                  {openDropdown === 'user' && (
+                  {openDropdown === "user" && (
                     <div className="mt-2 bg-white rounded-md shadow-lg py-1">
                       <Link
                         to="/dashboard"
@@ -154,7 +183,7 @@ const MobileNav = () => {
                         onClick={() => setShowSignoutModal(true)}
                         className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-orange-100 transition duration-300"
                       >
-                        {t("signOut")}
+                        {t("logout")}
                       </button>
                     </div>
                   )}
@@ -165,7 +194,7 @@ const MobileNav = () => {
                   className="block text-center bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md text-base font-medium transition duration-300"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Sign Up
+                  {t("signup")}
                 </Link>
               )}
             </div>
@@ -174,18 +203,22 @@ const MobileNav = () => {
       </div>
 
       <Modal show={showSignoutModal} onClose={() => setShowSignoutModal(false)}>
-        <Modal.Header>Signing Out</Modal.Header>
+        <Modal.Header>{t("logout")}</Modal.Header>
         <Modal.Body>
           <p className="text-sm leading-relaxed text-gray-500">
-            Are you sure you want to sign out?
+            {t("signOutConfirmation")}
           </p>
         </Modal.Body>
         <Modal.Footer>
           <Button className="bg-orange-500 text-sm" onClick={handleSignout}>
-            Yes, Sign Out
+            {t("yesSignOut")}
           </Button>
-          <Button color="gray" className="text-sm" onClick={() => setShowSignoutModal(false)}>
-            Cancel
+          <Button
+            color="gray"
+            className="text-sm"
+            onClick={() => setShowSignoutModal(false)}
+          >
+            {t("cancel")}
           </Button>
         </Modal.Footer>
       </Modal>

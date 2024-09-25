@@ -1,23 +1,9 @@
-import { useState } from "react";
-import {
-  FaClock,
-  FaQuestionCircle,
-  FaCalendarAlt,
-  FaTag,
-} from "react-icons/fa";
-import QuizPopup from "./QuizPopup";
-import LoginPopup from "./LoginPopup";
-const QuizCard = ({ quiz, isLoggedIn }) => {
-  const [showQuizPopup, setShowQuizPopup] = useState(false);
-  const [showLoginPopup, setShowLoginPopup] = useState(false);
-  const handleStart = () => {
-    if (isLoggedIn) {
-      setShowQuizPopup(true);
-    } else {
-      setShowLoginPopup(true);
-    }
-  };
+import { FaQuestionCircle, FaLanguage, FaTag } from "react-icons/fa";
+import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
+const QuizCard = ({ quiz, isLoggedIn, onStart }) => {
+  const { t } = useTranslation("home");
   const currentDate = new Date();
   const startDate = new Date(quiz.startDate);
   const endDate = new Date(quiz.endDate);
@@ -30,62 +16,73 @@ const QuizCard = ({ quiz, isLoggedIn }) => {
     return Math.ceil(timeDiff / (1000 * 3600 * 24));
   };
 
+  const getBadgeContent = () => {
+    if (isOngoing) {
+      return t("daysLeft", { count: getDaysRemaining(endDate) });
+    } else if (isUpcoming) {
+      return t("startsIn", { count: getDaysRemaining(startDate) });
+    } else {
+      return t("closed");
+    }
+  };
+
+  const getBadgeColor = () => {
+    if (isOngoing) return "bg-green-500";
+    if (isUpcoming) return "bg-yellow-500";
+    return "bg-red-500";
+  };
+
   return (
-    <>
-      <div className="bg-white bg-opacity-60 backdrop-blur-md shadow-lg rounded-lg p-4 mb-4 transition-transform transform hover:scale-105 duration-300 ease-in-out border border-orange-200">
-        <img
-          src={quiz.imageLink}
-          alt={quiz.title}
-          className="w-full h-40 object-cover rounded-lg mb-4"
-        />
-        <h3 className="text-lg font-semibold mb-2 text-orange-700 flex items-center">
-          <FaQuestionCircle className="mr-2 text-yellow-500" />
+    <motion.div
+      className="bg-white rounded-xl shadow-2xl overflow-hidden relative"
+      whileHover={{ y: -10, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
+    >
+      <div className={`absolute top-4 right-4 ${getBadgeColor()} text-white text-lg font-bold px-4 py-2 rounded-full z-10 shadow-lg`}>
+        {getBadgeContent()}
+      </div>
+      <img
+        src={quiz.imageLink}
+        alt={quiz.title}
+        className="w-full h-56 object-cover"
+      />
+      <div className="p-6">
+        <h3 className="text-2xl font-bold mb-3 text-purple-700">
           {quiz.title}
         </h3>
-        <p className="text-gray-600 mb-2">{quiz.description}</p>
-        <div className="flex flex-wrap text-gray-600 mb-2">
-          {quiz.categories.map((category, index) => (
-            <span key={index} className="flex items-center mr-2 mb-1 bg-yellow-200 rounded-[5%] p-1 ">
-              {category}
-            </span>
-          ))}
+        <p className="text-gray-600 mb-4 text-lg">{quiz.description}</p>
+        <div className="flex items-start mb-4">
+          <FaTag className="mr-2  text-blue-500" size={20} />
+          <span className="font-semibold  mr-2">{t("categories")}</span>
+          <div className="flex flex-wrap gap-2">
+            {quiz.categories.map((category, index) => (
+              <span key={index} className="bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1 rounded-full">
+                {category}
+              </span>
+            ))}
+          </div>
         </div>
-        <p className="text-gray-600 mb-2">
-          <FaQuestionCircle className="mr-1 inline text-green-500" />
-          {quiz.isBasic ? "Basic" : "Advanced"}
+        <p className="text-gray-700 mb-2 flex items-center text-lg">
+          <FaQuestionCircle className="mr-2 text-green-500" size={20} />
+          <span className="font-semibold mr-2">{t("level")}</span>
+          {quiz.isBasic ? t("basic") : t("advanced")}
         </p>
-        <div className="text-gray-500 mb-2">
-          {isOngoing && (
-            <p className="flex items-center">
-              <FaClock className="mr-1 text-red-500" />
-              Quiz ending in {getDaysRemaining(endDate)} Days
-            </p>
-          )}
-          {isUpcoming && (
-            <p className="flex items-center">
-              <FaCalendarAlt className="mr-1 text-purple-500" />
-              Quiz will start in {getDaysRemaining(startDate)} Days
-            </p>
-          )}
-          {!isOngoing && !isUpcoming && (
-            <p className="flex items-center">
-              <FaCalendarAlt className="mr-1 text-gray-500" />
-              Quiz submission is Closed now
-            </p>
-          )}
-        </div>
+        <p className="text-gray-700 mb-4 flex items-center text-lg">
+          <FaLanguage className="mr-2 text-blue-500" size={20} />
+          <span className="font-semibold mr-2">{t("language")}</span>
+          {quiz.language}
+        </p>
         {isOngoing && (
-          <button
-            onClick={handleStart}
-            className="mt-4 bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition duration-300 ease-in-out"
+          <motion.button
+            onClick={() => onStart(quiz.id)}
+            className="mt-4 bg-purple-600 text-white text-xl font-bold px-6 py-3 rounded-full hover:bg-purple-700 transition duration-300 ease-in-out w-full"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            Start
-          </button>
+            {t("startQuizNow")}
+          </motion.button>
         )}
       </div>
-      <QuizPopup show={showQuizPopup} onClose={() => setShowQuizPopup(false)} quizId={quiz.id} />
-      <LoginPopup show={showLoginPopup} onClose={() => setShowLoginPopup(false)} onLogin={() => {/* Implement login logic */}} />
-    </>
+    </motion.div>
   );
 };
 

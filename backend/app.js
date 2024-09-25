@@ -9,10 +9,10 @@ const app = express();
 dotenv.config();
 app.use(
   cors({
-    origin: ['https://quiz-ipr.vercel.app', 'http://localhost:5173'],
+    origin: ["https://quiz-ipr.vercel.app", "http://localhost:5173"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
-  })
+  }),
 );
 app.use(express.json({ limit: "20kb" }));
 app.use(express.urlencoded({ extended: true, limit: "20kb" }));
@@ -33,15 +33,12 @@ app.use("/api/user", userRoutes);
 app.use("/api/quiz", quizRoutes);
 app.use("/api/analytics", analyticsRoutes);
 
-
-
 app.get("/", (req, res) => {
   res.status(200).json({
     message: "Welcome to the IPR's Project Quiz-App APIs",
-    developer: config.linkedIn || "Harsh Dodiya"    
+    developer: config.linkedIn || "Harsh Dodiya",
   });
 });
-
 
 const port = config.port || 3000;
 app.listen(port, () => {
