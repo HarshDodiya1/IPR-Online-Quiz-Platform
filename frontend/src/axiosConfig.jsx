@@ -19,4 +19,18 @@ instance.interceptors.request.use(
   }
 );
 
+instance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 404) {
+      // Handle 404 errors
+      console.error("Resource not found");
+      // You can redirect to a 404 page or handle it as needed
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default instance;
+
+
