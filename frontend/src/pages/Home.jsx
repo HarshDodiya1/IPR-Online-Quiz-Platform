@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import QuizCard from "../components/QuizCard";
 import QuizPopup from "../components/QuizPopup";
-import axios from "../axiosConfig.jsx"
+import axios from "../axiosConfig.jsx";
 import { useTranslation } from "react-i18next";
 
 const Home = () => {
@@ -75,17 +75,7 @@ const Home = () => {
     },
   };
 
-  const backgroundVariants = {
-    animate: {
-      backgroundPosition: ["0% 0%", "100% 100%"],
-      transition: {
-        duration: 20,
-        ease: "linear",
-        repeat: Infinity,
-        repeatType: "reverse",
-      },
-    },
-  };
+  
 
   const floatingObjectVariants = {
     animate: {
@@ -105,16 +95,6 @@ const Home = () => {
       variants={containerVariants}
       className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-100 to-blue-200 py-10 relative overflow-hidden"
     >
-      <motion.div
-        className="absolute inset-0 z-0"
-        variants={backgroundVariants}
-        animate="animate"
-        style={{
-          backgroundImage: "url('/assets/background-pattern.svg')",
-          backgroundSize: "200% 200%",
-        }}
-      />
-
       {/* Floating objects */}
       <motion.div
         className="absolute top-20 left-20 w-16 h-16 bg-yellow-300 rounded-full opacity-50"
@@ -143,7 +123,7 @@ const Home = () => {
         {/* Ongoing Quizzes Section */}
         <motion.section variants={itemVariants} className="mb-12">
           <h2 className="text-3xl font-bold mb-6 text-center text-orange-600 animate-bounce">
-            🚀 {t("ongoingQuizzes")}  
+            🚀 {t("ongoingQuizzes")}
           </h2>
           <motion.div
             variants={containerVariants}
@@ -167,7 +147,7 @@ const Home = () => {
         {/* Upcoming Quizzes Section */}
         <motion.section variants={itemVariants} className="mb-12">
           <h2 className="text-3xl font-bold mb-6 text-center text-green-600 animate-bounce">
-          🔮 {t("upcomingQuizzes")}
+            🔮 {t("upcomingQuizzes")}
           </h2>
           <motion.div
             variants={containerVariants}
@@ -188,7 +168,7 @@ const Home = () => {
         {/* Past Quizzes Section */}
         <motion.section variants={itemVariants}>
           <h2 className="text-3xl font-bold mb-6 text-center text-blue-600 animate-bounce">
-          📚 {t("pastQuizzes")}
+            📚 {t("pastQuizzes")}
           </h2>
           <motion.div
             variants={containerVariants}
