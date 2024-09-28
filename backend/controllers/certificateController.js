@@ -20,17 +20,11 @@ exports.generateAndEmailCertificate = async (req, res) => {
   }
 
   try {
-    const pdfBuffer = await generateCertificatePDF(
-      studentName,
-      quizName,
-      percentage,
-    );
+    const pdfBuffer = await generateCertificatePDF(studentName, quizName, percentage);
     await emailCertificate(email, studentName, quizName, pdfBuffer);
-    res
-      .status(200)
-      .json({ message: "Certificate generated and emailed successfully" });
+    res.status(200).json({ message: "Certificate generated and emailed successfully" });
   } catch (error) {
-    console.error("Error in certificate generation or emailing:", error);
+    console.error("Error generating or emailing certificate:", error);
     res.status(500).json({
       error: "Error generating or emailing certificate",
       details: error.message,
@@ -40,50 +34,32 @@ exports.generateAndEmailCertificate = async (req, res) => {
 
 async function generateCertificatePDF(studentName, quizName, percentage) {
   return new Promise((resolve, reject) => {
-    const doc = new PDFDocument({
-      layout: "landscape",
-      size: "A4",
-    });
-
+    const doc = new PDFDocument({ layout: "landscape", size: "A4" });
     const buffers = [];
-    doc.on("data", buffers.push.bind(buffers));
-    doc.on("end", () => {
-      const pdfBuffer = Buffer.concat(buffers);
-      resolve(pdfBuffer);
-    });
 
-    // Add the template to the document
-    const templatePath = path.join(
-      __dirname,
-      "../assets/certificate_template.png",
-    );
+    // Event listeners to handle PDF generation
+    doc.on("data", buffers.push.bind(buffers));
+    doc.on("end", () => resolve(Buffer.concat(buffers)));
+    doc.on("error", reject); // Add error handler for robustness
+
+    // Certificate template path
+    const templatePath = path.join(__dirname, "../assets/certificate_template.png");
     doc.image(templatePath, 0, 0, { width: 842 });
 
-    // Set the font
-    doc.font("Helvetica");
+    // Set the font and add dynamic content
+    doc.font("Helvetica")
+      .fontSize(28)
+      .text(studentName, { align: "center", y: 300 })
+      .fontSize(18)
+      .text(`has participated in the ${quizName}`, { align: "center", y: 340 })
+      .fontSize(24)
+      .text(`and secured ${percentage}%`, { align: "center", y: 380 });
 
-    // Add the dynamic text
-    doc.fontSize(28).text(studentName, 0, 300, {
-      align: "center",
-    });
+    // Add the current date
+    doc.fontSize(12)
+      .text(new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }), 700, 400);
 
-    doc.fontSize(18).text(`has participated in the ${quizName}`, 0, 340, {
-      align: "center",
-    });
-
-    doc.fontSize(24).text(`and secured ${percentage}%`, 0, 380, {
-      align: "center",
-    });
-
-    // Add the date
-    const date = new Date().toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-    doc.fontSize(12).text(date, 700, 400);
-
-    doc.end();
+    doc.end(); // End the PDF document
   });
 }
 

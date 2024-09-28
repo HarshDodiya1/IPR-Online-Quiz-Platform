@@ -16,10 +16,6 @@ const DashManageQuiz = () => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [quizToDelete, setQuizToDelete] = useState(null);
 
-  useEffect(() => {
-    fetchQuizzes();
-  }, []);
-
   const fetchQuizzes = async () => {
     try {
       const response = await axios.get("/api/quiz/get-all");
@@ -30,6 +26,10 @@ const DashManageQuiz = () => {
       toast.error("Failed to fetch quizzes");
     }
   };
+  useEffect(() => {
+    fetchQuizzes();
+  }, []);
+
 
   useEffect(() => {
     const filtered = quizzes.filter(
