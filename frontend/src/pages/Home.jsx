@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import QuizCard from "../components/QuizCard";
 import QuizPopup from "../components/QuizPopup";
-import axios from "axios";
+import axios from "../axiosConfig.jsx"
 import { useTranslation } from "react-i18next";
 
 const Home = () => {
