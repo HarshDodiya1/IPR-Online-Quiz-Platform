@@ -12,6 +12,7 @@ app.use(
     origin: ["https://quiz-ipr.vercel.app", "http://localhost:5173"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
 app.use(express.json({ limit: "20kb" }));
