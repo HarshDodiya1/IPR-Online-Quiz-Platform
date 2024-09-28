@@ -110,7 +110,7 @@ const Home = () => {
         variants={backgroundVariants}
         animate="animate"
         style={{
-          backgroundImage: "url('/path/to/background-pattern.svg')",
+          backgroundImage: "url('/assets/background-pattern.svg')",
           backgroundSize: "200% 200%",
         }}
       />
