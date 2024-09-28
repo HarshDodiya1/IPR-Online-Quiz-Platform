@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import axios from "axios";
+import axios from "../axiosConfig.jsx"
 import { toast } from "react-toastify";
 import * as XLSX from "xlsx";
 

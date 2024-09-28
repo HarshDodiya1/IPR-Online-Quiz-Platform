@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateStart, updateSuccess, updateFailure } from "../slices/userSlice";
 import { toast } from "react-toastify";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
-import axios from "axios";
+import axios from "../axiosConfig.jsx"
 
 const DashProfile = () => {
   const { currentUser, loading, error } = useSelector((state) => state.user);

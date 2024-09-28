@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "../axiosConfig.jsx"
 import AdminQuizCard from "./AdminQuizCard";
 import UpdateQuizPopup from "./UpdateQuizPopup";
 import { toast } from "react-toastify";

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Bar, Doughnut } from "react-chartjs-2";
-import axios from "axios";
+import axios from "../axiosConfig.jsx"
 import {
   Chart as ChartJS,
   CategoryScale,

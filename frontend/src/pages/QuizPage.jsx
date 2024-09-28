@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import axios from "axios";
+import axios from "../axiosConfig.jsx"
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
 
