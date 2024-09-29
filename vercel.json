@@ -25,6 +25,10 @@
       "dest": "/frontend/assets/$1"
     },
     {
+      "src": "^/assets/Logo.jpg",
+      "dest": "/frontend/assets/Logo.jpg"
+    },
+    {
       "src": "^/favicon.ico",
       "dest": "/frontend/favicon.ico"
     },

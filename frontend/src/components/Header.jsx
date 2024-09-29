@@ -1,6 +1,6 @@
 import { FaChevronDown, FaUser, FaBars, FaTimes } from "react-icons/fa";
 import { IoLanguage } from "react-icons/io5";
-import Logo from "/Logo.jpg";
+import Logo from "../assets/Logo.jpg";
 import { useTranslation } from "react-i18next";
 import { Button, Modal } from "flowbite-react";
 import { Link, useNavigate } from "react-router-dom";
