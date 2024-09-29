@@ -1,6 +1,6 @@
 import { FaChevronDown, FaUser, FaBars, FaTimes } from "react-icons/fa";
 import { IoLanguage } from "react-icons/io5";
-import Logo from "../assets/Logo.jpg";
+import logo from "../assets/Logo.jpg";
 import { useTranslation } from "react-i18next";
 import { Button, Modal } from "flowbite-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -79,10 +79,10 @@ const Header = () => {
       <div className="mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex justify-between items-center h-20">
           <Link to="/" className="flex items-center space-x-4">
-            <img src={Logo} alt="IPR Logo" className="h-24 w-26" />
+            <img src={logo} alt="IPR Logo" className="h-24 w-26" />
             <div>
               <div className="text-[#e1823a] text-sm sm:text-3xl font-medium text-center">
-              प्लाज्मा अनुसंधान संस्थान
+                प्लाज्मा अनुसंधान संस्थान
               </div>
               <p className="text-[#23559f] font-normal text-xl sm:text-3xl ">
                 Institute for{" "}
@@ -91,15 +91,28 @@ const Header = () => {
             </div>
           </Link>
 
-          <div className="hidden md:flex items-center space-x-8" ref={dropdownRef}>
-            <Link to="/about-us" className="text-gray-800 hover:text-orange-500 text-lg font-medium transition duration-300">
+          <div
+            className="hidden md:flex items-center space-x-8"
+            ref={dropdownRef}
+          >
+            <Link
+              to="/about-us"
+              className="text-gray-800 hover:text-orange-500 text-lg font-medium transition duration-300"
+            >
               {t("aboutUs")}
             </Link>
             <div className="relative">
-              <button onClick={() => handleDropdownToggle("language")} className="flex items-center text-gray-800 hover:text-orange-500 text-lg font-medium transition duration-300">
+              <button
+                onClick={() => handleDropdownToggle("language")}
+                className="flex items-center text-gray-800 hover:text-orange-500 text-lg font-medium transition duration-300"
+              >
                 <IoLanguage className="mr-2 text-3xl" />
                 <span>{t("language")}</span>
-                <FaChevronDown className={`ml-2 w-5 h-5 transition-transform ${openDropdown === "language" ? "rotate-180" : "rotate-0"}`} />
+                <FaChevronDown
+                  className={`ml-2 w-5 h-5 transition-transform ${
+                    openDropdown === "language" ? "rotate-180" : "rotate-0"
+                  }`}
+                />
               </button>
               {openDropdown === "language" && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
@@ -107,9 +120,19 @@ const Header = () => {
                     <button
                       key={lang}
                       onClick={() => changeLanguage(lang)}
-                      className={`block w-full text-left px-4 py-2 text-lg text-gray-700 hover:bg-orange-100 transition duration-300 ${i18n.language === lang ? "bg-orange-200 text-orange-600 font-semibold" : ""}`}
+                      className={`block w-full text-left px-4 py-2 text-lg text-gray-700 hover:bg-orange-100 transition duration-300 ${
+                        i18n.language === lang
+                          ? "bg-orange-200 text-orange-600 font-semibold"
+                          : ""
+                      }`}
                     >
-                      {t(lang === "en" ? "english" : lang === "gu" ? "gujarati" : "hindi")}
+                      {t(
+                        lang === "en"
+                          ? "english"
+                          : lang === "gu"
+                          ? "gujarati"
+                          : "hindi"
+                      )}
                     </button>
                   ))}
                 </div>
@@ -117,21 +140,43 @@ const Header = () => {
             </div>
             {currentUser ? (
               <div className="relative group">
-                <button onClick={() => handleDropdownToggle("user")} className="flex justify-center items-center text-gray-800 text-xl font-medium transition duration-300 border-2 h-14 w-64 border-gray-400 rounded-md hover:border-orange-500">
+                <button
+                  onClick={() => handleDropdownToggle("user")}
+                  className="flex justify-center items-center text-gray-800 text-xl font-medium transition duration-300 border-2 h-14 w-64 border-gray-400 rounded-md hover:border-orange-500"
+                >
                   <FaUser className="mr-2 text-2xl" />
                   <span className="text-lg">
                     {t("welcome")},{" "}
                     <span className="text-orange-500 opacity-85">
-                      {currentUser?.user.firstName ? ` ${currentUser.user.firstName}` : " Guest"}
+                      {currentUser?.user.firstName
+                        ? ` ${currentUser.user.firstName}`
+                        : " Guest"}
                     </span>
                   </span>
-                  <FaChevronDown className={`ml-2 w-5 h-5 transition-transform ${openDropdown === "user" ? "rotate-180" : "rotate-0"}`} />
+                  <FaChevronDown
+                    className={`ml-2 w-5 h-5 transition-transform ${
+                      openDropdown === "user" ? "rotate-180" : "rotate-0"
+                    }`}
+                  />
                 </button>
-                <div className={`absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-10 transition-opacity duration-300 ${openDropdown === "user" ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
-                  <Link to="/dashboard" className="block px-4 py-2 text-lg text-gray-700 hover:bg-orange-100 transition duration-300" onClick={closeDropdown}>
+                <div
+                  className={`absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-10 transition-opacity duration-300 ${
+                    openDropdown === "user"
+                      ? "opacity-100"
+                      : "opacity-0 pointer-events-none"
+                  }`}
+                >
+                  <Link
+                    to="/dashboard"
+                    className="block px-4 py-2 text-lg text-gray-700 hover:bg-orange-100 transition duration-300"
+                    onClick={closeDropdown}
+                  >
                     {t("accountSettings")}
                   </Link>
-                  <button onClick={() => setShowSignoutModal(true)} className="block w-full text-left px-4 py-2 text-lg text-gray-700 hover:bg-orange-100 transition duration-300">
+                  <button
+                    onClick={() => setShowSignoutModal(true)}
+                    className="block w-full text-left px-4 py-2 text-lg text-gray-700 hover:bg-orange-100 transition duration-300"
+                  >
                     {t("logout")}
                   </button>
                 </div>
