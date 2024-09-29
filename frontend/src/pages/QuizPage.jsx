@@ -1,11 +1,13 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import axios from "../axiosConfig.jsx"
+import axios from "../axiosConfig.jsx";
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 const QuizPage = () => {
+  const { t } = useTranslation("resultsQuiz");
   const { id } = useParams();
   const navigate = useNavigate();
   const [questions, setQuestions] = useState([]);
@@ -89,7 +91,7 @@ const QuizPage = () => {
     };
 
     try {
-      const response = await axios.post('/api/quiz/submit', quizData, {
+      const response = await axios.post("/api/quiz/submit", quizData, {
         withCredentials: true,
       });
       if (response.data.success) {
@@ -113,20 +115,20 @@ const QuizPage = () => {
   }, [timeRemaining]);
 
   return (
-    <motion.div 
+    <motion.div
       className="min-h-screen bg-gradient-to-br from-purple-100 to-blue-200 p-4 sm:p-8 relative"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <motion.div 
+      <motion.div
         className="fixed top-4 right-4 bg-white p-5 rounded-lg shadow-lg"
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.5 }}
       >
         <span className="text-xl font-semibold text-orange-600">
-          Time Left:
+          {t("timeLeft")}
         </span>
         <div className="text-2xl font-bold text-red-600">
           {getFormattedTime()}
@@ -134,13 +136,13 @@ const QuizPage = () => {
       </motion.div>
 
       <h1 className="text-4xl font-bold text-center text-purple-700 mb-12 animate-pulse">
-        Quiz Time!
+        {t("quizTime")}
       </h1>
 
       <div className="space-y-8 max-w-4xl mx-auto">
         {questions.map((question, index) => (
-          <motion.div 
-            key={question.id} 
+          <motion.div
+            key={question.id}
             className="bg-white p-8 rounded-xl shadow-xl border border-purple-200 relative overflow-hidden"
             initial={{ x: -100, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
@@ -154,7 +156,11 @@ const QuizPage = () => {
               {question.question}
             </h2>
             {question.imageLink && (
-              <img src={question.imageLink} alt="Question" className="w-full h-[30rem] object-cover rounded-lg shadow-md mb-4" />
+              <img
+                src={question.imageLink}
+                alt="Question"
+                className="w-full h-[30rem] object-cover rounded-lg shadow-md mb-4"
+              />
             )}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {question.options.map((option, optionIndex) => (
@@ -187,23 +193,23 @@ const QuizPage = () => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          Submit Quiz
+          {t("submit")}
         </motion.button>
       </div>
 
       {showConfirmation && (
-        <motion.div 
+        <motion.div
           className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          <motion.div 
+          <motion.div
             className="bg-white p-10 rounded-lg shadow-lg text-center"
             initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
           >
             <h3 className="text-3xl font-semibold mb-6 text-purple-700">
-              Are you sure you want to submit the quiz?
+              {t("confirmSubmit")}
             </h3>
             <div className="space-x-6">
               <motion.button
@@ -212,7 +218,7 @@ const QuizPage = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                Yes, Submit
+                {t("yesSubmit")}
               </motion.button>
               <motion.button
                 className="px-6 py-3 bg-gray-300 text-lg rounded-full hover:bg-gray-400 transition"
@@ -220,7 +226,7 @@ const QuizPage = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                Cancel
+                {t("cancel")}
               </motion.button>
             </div>
           </motion.div>

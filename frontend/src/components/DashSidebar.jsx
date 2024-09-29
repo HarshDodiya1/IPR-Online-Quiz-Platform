@@ -14,8 +14,10 @@ import {
 } from "react-icons/fa";
 import { signInSuccess } from "../slices/userSlice";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const DashSidebar = ({ isOpen, toggleSidebar }) => {
+  const { t } = useTranslation("sidebar");
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -34,13 +36,13 @@ const DashSidebar = ({ isOpen, toggleSidebar }) => {
 
   const studentSidebarItems = [
     {
-      name: "Profile",
+      name: t("profile"),
       param: "profile",
       icon: <FaUser size={24} />,
       component: "DashProfile",
     },
     {
-      name: "Past Quizzes",
+      name: t("pastQuizzes"),
       param: "past-quizzes",
       icon: <FaHistory size={24} />,
       component: "DashPastQuizzes",
@@ -49,31 +51,31 @@ const DashSidebar = ({ isOpen, toggleSidebar }) => {
 
   const adminSidebarItems = [
     {
-      name: "Profile",
+      name: t("profile"),
       param: "profile",
       icon: <FaUser size={24} />,
       component: "DashProfile",
     },
     {
-      name: "Upload Excel",
+      name: t("uploadExcel"),
       param: "upload-excel",
       icon: <FaUpload size={24} />,
       component: "DashUploadExcel",
     },
     {
-      name: "Create Quiz",
+      name: t("createQuiz"),
       param: "create-quiz",
       icon: <FaPlusCircle size={24} />,
       component: "DashCreateQuiz",
     },
     {
-      name: "Manage Quiz",
+      name: t("manageQuiz"),
       param: "manage-quiz",
       icon: <FaTasks size={24} />,
       component: "DashManageQuiz",
     },
     {
-      name: "Analytics",
+      name: t("analytics"),
       param: "analytics",
       icon: <FaChartBar size={24} />,
       component: "DashboardAnalytics",
@@ -99,12 +101,12 @@ const DashSidebar = ({ isOpen, toggleSidebar }) => {
       if (response.ok) {
         dispatch(signInSuccess(null));
         navigate("/");
-        toast.success("Signed out successfully");
+        toast.success(t("signOutSuccess"));
       } else {
-        toast.error("Signout failed");
+        toast.error(t("signOutFailed"));
       }
     } catch (error) {
-      toast.error("Error during signout");
+      toast.error(t("signOutError"));
     }
   };
 
@@ -130,7 +132,7 @@ const DashSidebar = ({ isOpen, toggleSidebar }) => {
         } lg:translate-x-0 shadow-lg overflow-y-auto`}
       >
         <h2 className="text-3xl font-bold mb-8 text-blue-600">
-          IPR Quiz Dashboard
+          {t("dashboard")}
         </h2>
         <nav className="flex flex-col justify-between h-[calc(100%-13.5rem)]">
           <ul className="space-y-6">
@@ -164,7 +166,7 @@ const DashSidebar = ({ isOpen, toggleSidebar }) => {
                           : "bg-green-300 text-green-900"
                       }`}
                     >
-                      {currentUser?.user.isAdmin ? "Admin" : "Student"}
+                      {currentUser?.user.isAdmin ? t("admin") : t("student")}
                     </span>
                   )}
                 </Link>
@@ -178,7 +180,7 @@ const DashSidebar = ({ isOpen, toggleSidebar }) => {
             <span className="mr-4 text-red-600">
               <FaSignOutAlt size={24} />
             </span>
-            Sign Out
+            {t("signOut")}
           </button>
         </nav>
       </div>

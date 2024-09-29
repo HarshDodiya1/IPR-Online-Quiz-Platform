@@ -4,8 +4,10 @@ import { updateStart, updateSuccess, updateFailure } from "../slices/userSlice";
 import { toast } from "react-toastify";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import axios from "../axiosConfig.jsx"
+import { useTranslation } from "react-i18next";
 
 const DashProfile = () => {
+  const { t } = useTranslation("dashboard");
   const { currentUser, loading, error } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
@@ -42,39 +44,12 @@ const DashProfile = () => {
   }, [currentUser]);
 
   const cities = [
-    "Ahmedabad",
-    "Amreli",
-    "Anand",
-    "Aravalli",
-    "Banaskantha",
-    "Bharuch",
-    "Bhavnagar",
-    "Botad",
-    "Chhota Udaipur",
-    "Dahod",
-    "Dang",
-    "Devbhoomi Dwarka",
-    "Gandhinagar",
-    "Gir Somnath",
-    "Jamnagar",
-    "Junagadh",
-    "Kheda",
-    "Kutch",
-    "Mahisagar",
-    "Mehsana",
-    "Morbi",
-    "Narmada",
-    "Navsari",
-    "Panchmahal",
-    "Patan",
-    "Porbandar",
-    "Rajkot",
-    "Sabarkantha",
-    "Surat",
-    "Surendranagar",
-    "Tapi",
-    "Vadodara",
-    "Valsad",
+    "Ahmedabad", "Amreli", "Anand", "Aravalli", "Banaskantha", "Bharuch",
+    "Bhavnagar", "Botad", "Chhota Udaipur", "Dahod", "Dang", "Devbhoomi Dwarka",
+    "Gandhinagar", "Gir Somnath", "Jamnagar", "Junagadh", "Kheda", "Kutch",
+    "Mahisagar", "Mehsana", "Morbi", "Narmada", "Navsari", "Panchmahal",
+    "Patan", "Porbandar", "Rajkot", "Sabarkantha", "Surat", "Surendranagar",
+    "Tapi", "Vadodara", "Valsad",
   ];
 
   const handleChange = (e) => {
@@ -109,53 +84,18 @@ const DashProfile = () => {
       toast.error(error.response?.data?.message || "Something went wrong");
     }
   };
-  // const handleSubmit = async (e) => {
-    // e.preventDefault();
-    // setUpdateUserError(null);
-    // setUpdateUserSuccess(null);
-    // if (Object.keys(formData).length === 0) {
-    //   setUpdateUserError('No changes made');
-    //   return;
-    // }
-  //   if (imageFileUploading) {
-  //     setUpdateUserError('Please wait for image to upload');
-  //     return;
-  //   }
-  //   try {
-  //     dispatch(updateStart());
-  //     const res = await fetch(`/api/user/update/${currentUser._id}`, {
-  //       method: 'PUT',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify(formData),
-  //     });
-  //     const data = await res.json();
-  //     if (!res.ok) {
-  //       dispatch(updateFailure(data.message));
-  //       setUpdateUserError(data.message);
-  //     } else {
-  //       dispatch(updateSuccess(data));
-  //       setUpdateUserSuccess("User's profile updated successfully");
-  //     }
-  //   } catch (error) {
-  //     dispatch(updateFailure(error.message));
-  //     setUpdateUserError(error.message);
-  //   }
-  // };
 
   return (
     <div className="flex justify-center min-h-[calc(88vh)] items-center bg-white p-8">
       <div className="bg-white rounded-xl shadow-2xl p-8 max-w-[98rem] min-h-[80vh] w-full border-2">
       <h2 className="text-4xl font-semibold mb-4 text-blue-600">
-        Update Profile
+        {t("updateProfile")}
       </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* First Name */}
             <div>
               <label htmlFor="firstName" className="block mb-1 font-medium">
-                First Name
+                {t("firstName")}
               </label>
               <input
                 id="firstName"
@@ -165,10 +105,9 @@ const DashProfile = () => {
                 className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-            {/* Middle Name */}
             <div>
               <label htmlFor="middleName" className="block mb-1 font-medium">
-                Middle Name
+                {t("middleName")}
               </label>
               <input
                 id="middleName"
@@ -178,10 +117,9 @@ const DashProfile = () => {
                 className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-            {/* Last Name */}
             <div>
               <label htmlFor="lastName" className="block mb-1 font-medium">
-                Last Name
+                {t("lastName")}
               </label>
               <input
                 id="lastName"
@@ -191,10 +129,9 @@ const DashProfile = () => {
                 className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-            {/* Email */}
             <div>
               <label htmlFor="email" className="block mb-1 font-medium">
-                Email
+                {t("email")}
               </label>
               <input
                 id="email"
@@ -205,10 +142,9 @@ const DashProfile = () => {
                 disabled
               />
             </div>
-            {/* Mobile Number */}
             <div>
               <label htmlFor="mobileNumber" className="block mb-1 font-medium">
-                Mobile Number
+                {t("mobileNumber")}
               </label>
               <input
                 id="mobileNumber"
@@ -218,10 +154,9 @@ const DashProfile = () => {
                 className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-            {/* Date of Birth */}
             <div>
               <label htmlFor="dateOfBirth" className="block mb-1 font-medium">
-                Date of Birth
+                {t("dateOfBirth")}
               </label>
               <input
                 id="dateOfBirth"
@@ -231,10 +166,9 @@ const DashProfile = () => {
                 className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-            {/* School Name */}
             <div>
               <label htmlFor="schoolName" className="block mb-1 font-medium">
-                School Name
+                {t("schoolName")}
               </label>
               <input
                 id="schoolName"
@@ -244,10 +178,9 @@ const DashProfile = () => {
                 className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-            {/* Standard */}
             <div>
               <label htmlFor="standard" className="block mb-1 font-medium">
-                Standard
+                {t("standard")}
               </label>
               <select
                 id="standard"
@@ -256,7 +189,7 @@ const DashProfile = () => {
                 className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="" disabled>
-                  Select your standard
+                  {t("selectStandard")}
                 </option>
                 {[...Array(8)].map((_, index) => (
                   <option key={index + 5} value={index + 5}>
@@ -265,10 +198,9 @@ const DashProfile = () => {
                 ))}
               </select>
             </div>
-            {/* City */}
             <div>
               <label htmlFor="city" className="block mb-1 font-medium">
-                City
+                {t("city")}
               </label>
               <select
                 id="city"
@@ -276,7 +208,7 @@ const DashProfile = () => {
                 onChange={handleChange}
                 className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="">Select your city</option>
+                <option value="">{t("selectCity")}</option>
                 {cities.map((city, index) => (
                   <option key={index} value={city}>
                     {city}
@@ -284,10 +216,9 @@ const DashProfile = () => {
                 ))}
               </select>
             </div>
-            {/* Password */}
             <div>
               <label htmlFor="password" className="block mb-1 font-medium">
-                Password
+                {t("password")}
               </label>
               <div className="relative">
                 <input
@@ -295,7 +226,7 @@ const DashProfile = () => {
                   type={showPassword ? "text" : "password"}
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="Enter new password to change"
+                  placeholder={t("enterNewPassword")}
                   className="w-full p-3 border border-gray-300 rounded pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <button
@@ -316,7 +247,7 @@ const DashProfile = () => {
             type="submit"
             className="w-full py-3 rounded-xl bg-blue-600 text-white text-lg font-bold transition-all hover:bg-blue-700 active:scale-[.98]"
           >
-            Update Profile
+            {t("updateProfileButton")}
           </button>
         </form>
         {error && <p className="text-red-500 mt-4">{error}</p>}

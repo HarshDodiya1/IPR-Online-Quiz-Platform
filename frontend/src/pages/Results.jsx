@@ -1,13 +1,15 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import confetti from "canvas-confetti";
-import axios from "../axiosConfig.jsx"
+import axios from "../axiosConfig.jsx";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useTranslation } from "react-i18next";
 
 const Results = () => {
+  const { t } = useTranslation("resultsQuiz");
   const navigate = useNavigate();
   const [results, setResults] = useState(null);
   const [submittedAnswers, setSubmittedAnswers] = useState({});
@@ -28,8 +30,7 @@ const Results = () => {
       setSubmittedAnswers(JSON.parse(storedAnswers));
       setQuestions(JSON.parse(storedQuestions));
 
-      // Trigger confetti
-      const end = Date.now() + 3 * 1000; // 3 seconds
+      const end = Date.now() + 3 * 1000;
       const colors = ["#a786ff", "#fd8bbc", "#eca184", "#f8deb1"];
 
       const frame = () => {
@@ -61,6 +62,7 @@ const Results = () => {
       navigate("/");
     }
   }, [navigate]);
+
   window.history.pushState(null, null, window.location.pathname);
   window.addEventListener("popstate", () => {
     window.history.pushState(null, null, window.location.pathname);
@@ -89,12 +91,12 @@ const Results = () => {
   if (!results || !questions.length) return <div>Loading...</div>;
 
   const tableData = [
-    { label: "User Name", value: results.userName },
-    { label: "Quiz Name", value: results.quizName },
-    { label: "Skipped Questions", value: results.skippedQuestions },
-    { label: "Incorrect Answers", value: results.incorrectAnswers },
-    { label: "Correct Answers", value: results.correctAnswers },
-    { label: "Score Percentage", value: `${results.scorePercentage}%` },
+    { label: t("userName"), value: results.userName },
+    { label: t("quizName"), value: results.quizName },
+    { label: t("skippedQuestions"), value: results.skippedQuestions },
+    { label: t("incorrectAnswers"), value: results.incorrectAnswers },
+    { label: t("correctAnswers"), value: results.correctAnswers },
+    { label: t("scorePercentage"), value: `${results.scorePercentage}%` },
   ];
 
   return (
@@ -104,7 +106,9 @@ const Results = () => {
       transition={{ duration: 0.5 }}
       className="container mx-auto px-4 py-8 relative"
     >
-      <h1 className="text-3xl font-bold mb-8 text-center">Quiz Results</h1>
+      <h1 className="text-3xl font-bold mb-8 text-center">
+        {t("quizResults")}
+      </h1>
 
       <motion.table
         initial={{ y: 50, opacity: 0 }}
@@ -150,12 +154,12 @@ const Results = () => {
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               ></path>
             </svg>
-            Sending...
+            {t("sendCertificate")}
           </span>
         ) : isEmailSent ? (
-          "Certificate Sent!"
+          t("certificateSent")
         ) : (
-          "Send Certificate to Email"
+          t("sendCertificate")
         )}
       </motion.button>
 
@@ -165,10 +169,10 @@ const Results = () => {
         className="mt-8 bg-green-500 mb-8 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
         onClick={() => navigate("/", { replace: true })}
       >
-        Go Home
+        {t("goHome")}
       </motion.button>
 
-      <h2 className="text-2xl font-bold mb-4">Detailed Results</h2>
+      <h2 className="text-2xl font-bold mb-4">{t("detailedResults")}</h2>
       {questions.map((question, index) => {
         const correctAnswer = results.correctAnswersList[question.id];
         const submittedAnswer = submittedAnswers[question.id];
@@ -184,7 +188,7 @@ const Results = () => {
             className="mb-6 p-4 bg-white shadow-md rounded-lg"
           >
             <h3 className="font-semibold mb-2">
-              Question {index + 1}: {question.question}
+              {t("question")} {index + 1}: {question.question}
             </h3>
             <div className="grid grid-cols-2 gap-2 mb-2">
               {question.options.map((option, optIndex) => (
@@ -203,7 +207,7 @@ const Results = () => {
               ))}
             </div>
             <p className="mb-1">
-              Your Answer:
+              {t("yourAnswer")}:
               <span
                 className={
                   isSkipped
@@ -213,14 +217,17 @@ const Results = () => {
                     : "text-red-600"
                 }
               >
-                {isSkipped ? " Skipped" : ` ${submittedAnswer}`}
+                {isSkipped ? ` ${t("skipped")}` : ` ${submittedAnswer}`}
               </span>
             </p>
-            <p className="text-green-600">Correct Answer: {correctAnswer}</p>
+            <p className="text-green-600">
+              {t("correctAnswer")}: {correctAnswer}
+            </p>
           </motion.div>
         );
       })}
     </motion.div>
   );
 };
+
 export default Results;

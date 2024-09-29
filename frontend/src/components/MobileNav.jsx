@@ -85,11 +85,11 @@ const MobileNav = () => {
               className="h-16 w-16 sm:h-18 sm:w-20"
             />
             <div>
-              <div className="text-orange-500 text-lg sm:text-xl font-black">
-                Institute for Plasma Research
-              </div>
-              <div className="hidden sm:block text-gray-600 text-xs sm:text-sm">
-                {t("instituteHindi")}
+              <div>
+                <p className="text-[#23559f] font-normal text-xl sm:text-3xl ">
+                  Institute for{" "}
+                  <span className="font-black">Plasma Research</span>
+                </p>
               </div>
             </div>
           </Link>
