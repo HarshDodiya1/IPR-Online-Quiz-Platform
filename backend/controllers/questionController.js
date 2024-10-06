@@ -18,30 +18,31 @@ exports.questionUpload = async (req, res) => {
     const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
     const formattedData = sheetData.map((row) => ({
-      question: row.Question?.toString() || '',
+      question: row.Question?.toString() || "",
       imageUrl: row.ImageLink?.toString() || null,
-      correctAnswer: row.CorrectAns?.toString() || '',
-      option1: row.Option1?.toString() || '',
-      option2: row.Option2?.toString() || '',
-      option3: row.Option3?.toString() || '',
-      category: row.Category?.toString() || '',
-      language: row.Language?.toString() || '',
+      correctAnswer: row.CorrectAns?.toString() || "",
+      option1: row.Option1?.toString() || "",
+      option2: row.Option2?.toString() || "",
+      option3: row.Option3?.toString() || "",
+      category: row.Category?.toString() || "",
+      language: row.Language?.toString() || "",
       isBasic: Boolean(row.IsBasic),
     }));
 
     const existingQuestions = await prisma.question.findMany();
 
     const duplicates = [];
-    const uniqueData = formattedData.filter(data => {
-      const isDuplicate = existingQuestions.some(q => 
-        q.question === data.question &&
-        q.correctAnswer === data.correctAnswer &&
-        q.option1 === data.option1 &&
-        q.option2 === data.option2 &&
-        q.option3 === data.option3 &&
-        q.category === data.category &&
-        q.langauge === data.langauge &&
-        q.isBasic === data.isBasic
+    const uniqueData = formattedData.filter((data) => {
+      const isDuplicate = existingQuestions.some(
+        (q) =>
+          q.question === data.question &&
+          q.correctAnswer === data.correctAnswer &&
+          q.option1 === data.option1 &&
+          q.option2 === data.option2 &&
+          q.option3 === data.option3 &&
+          q.category === data.category &&
+          q.langauge === data.langauge &&
+          q.isBasic === data.isBasic,
       );
 
       if (isDuplicate) {
@@ -55,7 +56,7 @@ exports.questionUpload = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "All questions are duplicates. No new data to upload.",
-        duplicates: duplicates
+        duplicates: duplicates,
       });
     }
 
@@ -68,7 +69,7 @@ exports.questionUpload = async (req, res) => {
       message: "Excel data uploaded and stored successfully",
       insertedCount: insertedQuestions.count,
       duplicatesCount: duplicates.length,
-      duplicates: duplicates
+      duplicates: duplicates,
     });
   } catch (error) {
     console.log("Error while uploading the excel file:", error);
@@ -83,15 +84,13 @@ exports.questionUpload = async (req, res) => {
   }
 };
 
-
-
 exports.findAllCategories = async (req, res) => {
   try {
     const categories = await prisma.question.findMany({
       select: {
         category: true,
       },
-      distinct: ['category'],
+      distinct: ["category"],
     });
 
     res.status(200).json({
@@ -113,10 +112,10 @@ exports.getAllLanguages = async (req, res) => {
       select: {
         language: true,
       },
-      distinct: ['language'],
+      distinct: ["language"],
     });
 
-    const languageList = languages.map(lang => lang.language);
+    const languageList = languages.map((lang) => lang.language);
 
     res.status(200).json({
       success: true,
@@ -184,3 +183,31 @@ exports.getAllQuestions = async (req, res) => {
   }
 };
 
+exports.deleteAllQuestions = async (req, res) => {
+  try {
+    if (req.user.role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized (admin) to delete all questions",
+      });
+    }
+
+    // Delete all QuizQuestion records first
+    await prisma.quizQuestion.deleteMany();
+
+    // Then delete all Question records
+    await prisma.question.deleteMany();
+
+    res.status(200).json({
+      success: true,
+      message:
+        "All questions and related quiz questions have been deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error while deleting all questions:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

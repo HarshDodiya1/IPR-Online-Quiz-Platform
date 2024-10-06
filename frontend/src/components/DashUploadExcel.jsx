@@ -47,6 +47,8 @@ function DashUploadExcel() {
   const [filePreview, setFilePreview] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const fileInputRef = useRef(null);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -140,12 +142,42 @@ function DashUploadExcel() {
     }
   };
 
+  const handleDeleteAllQuestions = async () => {
+    setIsDeleting(true);
+    try {
+      await axios.delete("/api/questions/delete-all");
+      toast.success("All questions and related quiz questions have been deleted successfully");
+      setShowDeleteConfirmation(false);
+      // Reset file and preview states
+      setFile(null);
+      setFilePreview([]);
+      setUploadProgress(0);
+      setMessage("");
+    } catch (error) {
+      toast.error("Error deleting questions: " + (error.response?.data?.message || error.message));
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <div className="flex flex-col justify-center min-h-[calc(88vh)] items-center bg-white p-8">
       <div className="bg-white rounded-xl shadow-2xl p-8 max-w-[98rem] min-h-[80vh] w-full border-2">
-        <h2 className="text-4xl font-semibold mb-4 text-blue-600">
-          Upload Excel file
-        </h2>
+
+
+
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-4xl font-semibold text-blue-600">
+            Upload Excel file
+          </h2>
+          <button
+            onClick={() => setShowDeleteConfirmation(true)}
+            className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+            disabled={isDeleting}
+          >
+            {isDeleting ? "Deleting..." : "Delete All Questions"}
+          </button>
+        </div>
         <div
           className={`border-2 border-dashed ${
             isDragging ? "border-blue-500 bg-blue-50" : "border-gray-300"
@@ -264,6 +296,30 @@ function DashUploadExcel() {
           )}
         </div>
       )}
+        {showDeleteConfirmation && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg">
+              <h3 className="text-xl font-bold mb-4">Confirm Deletion</h3>
+              <p className="mb-4">Are you sure you want to delete all questions and related quiz questions? This action cannot be undone.</p>
+              <div className="flex justify-end">
+                <button
+                  onClick={() => setShowDeleteConfirmation(false)}
+                  className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg mr-2 hover:bg-gray-400 transition-colors"
+                  disabled={isDeleting}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDeleteAllQuestions}
+                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                  disabled={isDeleting}
+                >
+                  {isDeleting ? "Deleting..." : "Delete All"}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       
@@ -302,5 +358,6 @@ function FileIcon(props) {
     </svg>
   );
 }
+
 
 export default DashUploadExcel;
