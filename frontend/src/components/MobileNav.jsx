@@ -107,13 +107,6 @@ const MobileNav = () => {
         {mobileMenuOpen && (
           <div className="md:hidden mt-4" ref={dropdownRef}>
             <div className="space-y-4">
-              <Link
-                to="/about-us"
-                className="block text-gray-800 hover:text-orange-500 text-base font-medium transition duration-300"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {t("aboutUs")}
-              </Link>
               <div className="relative">
                 <button
                   onClick={() => handleDropdownToggle("language")}

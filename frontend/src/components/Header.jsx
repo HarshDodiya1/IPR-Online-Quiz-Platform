@@ -95,12 +95,7 @@ const Header = () => {
             className="hidden md:flex items-center space-x-8"
             ref={dropdownRef}
           >
-            <Link
-              to="/about-us"
-              className="text-gray-800 hover:text-orange-500 text-lg font-medium transition duration-300"
-            >
-              {t("aboutUs")}
-            </Link>
+            
             <div className="relative">
               <button
                 onClick={() => handleDropdownToggle("language")}
