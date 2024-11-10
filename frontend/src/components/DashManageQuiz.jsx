@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
-import axios from "../axiosConfig.jsx"
-import AdminQuizCard from "./AdminQuizCard";
-import UpdateQuizPopup from "./UpdateQuizPopup";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "../axiosConfig.jsx";
+import AdminQuizCard from "./AdminQuizCard";
+import UpdateQuizPopup from "./UpdateQuizPopup";
 
 const DashManageQuiz = () => {
   const [quizzes, setQuizzes] = useState([]);
@@ -29,7 +29,6 @@ const DashManageQuiz = () => {
   useEffect(() => {
     fetchQuizzes();
   }, []);
-
 
   useEffect(() => {
     const filtered = quizzes.filter(
@@ -67,31 +66,29 @@ const DashManageQuiz = () => {
   };
 
   const handleDeleteQuiz = async (quizId) => {
-  setQuizToDelete(quizId);
-  setShowDeleteConfirmation(true);
-};
+    setQuizToDelete(quizId);
+    setShowDeleteConfirmation(true);
+  };
 
-const confirmDelete = async () => {
-  try {
-    await axios.post(`/api/quiz/delete/${quizToDelete}`);
-    toast.success('Quiz deleted successfully');
-    setShowDeleteConfirmation(false);
-    setQuizToDelete(null);
-    setShowUpdatePopup(false); // Close the update popup
-    setSelectedQuiz(null); // Clear the selected quiz
-    fetchQuizzes();
-  } catch (error) {
-    console.error('Error deleting quiz:', error);
-    toast.error('Failed to delete quiz');
-  }
-};
+  const confirmDelete = async () => {
+    try {
+      await axios.post(`/api/quiz/delete/${quizToDelete}`);
+      toast.success("Quiz deleted successfully");
+      setShowDeleteConfirmation(false);
+      setQuizToDelete(null);
+      setShowUpdatePopup(false); // Close the update popup
+      setSelectedQuiz(null); // Clear the selected quiz
+      fetchQuizzes();
+    } catch (error) {
+      console.error("Error deleting quiz:", error);
+      toast.error("Failed to delete quiz");
+    }
+  };
 
   return (
     <div className="flex justify-center min-h-[calc(88vh)] items-center bg-white p-8">
       <div className="bg-white rounded-xl shadow-2xl p-8 max-w-[98rem] min-h-[80vh] w-full border-2">
-        <h1 className="text-4xl font-bold mb-6 text-blue-600">
-          Manage Quiz
-        </h1>
+        <h1 className="text-4xl font-bold mb-6 text-blue-600">Manage Quiz</h1>
         <div className="mb-6 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 sm:space-x-4">
           <input
             type="text"
@@ -136,9 +133,10 @@ const confirmDelete = async () => {
               <h2 className="text-2xl font-bold mb-4">Confirm Delete</h2>
               <p className="mb-6">
                 Are you sure you want to delete this quiz? This action cannot be
-                undone and all quiz data will be permanently deleted.
-                {" "}
-                <span className="font-bold">Download all the data before deleting the quiz.</span>
+                undone and all quiz data will be permanently deleted.{" "}
+                <span className="font-bold">
+                  Download all the data before deleting the quiz.
+                </span>
               </p>
 
               <div className="flex justify-end space-x-4">

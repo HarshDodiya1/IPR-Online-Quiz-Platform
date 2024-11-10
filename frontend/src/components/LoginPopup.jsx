@@ -1,8 +1,7 @@
-import React from "react";
 import { Transition } from "@headlessui/react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 import { useTranslation } from "react-i18next";
-
+import { useNavigate } from "react-router-dom";
 
 const LoginPopup = ({ show, onClose }) => {
   const { t } = useTranslation("home");
@@ -25,7 +24,9 @@ const LoginPopup = ({ show, onClose }) => {
     >
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4">
         <div className="bg-white bg-opacity-80 backdrop-blur-md rounded-lg p-4 sm:p-6 w-full max-w-md sm:max-w-lg md:max-w-xl transition-transform transform scale-90 duration-300 ease-in-out">
-          <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">{t("pleaseLoginFirst")}</h2>
+          <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">
+            {t("pleaseLoginFirst")}
+          </h2>
           <p className="mb-4 text-sm sm:text-base">{t("loginNeeded")}</p>
           <div className="flex justify-end space-x-4">
             <button

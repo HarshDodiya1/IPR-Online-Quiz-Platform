@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import axios from "../axiosConfig.jsx";
 import QuizCard from "../components/QuizCard";
 import QuizPopup from "../components/QuizPopup";
-import axios from "../axiosConfig.jsx";
-import { useTranslation } from "react-i18next";
 
 const Home = () => {
   const { t } = useTranslation("home");
@@ -75,8 +75,6 @@ const Home = () => {
     },
   };
 
-  
-
   const floatingObjectVariants = {
     animate: {
       y: [0, -20, 0],
@@ -121,70 +119,84 @@ const Home = () => {
         </motion.h1>
 
         {/* Ongoing Quizzes Section */}
-        <motion.section variants={itemVariants} className="mb-12">
-          <h2 className="text-3xl font-bold mb-6 text-center text-orange-600 animate-bounce">
-            🚀 {t("ongoingQuizzes")}
-          </h2>
-          <motion.div
-            variants={containerVariants}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+        {ongoingQuizzes.length > 0 ? (
+          <motion.section variants={itemVariants} className="mb-12">
+            <h2 className="text-3xl font-bold mb-6 text-center text-orange-600 animate-bounce">
+              🚀 {t("ongoingQuizzes")}
+            </h2>
+            <motion.div
+              variants={containerVariants}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
+              {ongoingQuizzes.map((quiz) => (
+                <motion.div
+                  key={quiz.id}
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <QuizCard
+                    quiz={quiz}
+                    onStart={() => handleStartQuiz(quiz.id)}
+                    isLoggedIn={isLoggedIn}
+                  />
+                </motion.div>
+              ))}
+            </motion.div>
+          </motion.section>
+        ) : (
+          <motion.p
+            variants={itemVariants}
+            className="text-center text-2xl font-extrabold text-gray-600 mb-12"
           >
-            {ongoingQuizzes.map((quiz) => (
-              <motion.div
-                key={quiz.id}
-                variants={itemVariants}
-                whileHover={{ scale: 1.05 }}
-              >
-                <QuizCard
-                  quiz={quiz}
-                  onStart={() => handleStartQuiz(quiz.id)}
-                  isLoggedIn={isLoggedIn}
-                />
-              </motion.div>
-            ))}
-          </motion.div>
-        </motion.section>
+            There are no quizzes ongoing currently, please visit later.
+          </motion.p>
+        )}
+
         {/* Upcoming Quizzes Section */}
-        <motion.section variants={itemVariants} className="mb-12">
-          <h2 className="text-3xl font-bold mb-6 text-center text-green-600 animate-bounce">
-            🔮 {t("upcomingQuizzes")}
-          </h2>
-          <motion.div
-            variants={containerVariants}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {upcomingQuizzes.map((quiz) => (
-              <motion.div
-                key={quiz.id}
-                variants={itemVariants}
-                whileHover={{ scale: 1.05 }}
-              >
-                <QuizCard quiz={quiz} isLoggedIn={isLoggedIn} />
-              </motion.div>
-            ))}
-          </motion.div>
-        </motion.section>
+        {upcomingQuizzes.length > 0 && (
+          <motion.section variants={itemVariants} className="mb-12">
+            <h2 className="text-3xl font-bold mb-6 text-center text-green-600 animate-bounce">
+              🔮 {t("upcomingQuizzes")}
+            </h2>
+            <motion.div
+              variants={containerVariants}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
+              {upcomingQuizzes.map((quiz) => (
+                <motion.div
+                  key={quiz.id}
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <QuizCard quiz={quiz} isLoggedIn={isLoggedIn} />
+                </motion.div>
+              ))}
+            </motion.div>
+          </motion.section>
+        )}
 
         {/* Past Quizzes Section */}
-        <motion.section variants={itemVariants}>
-          <h2 className="text-3xl font-bold mb-6 text-center text-blue-600 animate-bounce">
-            📚 {t("pastQuizzes")}
-          </h2>
-          <motion.div
-            variants={containerVariants}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {pastQuizzes.map((quiz) => (
-              <motion.div
-                key={quiz.id}
-                variants={itemVariants}
-                whileHover={{ scale: 1.05 }}
-              >
-                <QuizCard quiz={quiz} isLoggedIn={isLoggedIn} />
-              </motion.div>
-            ))}
-          </motion.div>
-        </motion.section>
+        {pastQuizzes.length > 0 && (
+          <motion.section variants={itemVariants}>
+            <h2 className="text-3xl font-bold mb-6 text-center text-blue-600 animate-bounce">
+              📚 {t("pastQuizzes")}
+            </h2>
+            <motion.div
+              variants={containerVariants}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
+              {pastQuizzes.map((quiz) => (
+                <motion.div
+                  key={quiz.id}
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <QuizCard quiz={quiz} isLoggedIn={isLoggedIn} />
+                </motion.div>
+              ))}
+            </motion.div>
+          </motion.section>
+        )}
       </div>
 
       <QuizPopup

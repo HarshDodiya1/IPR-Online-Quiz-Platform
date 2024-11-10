@@ -12,26 +12,33 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// Generate and send certificate asynchronously
 exports.generateAndEmailCertificate = async (req, res) => {
   const { studentName, quizName, percentage, email } = req.body;
 
+  // Validate required fields
   if (!studentName || !quizName || !email) {
     return res.status(400).json({ error: "Missing required fields" });
   }
 
+  // Acknowledge request immediately
+  res.status(202).json({ message: "Certificate generation initiated" });
+
   try {
-    const pdfBuffer = await generateCertificatePDF(studentName, quizName, percentage);
+    // Generate PDF and send email in background
+    const pdfBuffer = await generateCertificatePDF(
+      studentName,
+      quizName,
+      percentage,
+    );
     await emailCertificate(email, studentName, quizName, pdfBuffer);
-    res.status(200).json({ message: "Certificate generated and emailed successfully" });
+    console.log("Certificate generated and emailed successfully");
   } catch (error) {
     console.error("Error generating or emailing certificate:", error);
-    res.status(500).json({
-      error: "Error generating or emailing certificate",
-      details: error.message,
-    });
   }
 };
 
+// Function to generate certificate PDF as a buffer
 async function generateCertificatePDF(studentName, quizName, percentage) {
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({ layout: "landscape", size: "A4" });
@@ -40,29 +47,46 @@ async function generateCertificatePDF(studentName, quizName, percentage) {
     // Event listeners to handle PDF generation
     doc.on("data", buffers.push.bind(buffers));
     doc.on("end", () => resolve(Buffer.concat(buffers)));
-    doc.on("error", reject); // Add error handler for robustness
+    doc.on("error", reject);
 
     // Certificate template path
-    const templatePath = path.join(__dirname, "../assets/certificate_template.png");
+    const templatePath = path.join(
+      __dirname,
+      "../assets/certificate_template.png",
+    );
     doc.image(templatePath, 0, 0, { width: 842 });
 
     // Set the font and add dynamic content
-    doc.font("Helvetica")
-      .fontSize(28)
-      .text(studentName, { align: "center", y: 300 })
-      .fontSize(18)
-      .text(`has participated in the ${quizName}`, { align: "center", y: 340 })
+    doc
+      .font("Helvetica-Bold")
+      .fontSize(36)
+      .text(studentName, 0, 280, { align: "center" }); // Centered, adjusted y-coordinate
+
+    doc
+      .font("Helvetica")
+      .fontSize(20)
+      .text(`has participated in the ${quizName}`, 0, 330, { align: "center" });
+
+    doc
+      .font("Helvetica")
       .fontSize(24)
-      .text(`and secured ${percentage}%`, { align: "center", y: 380 });
+      .text(`and secured ${percentage}%`, 0, 370, { align: "center" });
 
     // Add the current date
-    doc.fontSize(12)
-      .text(new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }), 700, 400);
+    doc.fontSize(14).text(
+      new Date().toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }),
+      640,
+      480,
+    );
 
     doc.end(); // End the PDF document
   });
 }
-
+// Function to send email with the generated certificate
 async function emailCertificate(email, studentName, quizName, pdfBuffer) {
   const mailOptions = {
     from: admin_email,
@@ -77,5 +101,6 @@ async function emailCertificate(email, studentName, quizName, pdfBuffer) {
     ],
   };
 
-  await transporter.sendMail(mailOptions);
+  // Send the email asynchronously
+  return transporter.sendMail(mailOptions);
 }

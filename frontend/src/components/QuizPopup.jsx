@@ -1,8 +1,8 @@
-import React from "react";
 import { Transition } from "@headlessui/react";
+import React from "react";
+import { useTranslation } from "react-i18next";
 import { FaRegCheckCircle, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 
 const Popup = ({ show, onClose, quizId }) => {
   const { t } = useTranslation("home");

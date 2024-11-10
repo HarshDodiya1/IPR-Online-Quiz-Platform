@@ -1,20 +1,20 @@
-import { useState, useEffect } from "react";
-import { useLocation, Link, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
-  FaUser,
-  FaUpload,
-  FaPlusCircle,
-  FaHistory,
-  FaChartBar,
   FaBars,
+  FaChartBar,
+  FaHistory,
+  FaPlusCircle,
   FaSignOutAlt,
   FaTasks,
   FaTimes,
+  FaUpload,
+  FaUser,
 } from "react-icons/fa";
-import { signInSuccess } from "../slices/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useTranslation } from "react-i18next";
+import { signInSuccess } from "../slices/userSlice";
 
 const DashSidebar = ({ isOpen, toggleSidebar }) => {
   const { t } = useTranslation("sidebar");
@@ -114,7 +114,7 @@ const DashSidebar = ({ isOpen, toggleSidebar }) => {
     <>
       <button
         className={`fixed top-32 z-30 text-blue-600 p-3 rounded-md lg:hidden transition-all duration-300 ${
-          isOpen ? 'left-56 top-36' : ' top-[6.9rem]'
+          isOpen ? "left-56 top-36" : " top-[6.9rem]"
         }`}
         onClick={toggleSidebar}
       >
@@ -128,7 +128,7 @@ const DashSidebar = ({ isOpen, toggleSidebar }) => {
       )}
       <div
         className={`fixed top-28 left-0 h-screen bg-white text-gray-800 w-72 p-6 z-20 transition-transform duration-300 ease-in-out transform ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
+          isOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0 shadow-lg overflow-y-auto`}
       >
         <h2 className="text-3xl font-bold mb-8 text-blue-600">

@@ -10,8 +10,8 @@ const Error404 = () => {
         Looks like you've wandered into a magical forest! <br />
         Let's find our way back home.
       </p>
-      <Link 
-        to="/" 
+      <Link
+        to="/"
         className="bg-indigo-600 text-white px-8 py-4 rounded-full font-bold text-xl hover:bg-indigo-700 transition duration-300 transform hover:scale-105"
       >
         🏠 Go Home

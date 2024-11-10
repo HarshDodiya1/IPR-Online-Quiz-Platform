@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "https://backend-ipr.vercel.app/",
+  baseURL: "http://localhost:3000/",
   withCredentials: true,
   timeout: 30000,
 });
@@ -32,5 +32,3 @@ instance.interceptors.response.use(
 );
 
 export default instance;
-
-

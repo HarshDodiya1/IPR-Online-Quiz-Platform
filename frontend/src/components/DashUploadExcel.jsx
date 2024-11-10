@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect } from "react";
-import axios from "../axiosConfig.jsx"
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import * as XLSX from "xlsx";
+import axios from "../axiosConfig.jsx";
 
 const checkImageLink = (url) => {
   return new Promise((resolve) => {
@@ -146,7 +146,9 @@ function DashUploadExcel() {
     setIsDeleting(true);
     try {
       await axios.delete("/api/questions/delete-all");
-      toast.success("All questions and related quiz questions have been deleted successfully");
+      toast.success(
+        "All questions and related quiz questions have been deleted successfully"
+      );
       setShowDeleteConfirmation(false);
       // Reset file and preview states
       setFile(null);
@@ -154,7 +156,10 @@ function DashUploadExcel() {
       setUploadProgress(0);
       setMessage("");
     } catch (error) {
-      toast.error("Error deleting questions: " + (error.response?.data?.message || error.message));
+      toast.error(
+        "Error deleting questions: " +
+          (error.response?.data?.message || error.message)
+      );
     } finally {
       setIsDeleting(false);
     }
@@ -163,9 +168,6 @@ function DashUploadExcel() {
   return (
     <div className="flex flex-col justify-center min-h-[calc(88vh)] items-center bg-white p-8">
       <div className="bg-white rounded-xl shadow-2xl p-8 max-w-[98rem] min-h-[80vh] w-full border-2">
-
-
-
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-4xl font-semibold text-blue-600">
             Upload Excel file
@@ -232,75 +234,79 @@ function DashUploadExcel() {
           <p className="text-center text-green-500 mb-6">{message}</p>
         )}
         {filePreview.length > 0 && (
-        <div>
-          <h3 className="text-3xl font-semibold mb-4 text-blue-600">
-            File Preview
-          </h3>
-          <div className="overflow-x-auto">
-            <table className="w-full border-2">
-              <thead>
-                <tr className="bg-blue-100">
-                  {filePreview[0].map((col, index) => (
-                    <th
-                      key={index}
-                      className="border-b border-blue-200 px-2 py-2 text-sm font-semibold text-blue-800"
-                    >
-                      {col}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {filePreview.slice(1, 16).map((row, rowIndex) => (
-                  <tr
-                    key={rowIndex}
-                    className={
-                      rowIndex % 2 === 0
-                        ? "bg-gray-50 text-center"
-                        : "bg-white text-center"
-                    }
-                  >
-                    {row.map((cell, cellIndex) => {
-                      const isLinkColumn = filePreview[0][cellIndex]
-                        .toLowerCase()
-                        .includes("link");
-                      return (
-                        <td
-                          key={cellIndex}
-                          className="border-b border-gray-200 px-2 py-2 text-sm text-gray-700"
-                        >
-                          {isLinkColumn ? (
-                            cell ? (
-                              <ImageWithFallback
-                                src={cell}
-                                alt="Preview"
-                                className="w-10 h-10 object-cover cursor-pointer"
-                                onClick={() => setSelectedImage(cell)}
-                              />
-                            ) : null
-                          ) : (
-                            cell
-                          )}
-                        </td>
-                      );
-                    })}
+          <div>
+            <h3 className="text-3xl font-semibold mb-4 text-blue-600">
+              File Preview
+            </h3>
+            <div className="overflow-x-auto">
+              <table className="w-full border-2">
+                <thead>
+                  <tr className="bg-blue-100">
+                    {filePreview[0].map((col, index) => (
+                      <th
+                        key={index}
+                        className="border-b border-blue-200 px-2 py-2 text-sm font-semibold text-blue-800"
+                      >
+                        {col}
+                      </th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {filePreview.slice(1, 16).map((row, rowIndex) => (
+                    <tr
+                      key={rowIndex}
+                      className={
+                        rowIndex % 2 === 0
+                          ? "bg-gray-50 text-center"
+                          : "bg-white text-center"
+                      }
+                    >
+                      {row.map((cell, cellIndex) => {
+                        const isLinkColumn = filePreview[0][cellIndex]
+                          .toLowerCase()
+                          .includes("link");
+                        return (
+                          <td
+                            key={cellIndex}
+                            className="border-b border-gray-200 px-2 py-2 text-sm text-gray-700"
+                          >
+                            {isLinkColumn ? (
+                              cell ? (
+                                <ImageWithFallback
+                                  src={cell}
+                                  alt="Preview"
+                                  className="w-10 h-10 object-cover cursor-pointer"
+                                  onClick={() => setSelectedImage(cell)}
+                                />
+                              ) : null
+                            ) : (
+                              cell
+                            )}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {filePreview.length > 16 && (
+              <p className="text-sm text-gray-500 mt-4 text-center">
+                Showing first 15 rows out of {filePreview.length - 1} total
+                rows.
+              </p>
+            )}
           </div>
-          {filePreview.length > 16 && (
-            <p className="text-sm text-gray-500 mt-4 text-center">
-              Showing first 15 rows out of {filePreview.length - 1} total rows.
-            </p>
-          )}
-        </div>
-      )}
+        )}
         {showDeleteConfirmation && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white p-6 rounded-lg">
               <h3 className="text-xl font-bold mb-4">Confirm Deletion</h3>
-              <p className="mb-4">Are you sure you want to delete all questions and related quiz questions? This action cannot be undone.</p>
+              <p className="mb-4">
+                Are you sure you want to delete all questions and related quiz
+                questions? This action cannot be undone.
+              </p>
               <div className="flex justify-end">
                 <button
                   onClick={() => setShowDeleteConfirmation(false)}
@@ -322,7 +328,6 @@ function DashUploadExcel() {
         )}
       </div>
 
-      
       {selectedImage && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
@@ -358,6 +363,5 @@ function FileIcon(props) {
     </svg>
   );
 }
-
 
 export default DashUploadExcel;

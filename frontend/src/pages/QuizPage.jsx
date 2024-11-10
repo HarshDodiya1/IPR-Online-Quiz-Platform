@@ -1,10 +1,10 @@
-import { useEffect, useState, useCallback } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "../axiosConfig.jsx";
-import { useSelector } from "react-redux";
-import { motion } from "framer-motion";
-import { useTranslation } from "react-i18next";
 
 const QuizPage = () => {
   const { t } = useTranslation("resultsQuiz");

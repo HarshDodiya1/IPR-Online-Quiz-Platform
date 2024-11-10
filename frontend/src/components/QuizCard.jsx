@@ -1,6 +1,6 @@
-import { FaQuestionCircle, FaLanguage, FaTag } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { FaLanguage, FaQuestionCircle, FaTag } from "react-icons/fa";
 
 const QuizCard = ({ quiz, isLoggedIn, onStart }) => {
   const { t } = useTranslation("home");
@@ -35,9 +35,15 @@ const QuizCard = ({ quiz, isLoggedIn, onStart }) => {
   return (
     <motion.div
       className="bg-white rounded-xl shadow-2xl overflow-hidden relative"
-      whileHover={{ y: -10, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
+      whileHover={{
+        y: -10,
+        boxShadow:
+          "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+      }}
     >
-      <div className={`absolute top-4 right-4 ${getBadgeColor()} text-white text-lg font-bold px-4 py-2 rounded-full z-10 shadow-lg`}>
+      <div
+        className={`absolute top-4 right-4 ${getBadgeColor()} text-white text-lg font-bold px-4 py-2 rounded-full z-10 shadow-lg`}
+      >
         {getBadgeContent()}
       </div>
       <img
@@ -55,7 +61,10 @@ const QuizCard = ({ quiz, isLoggedIn, onStart }) => {
           <span className="font-semibold  mr-2">{t("categories")}</span>
           <div className="flex flex-wrap gap-2">
             {quiz.categories.map((category, index) => (
-              <span key={index} className="bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1 rounded-full">
+              <span
+                key={index}
+                className="bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1 rounded-full"
+              >
                 {category}
               </span>
             ))}

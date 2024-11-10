@@ -1,11 +1,11 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
-import login from "../assets/Login.svg";
-import axios from "../axiosConfig.jsx"
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useTranslation } from "react-i18next";
+import login from "../assets/Login.svg";
+import axios from "../axiosConfig.jsx";
 
 const SignUp = () => {
   const navigate = useNavigate();

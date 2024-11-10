@@ -1,8 +1,8 @@
 import {
-  FaClock,
-  FaQuestionCircle,
   FaCalendarAlt,
+  FaClock,
   FaEdit,
+  FaQuestionCircle,
 } from "react-icons/fa";
 
 const AdminQuizCard = ({ quiz, onEdit }) => {

@@ -1,22 +1,21 @@
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import "./App.css";
-import { useState, useEffect } from "react";
-import { Route, Routes, BrowserRouter } from "react-router-dom";
-import Home from "./pages/Home";
-import Header from "./components/Header";
-import MobileNav from "./components/MobileNav";
-import ScrollToTop from "./components/ScrollToTop";
-import SignUp from "./pages/SignUp";
-import Login from "./pages/Login";
-import Error404 from "./pages/Error404";
-import Dashboard from "./pages/Dashboard";
-import PrivateRoute from "./components/PrivateRoute";
-import QuizPage from "./pages/QuizPage.jsx";
-import Results from "./pages/Results.jsx";
-import { AboutUs } from "./pages/AboutUs.jsx";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./i18n.js"
+import "./App.css";
+import Header from "./components/Header";
+import MobileNav from "./components/MobileNav";
+import PrivateRoute from "./components/PrivateRoute";
+import ScrollToTop from "./components/ScrollToTop";
+import "./i18n.js";
+import Dashboard from "./pages/Dashboard";
+import Error404 from "./pages/Error404";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import QuizPage from "./pages/QuizPage.jsx";
+import Results from "./pages/Results.jsx";
+import SignUp from "./pages/SignUp";
 
 function App() {
   const { t } = useTranslation();
@@ -39,12 +38,11 @@ function App() {
           {isMobile ? <MobileNav /> : <Header />}
         </div>
         <main className="flex-grow mt-28 z-0">
-          <ScrollToTop /> 
+          <ScrollToTop />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/sign-up" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/about-us" element={<AboutUs />} />
             <Route element={<PrivateRoute />}>
               <Route path="/quiz/:id" element={<QuizPage />} />
               <Route path="/result/:id" element={<Results />} />

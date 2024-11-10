@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { updateStart, updateSuccess, updateFailure } from "../slices/userSlice";
-import { toast } from "react-toastify";
-import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
-import axios from "../axiosConfig.jsx"
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import axios from "../axiosConfig.jsx";
+import { updateFailure, updateStart, updateSuccess } from "../slices/userSlice";
 
 const DashProfile = () => {
   const { t } = useTranslation("dashboard");
@@ -44,12 +44,39 @@ const DashProfile = () => {
   }, [currentUser]);
 
   const cities = [
-    "Ahmedabad", "Amreli", "Anand", "Aravalli", "Banaskantha", "Bharuch",
-    "Bhavnagar", "Botad", "Chhota Udaipur", "Dahod", "Dang", "Devbhoomi Dwarka",
-    "Gandhinagar", "Gir Somnath", "Jamnagar", "Junagadh", "Kheda", "Kutch",
-    "Mahisagar", "Mehsana", "Morbi", "Narmada", "Navsari", "Panchmahal",
-    "Patan", "Porbandar", "Rajkot", "Sabarkantha", "Surat", "Surendranagar",
-    "Tapi", "Vadodara", "Valsad",
+    "Ahmedabad",
+    "Amreli",
+    "Anand",
+    "Aravalli",
+    "Banaskantha",
+    "Bharuch",
+    "Bhavnagar",
+    "Botad",
+    "Chhota Udaipur",
+    "Dahod",
+    "Dang",
+    "Devbhoomi Dwarka",
+    "Gandhinagar",
+    "Gir Somnath",
+    "Jamnagar",
+    "Junagadh",
+    "Kheda",
+    "Kutch",
+    "Mahisagar",
+    "Mehsana",
+    "Morbi",
+    "Narmada",
+    "Navsari",
+    "Panchmahal",
+    "Patan",
+    "Porbandar",
+    "Rajkot",
+    "Sabarkantha",
+    "Surat",
+    "Surendranagar",
+    "Tapi",
+    "Vadodara",
+    "Valsad",
   ];
 
   const handleChange = (e) => {
@@ -88,9 +115,9 @@ const DashProfile = () => {
   return (
     <div className="flex justify-center min-h-[calc(88vh)] items-center bg-white p-8">
       <div className="bg-white rounded-xl shadow-2xl p-8 max-w-[98rem] min-h-[80vh] w-full border-2">
-      <h2 className="text-4xl font-semibold mb-4 text-blue-600">
-        {t("updateProfile")}
-      </h2>
+        <h2 className="text-4xl font-semibold mb-4 text-blue-600">
+          {t("updateProfile")}
+        </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>

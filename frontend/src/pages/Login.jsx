@@ -1,13 +1,17 @@
 import { useState } from "react";
-import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
-import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { signInStart, signInSuccess, signInFailure } from "../slices/userSlice.js";
-import login from "../assets/Login.svg";
-import axios from "../axiosConfig.jsx"
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useTranslation } from "react-i18next";
+import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import login from "../assets/Login.svg";
+import axios from "../axiosConfig.jsx";
+import {
+  signInFailure,
+  signInStart,
+  signInSuccess,
+} from "../slices/userSlice.js";
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -62,7 +66,8 @@ const Login = () => {
         dispatch(signInFailure(errorMsg));
       }
     } catch (error) {
-      const errorMsg = error.response?.data?.message || t("validation.genericError");
+      const errorMsg =
+        error.response?.data?.message || t("validation.genericError");
       toast.error(errorMsg);
       dispatch(signInFailure(errorMsg));
     }
@@ -123,7 +128,7 @@ const Login = () => {
                 </button>
               </div>
             </div>
-            
+
             <button
               type="submit"
               className="w-full py-3 rounded-xl bg-orange-500 text-white text-lg font-bold transition-all hover:bg-orange-600 active:scale-[.98] disabled:bg-orange-300"

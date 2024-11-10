@@ -1,11 +1,11 @@
-import { FaChevronDown, FaUser, FaBars, FaTimes } from "react-icons/fa";
-import { IoLanguage } from "react-icons/io5";
-import logo from "../assets/Logo.jpg";
-import { useTranslation } from "react-i18next";
 import { Button, Modal } from "flowbite-react";
+import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { FaBars, FaChevronDown, FaTimes, FaUser } from "react-icons/fa";
+import { IoLanguage } from "react-icons/io5";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { useState, useRef, useEffect } from "react";
+import logo from "../assets/Logo.jpg";
 import { signInSuccess } from "../slices/userSlice";
 
 const useOutsideClick = (callback) => {

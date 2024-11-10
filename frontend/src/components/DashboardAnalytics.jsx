@@ -1,17 +1,17 @@
-import { useState, useEffect } from "react";
-import { Bar, Doughnut } from "react-chartjs-2";
-import axios from "../axiosConfig.jsx"
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
   ArcElement,
+  BarElement,
+  CategoryScale,
+  Chart as ChartJS,
+  Legend,
+  LinearScale,
   Title,
   Tooltip,
-  Legend,
 } from "chart.js";
+import { useEffect, useState } from "react";
+import { Bar, Doughnut } from "react-chartjs-2";
 import { FaFileExcel } from "react-icons/fa";
+import axios from "../axiosConfig.jsx";
 
 ChartJS.register(
   CategoryScale,

@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import axios from "../axiosConfig.jsx"
-import { useSelector } from "react-redux";
-import { FaClock, FaCalendarAlt, FaPercent } from "react-icons/fa";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { FaCalendarAlt, FaClock, FaPercent } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import axios from "../axiosConfig.jsx";
 
 const DashPastQuizzes = () => {
   const [pastQuizzes, setPastQuizzes] = useState([]);
@@ -28,7 +28,11 @@ const DashPastQuizzes = () => {
   }, []);
 
   if (loading) {
-    return <div className="flex items-center justify-center h-screen"><div className="spinner"></div></div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="spinner"></div>
+      </div>
+    );
   }
 
   return (
@@ -68,7 +72,8 @@ const DashPastQuizzes = () => {
                 </p>
                 <p className="flex items-center">
                   <FaCalendarAlt className="mr-2 text-green-500" />
-                  {t("submitted")} {new Date(quiz.submittedAt).toLocaleDateString()}
+                  {t("submitted")}{" "}
+                  {new Date(quiz.submittedAt).toLocaleDateString()}
                 </p>
                 <p className="flex items-center">
                   <FaClock className="mr-2 text-red-500" />
