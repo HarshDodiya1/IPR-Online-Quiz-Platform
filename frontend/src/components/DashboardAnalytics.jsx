@@ -13,6 +13,7 @@ import { Bar, Doughnut } from "react-chartjs-2";
 import { FaFileExcel } from "react-icons/fa";
 import axios from "../axiosConfig.jsx";
 
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -76,6 +77,29 @@ const DashboardAnalytics = () => {
       link.click();
     } catch (error) {
       console.error("Error exporting to Excel:", error);
+    }
+  };
+
+  const handleExportUsers = async () => {
+    try {
+      const response = await axios.get("/api/user/get-all-users", {
+        responseType: "blob",
+      });
+
+      // Create blob and download
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "users_data.xlsx");
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error exporting users data:", error);
     }
   };
 
@@ -147,7 +171,14 @@ const DashboardAnalytics = () => {
             className="w-full sm:w-auto bg-green-500 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 flex items-center justify-center"
           >
             <FaFileExcel className="mr-2" />
-            Export as Excel
+            Export Quiz Data
+          </button>
+          <button
+            onClick={handleExportUsers}
+            className="w-full sm:w-auto bg-blue-500 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 flex items-center justify-center"
+          >
+            <FaFileExcel className="mr-2" />
+            Export Users Data
           </button>
         </div>
 

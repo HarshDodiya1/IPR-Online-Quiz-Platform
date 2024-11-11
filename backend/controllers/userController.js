@@ -1,5 +1,6 @@
 const prisma = require("../db/db.config.js");
 const bcrypt = require("bcrypt");
+const excel = require("exceljs");
 
 exports.updateProfile = async (req, res) => {
   try {
@@ -127,6 +128,73 @@ exports.getPastQuizzes = async (req, res) => {
     });
   } catch (error) {
     console.log("Error while getting past quizzes: ", error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+exports.getUsers = async (req, res) => {
+  try {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        firstName: true,
+        middleName: true,
+        lastName: true,
+        email: true,
+        mobileNumber: true,
+        dateOfBirth: true,
+        schoolName: true,
+        standard: true,
+        city: true,
+        totalQuizzesTaken: true,
+      },
+    });
+
+    const workbook = new excel.Workbook();
+    const worksheet = workbook.addWorksheet("Users Data");
+
+    worksheet.columns = [
+      { header: "ID", key: "id", width: 10 },
+      { header: "Name", key: "name", width: 30 },
+      { header: "Email", key: "email", width: 30 },
+      { header: "Mobile Number", key: "mobileNumber", width: 15 },
+      { header: "Date of Birth", key: "dateOfBirth", width: 15 },
+      { header: "School Name", key: "schoolName", width: 30 },
+      { header: "Standard", key: "standard", width: 10 },
+      { header: "City", key: "city", width: 20 },
+      { header: "Total Quizzes Taken", key: "totalQuizzesTaken", width: 20 },
+    ];
+
+    users.forEach((user) => {
+      worksheet.addRow({
+        id: user.id,
+        name: `${user.firstName} ${user.middleName || ""} ${user.lastName}`.trim(),
+        email: user.email,
+        mobileNumber: user.mobileNumber,
+        dateOfBirth: user.dateOfBirth.toLocaleDateString(),
+        schoolName: user.schoolName,
+        standard: user.standard,
+        city: user.city,
+        totalQuizzesTaken: user.totalQuizzesTaken,
+      });
+    });
+
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    );
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=users_data.xlsx",
+    );
+
+    await workbook.xlsx.write(res);
+    res.end();
+  } catch (error) {
+    console.log("Error while getting all users: ", error);
     res.status(500).json({
       success: false,
       message: error.message,
