@@ -61,11 +61,24 @@ const SignUp = () => {
     "Vadodara",
     "Valsad",
   ];
+  const isEnglishLetters = (text) => {
+    const englishRegex = /^[A-Za-z\s]+$/;
+    return englishRegex.test(text);
+  };
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
+    // Special handling for name fields
+    if (["firstName", "middleName", "lastName"].includes(name)) {
+      if (!isEnglishLetters(value) && value !== "") {
+        toast.error(t("validation.onlyEnglishLetters"));
+        return;
+      }
+    }
+
     setFormData({
       ...formData,
       [name]: name === "standard" ? parseInt(value, 10) : value,
@@ -81,6 +94,21 @@ const SignUp = () => {
         toast.error(t("validation.fillAllFields"));
         return;
       }
+
+      // Capitalize first letter of names
+      const capitalizedFormData = {
+        ...formData,
+        firstName:
+          formData.firstName.charAt(0).toUpperCase() +
+          formData.firstName.slice(1),
+        middleName: formData.middleName
+          ? formData.middleName.charAt(0).toUpperCase() +
+            formData.middleName.slice(1)
+          : "",
+        lastName:
+          formData.lastName.charAt(0).toUpperCase() +
+          formData.lastName.slice(1),
+      };
 
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(formData.email)) {
@@ -99,9 +127,13 @@ const SignUp = () => {
         return;
       }
 
-      const response = await axios.post("/api/auth/signup", formData, {
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await axios.post(
+        "/api/auth/signup",
+        capitalizedFormData,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
       const data = response.data;
 
