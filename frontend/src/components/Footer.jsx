@@ -14,7 +14,7 @@ const StyledFooter = styled(Box)({
 });
 
 const TeamMemberCard = styled(motion.div)(({ theme }) => ({
-  background: "rgba(255, 255, 255, 0.9)",
+  background: "rgba(255, 255, 255, 0.8)",
   backdropFilter: "blur(10px)",
   borderRadius: "12px",
   padding: "1rem",
@@ -22,8 +22,8 @@ const TeamMemberCard = styled(motion.div)(({ theme }) => ({
   transition: "all 0.3s ease",
   height: "100%",
   display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
+  flexDirection: "row",
+  justifyContent: "space-between",
   alignItems: "center",
   gap: "0.5rem",
   "&:hover": {
@@ -48,7 +48,7 @@ const LogoSection = styled(Box)(({ theme }) => ({
 }));
 
 const LogoImage = styled(motion.img)(({ theme }) => ({
-  height: "160px",
+  height: "120px",
   width: "auto",
   objectFit: "contain",
   [theme.breakpoints.down("md")]: {
@@ -164,7 +164,7 @@ export default function Footer() {
             </Typography>
             <Grid container spacing={2}>
               {teamMembers.map((member, index) => (
-                <Grid xs={6} sm={4} md={3} key={index}>
+                <Grid xs={6} sm={3} key={index}>
                   <TeamMemberCard
                     whileHover={{ scale: 1.03 }}
                     initial={{ opacity: 0, y: 20 }}
@@ -176,7 +176,6 @@ export default function Footer() {
                       sx={{
                         color: "#2D3748",
                         fontWeight: "600",
-                        textAlign: "center",
                         fontSize: { xs: "0.875rem", sm: "1rem" },
                       }}
                     >
@@ -189,9 +188,6 @@ export default function Footer() {
                       sx={{
                         color: "#0077B5",
                         padding: { xs: "4px", sm: "8px" },
-                        "&:hover": {
-                          backgroundColor: "rgba(0, 119, 181, 0.1)",
-                        },
                       }}
                     >
                       <LinkedInIcon
