@@ -2,7 +2,7 @@ import axios from "axios";
 import config from "./config";
 
 const instance = axios.create({
-  baseURL: config.NODE_ENV === "production" ? config.PROD_API_URL : config.LOCAL_API_URL,
+  baseURL: config.PROD_API_URL,
   withCredentials: true,
   timeout: 30000,
 });
